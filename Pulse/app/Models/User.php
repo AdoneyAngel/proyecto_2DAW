@@ -216,7 +216,7 @@ class User extends Model
     public static function getById($id){
         $users = self::selectQuery(["id" => $id]);
 
-        if ($users[0]) {
+        if (isset($users[0])) {
             return $users[0];
         }
 
@@ -230,7 +230,38 @@ class User extends Model
     }
 
     public function getProyects() {
+        if (!$this->id) {
+            return [];
+        }
 
+        $proyects = Proyect::getByOwnerId($this->id);
+
+        return $proyects;
+
+    }
+
+    public function getIncludedProyects() {
+        if (!$this->id) return null;
+
+        $proyectsOfmember = DB::select("CALL proyects_of_member_id(?)", [$this->id]);
+
+        if (count($proyectsOfmember)) {
+            $proyects = [];
+
+            foreach ($proyectsOfmember as $proyect) {
+                $proyects[] = new Proyect(
+                    $proyect->id,
+                    $proyect->title,
+                    $proyect->owner_id,
+                    $proyect->date
+                );
+            }
+
+            return $proyects;
+
+        } else {
+            return [];
+        }
     }
 
     public function getStatusInTask($idTask) {

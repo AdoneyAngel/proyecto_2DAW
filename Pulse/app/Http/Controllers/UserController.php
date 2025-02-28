@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\LoginUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
+use App\Http\Resources\Proyect\ProyectCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
@@ -39,12 +40,25 @@ class UserController extends Controller
     {
         try {
             if (!$id) {
-                return response("Missing id", 422);
+                return response()->json([
+                    "success" => false,
+                    "error" => "Missing ID"
+                ], 422);
             }
 
             $user = User::getById($id);
 
-            return response()->json(new UserResource($user));
+            if (!$user) {
+                return response()->json([
+                    "success" => false,
+                    "error" => "User not found"
+                ], 404);
+            }
+
+            return response()->json([
+                "success" => true,
+                "data" => new UserResource($user)
+            ]);
 
         } catch (\Exception $err) {
             error_log("Error getting user: ". $err->getMessage());
@@ -167,6 +181,65 @@ class UserController extends Controller
 
         } catch (\Exception $err) {
             error_log("Error updating user: ". $err->getMessage());
+
+            return response()->json([
+                "success" => false,
+                "error" => "Server error"
+            ], 500);
+        }
+    }
+
+    /**
+     * Get the proyects of user. (if ID is undefined or $id<1, it will use the id of the user who make the request)
+     */
+    public function getProyects(Request $request, $userId) {
+        try {
+            $user = $request["user"] ?? $userId;
+
+            if (!$user) {
+                return response()->json([
+                    "success" => false,
+                    "error" => "User not found"
+                ], 404);
+            }
+
+            $proyects = $user->getProyects();
+
+            return response()->json([
+                "success" => true,
+                "data" => new ProyectCollection($proyects)
+            ]);
+
+        } catch (\Exception $err) {
+            error_log("Error getting proyects of user: ". $err->getMessage());
+
+            return response()->json([
+                "success" => false,
+                "error" => "Server error"
+            ], 500);
+        }
+    }
+
+    public function getIncludedProyects(Request $request, $userId) {
+        try {
+            $user = $request["user"] ?? $userId;
+
+            if (!$user) {
+                return response()->json([
+                    "success" => false,
+                    "error" => "User not found"
+                ], 404);
+            }
+
+            $proyects = $user->getIncludedProyects();
+
+            return response()->json([
+                "success" => true,
+                "data" => new ProyectCollection($proyects)
+            ]);
+
+        } catch (\Exception $err) {
+            error_log("Error getting proyects of user: ". $err->getMessage());
 
             return response()->json([
                 "success" => false,

@@ -82,7 +82,19 @@ class Proyect extends Model
     public function delete()  {
     }
 
-    public function saveChanges() {
+    public function saveChanges() { //Update method
+        if (!$this->id) return false;
+        if (!$this->title || !strlen($this->title)) return false;
+        if (!$this->ownerId) return false;
+
+        $updatedProyectDb = DB::select("CALL proyects_update(?,?,?)", [$this->id, $this->title, $this->ownerId]);
+
+        if (count($updatedProyectDb)) {
+            return self::class;
+
+        } else {
+            return null;
+        }
     }
 
     public static function getAll() {
@@ -104,21 +116,13 @@ class Proyect extends Model
     public static function getByTitle(string $title) {
         $proyects = self::selectQuery(["title" => $title]);
 
-        if ($proyects[0]) {
-            return $proyects[0];
-        }
-
-        return null;
+        return $proyects;
     }
 
     public static function getByOwnerId($ownerId) {
         $proyects = self::selectQuery(["owner_id" => $ownerId]);
 
-        if ($proyects[0]) {
-            return $proyects[0];
-        }
-
-        return null;
+        return $proyects;
     }
 
     public function getTasks() {
@@ -167,6 +171,27 @@ class Proyect extends Model
     }
 
     public function getMembers() {
+        if (!$this->id) return null;
+
+        $membersDb = DB::select("CALL users_of_proyect_id(?)", [$this->id]);
+
+        $members = array();
+
+        foreach ($membersDb as $member) {
+            $members[] = new ProyectMember(
+                $member->id,
+                $member->username,
+                $member->email,
+                $member->password,
+                $member->photo,
+                $member->registred,
+                $member->status,
+                $member->effective_time,
+                $member->proyect_id,
+            );
+        }
+
+        return $members;
     }
 
     public function addMember(ProyectMember $member) {
@@ -183,6 +208,24 @@ class Proyect extends Model
 
     public function getMembersHistory() {
     }
+
+    public function isMember($userId) {
+        if (!$this->id) return false;
+
+        $members = $this->getMembers();
+
+        $exist = false;
+
+        foreach ($members as $member) {
+            if ($member->getId() == $userId) {
+                $exist = true;
+                break;
+            }
+        }
+
+        return $exist;
+    }
+
     private static function selectQuery(array $whereValues = null) {
         $queryString = "SELECT * FROM proyects ";
         $queryValues = [];
