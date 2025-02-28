@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProyectController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\userTokenAuthMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,9 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
 
     Route::apiResource("/proyects", ProyectController::class);
     Route::get("/proyects/{id}/members", [ProyectController::class, "getMembers"]);
+    Route::post("/proyects/{id}/members", [ProyectController::class, "addMember"]);
+
+    Route::apiResource("/tasks", TaskController::class);
 });
 
 Route::post("/login", [UserController::class, "login"])->name("login");

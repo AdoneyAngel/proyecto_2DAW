@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources\Proyect;
 
+use App\Http\Resources\ProyectMember\ProyectMemberCollection;
+use App\Http\Resources\Task\TaskCollection;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,7 +21,10 @@ class ProyectResource extends JsonResource
             "id" => $this->getId(),
             "title" => $this->getTitle(),
             "ownerId" => $this->getOwnerId(),
-            "date" => $this->getDate()
+            "date" => $this->getDate(),
+            "members" => $this->members ? new ProyectMemberCollection($this->members) : [],
+            "tasks" => $this->tasks ? new TaskCollection($this->tasks) : [],
+            "owner" => $this->owner ? new UserResource($this->owner) : null
         ];
     }
 }

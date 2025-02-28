@@ -54,6 +54,23 @@ class ProyectMember extends User
         return $proyect;
     }
 
+    public function buildFromUser(User $user, $status = null, $effectiveTime = null, $proyectId = null) {
+        if ($status) {
+            $this->status = $status;
+        }
+        if ($effectiveTime) {
+            $this->effectiveTime = $effectiveTime;
+        }
+        if ($proyectId) {
+            $this->proyectId = $proyectId;
+        }
 
+        $this->id = $user->getId();
+        $this->username = $user->getUserName();
+        $this->password = $user->getPassword();
+        $this->email = $user->getEmail();
+        $this->photo = $user->getPhoto();
+        $this->registred = $user->getRegistred();
+    }
 
 }

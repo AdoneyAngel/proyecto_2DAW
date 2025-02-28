@@ -126,24 +126,44 @@ class Proyect extends Model
     }
 
     public function getTasks() {
+        if (!$this->id) return null;
+
+        $tasks = Task::getByProyectId($this->id);
+
+        return $tasks;
     }
 
-    public function addTask(Task $task) {
+    public function loadTasks() {
+        $tasks = $this->getTasks();
+
+        $this->tasks = $tasks;
     }
 
     public function getTaskById($id) {
+        if (!$this->id) return null;
+
+        $task = Task::getById($id);
+
+        return $task;
     }
 
     public function getTaskByTag($tag) {
+        if (!$this->id) return null;
+
+        $tasks = Task::selectQuery(["proyect_id" => $this->id, "tag" => $tag]);
+
+        return $tasks;
     }
 
     public function getTaskByTitle($title) {
+        if (!$this->id) return null;
+
+        $tasks = Task::selectQuery(["proyect_id" => $this->id, "title" => $title]);
+
+        return $tasks;
     }
 
     public function getIssues() {
-    }
-
-    public function addIssue(Issue $issue) {
     }
 
     public function getIssueById($id) {
@@ -170,6 +190,12 @@ class Proyect extends Model
         }
     }
 
+    public function loadOwner() {
+        $owner = $this->getOwner();
+
+        $this->owner = $owner;
+    }
+
     public function getMembers() {
         if (!$this->id) return null;
 
@@ -194,7 +220,23 @@ class Proyect extends Model
         return $members;
     }
 
+    public function loadMembers() {
+        $members = $this->getMembers();
+
+        $this->members = $members;
+    }
+
     public function addMember(ProyectMember $member) {
+        if (!$this->id) return null;
+
+        $newMemberDb = DB::select("CALL proyects_members_insert(?,?,?)", [$this->id, $member->getId(), $member->getEffectiveTime()]);
+
+        if (count($newMemberDb)) {
+            return $member;
+
+        }
+
+        return null;
     }
 
     public function getMemberById($id) {
@@ -226,7 +268,7 @@ class Proyect extends Model
         return $exist;
     }
 
-    private static function selectQuery(array $whereValues = null) {
+    public static function selectQuery(array $whereValues = null) {
         $queryString = "SELECT * FROM proyects ";
         $queryValues = [];
 

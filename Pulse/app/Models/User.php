@@ -303,7 +303,7 @@ class User extends Model
         }
     }
 
-    private static function selectQuery(array $whereValues = null) {
+    public static function selectQuery(array $whereValues = null) {
         $queryString = "SELECT * FROM users ";
         $queryValues = [];
 
