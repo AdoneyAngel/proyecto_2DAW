@@ -6,9 +6,12 @@ use App\Http\Requests\User\LoginUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\Proyect\ProyectCollection;
+use App\Http\Resources\Task\TaskCollection;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
+use App\Models\responseUtils;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -117,7 +120,7 @@ class UserController extends Controller
             $userWithEmail = User::getByEmail($request->email);
 
             if (count($userWithEmail)) {
-                return response("Duplicated email", 409);
+                return response("The email is already in use", 409);
             }
 
             $newUser = new User(null, $request->username, $request->email, $request->password, $request->photo ?? null);
@@ -245,6 +248,28 @@ class UserController extends Controller
                 "success" => false,
                 "error" => "Server error"
             ], 500);
+        }
+    }
+
+    public function getTasks(Request $request, $userId) {
+        try {
+            $user = $userId > 0 ? User::getById($userId) : $request["user"];
+
+            //User exist
+            if (!$user) {
+                return responseUtils::notFound("User not found");
+            }
+
+            if ($request["user"]->getId() != $user->getId()) {
+                return responseUtils::unAuthorized("You can't see the task of this user");
+            }
+
+            $tasks = $user->getTasks();
+
+            return responseUtils::successful(new TaskCollection($tasks));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error gettings users tasks, UserController: ". $err->getMessage());
         }
     }
 }

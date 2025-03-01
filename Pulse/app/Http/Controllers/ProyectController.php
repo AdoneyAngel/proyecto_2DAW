@@ -9,9 +9,12 @@ use App\Http\Resources\Proyect\ProyectCollection;
 use App\Http\Resources\Proyect\ProyectResource;
 use App\Http\Resources\ProyectMember\ProyectMemberCollection;
 use App\Http\Resources\ProyectMember\ProyectMemberResource;
+use App\Http\Resources\Task\TaskCollection;
 use App\Models\Proyect;
 use App\Models\ProyectMember;
+use App\Models\responseUtils;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProyectController extends Controller
@@ -156,6 +159,95 @@ class ProyectController extends Controller
     }
 
     /**
+     * Add a new member to the proyect.
+     */
+    public function addMember(AddProyectMemberRequest $request, $proyectId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+            $user = User::getById($request->userId);
+
+            //User exist
+            if (!$user) {
+                return response()->json([
+                    "success" => false,
+                    "error" => "User not found"
+                ], 404);
+            }
+
+            //Proyect exist
+            if (!$proyect) {
+                return response()->json([
+                    "success" => false,
+                    "error" => "Proyect not found"
+                ], 404);
+            }
+
+            //Current user is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return response()->json([
+                    "success" => false,
+                    "error" => "You are not the owner of this proyect"
+                ], 401);
+            }
+
+            //User is already joined
+            if ($proyect->isMember($user->getId())) {
+                return response()->json([
+                    "success" => false,
+                    "error" => "The user is already in"
+                ], 422);
+            }
+
+            //Add member
+            $newMember = new ProyectMember();
+            $newMember->buildFromUser($user, 0, $request->effectiveTime, $proyect->getId());
+
+            $addedMember = $proyect->addMember($newMember);
+
+            if ($addedMember) {
+                return response()->json([
+                    "success" => true,
+                    "data" => new ProyectMemberResource($addedMember)
+                ], 201);
+
+            }
+
+        } catch (\Exception $err) {
+            error_log("Error adding member: ". $err->getMessage());
+
+            return response()->json([
+                "success" => false,
+                "error" => "Server error"
+            ], 500);
+        }
+    }
+
+    public function getTasks(Request $request, $proyectId) {
+        try {
+            $user = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //User is owner o member of proyect
+            if ($proyect->getOwnerId() != $user->getId() && !$proyect->isMember($user->getId())) {
+                return responseUtils::unAuthorized("You are not owner/member of this proyect");
+            }
+
+            $tasks = $proyect->getTasks();
+
+            return responseUtils::successful(new TaskCollection($tasks));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error gettings tasks of proyect, ProyectController: ". $err->getMessage());
+        }
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateProyectRequest $request, $id)
@@ -183,6 +275,7 @@ class ProyectController extends Controller
             }
 
             if ($proyectTitleExist) {
+
                 return response()->json([
                     "success" => false,
                     "error" => "You already have this proyect"
@@ -191,6 +284,9 @@ class ProyectController extends Controller
 
             //Update proyect
             if ((!$request->title || !strlen($request->title)) && !$request->ownerId) {
+                //Load missing parameters
+                $this->loadMissing($request, $proyect);
+
                 return response()->json([
                     "success" => true,
                     "data" => new ProyectResource($proyect)
@@ -213,54 +309,6 @@ class ProyectController extends Controller
 
         } catch (\Exception $err) {
             error_log("Error updating proyect: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
-        }
-    }
-
-    public function addMember(AddProyectMemberRequest $request, $proyectId) {
-        try {
-            $proyect = Proyect::getById($proyectId);
-            $user = User::getById($request->userId);
-
-            //User exist
-            if (!$user) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "User not found"
-                ], 404);
-            }
-
-            //Proyect exist
-            if ($proyect) {
-                //User is already joined
-                if ($proyect->isMember($user->getId())) {
-                    return response()->json([
-                        "success" => false,
-                        "error" => "The use is already in"
-                    ], 422);
-                }
-
-                //Add member
-                $newMember = new ProyectMember();
-                $newMember->buildFromUser($user, 0, $request->effectiveTime, $proyect->getId());
-
-                $addedMember = $proyect->addMember($newMember);
-
-                if ($addedMember) {
-                    return response()->json([
-                        "success" => true,
-                        "data" => new ProyectMemberResource($addedMember)
-                    ], 201);
-
-                }
-            }
-
-        } catch (\Exception $err) {
-            error_log("Error adding member: ". $err->getMessage());
 
             return response()->json([
                 "success" => false,

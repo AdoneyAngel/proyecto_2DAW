@@ -25,6 +25,9 @@ class UserResource extends JsonResource
         if ($this->token) {
             $resource["token"] = $this->token;
         }
+        if ($this->taskStatus) {
+            $resource["taskStatus"] = $this->taskStatus;
+        }
 
         return $resource;
     }

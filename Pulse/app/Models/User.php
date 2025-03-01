@@ -240,6 +240,14 @@ class User extends Model
 
     }
 
+    public function getTasks() {
+        if (!$this->id) return null;
+
+        $tasks = Task::getByUserId($this->id);
+
+        return $tasks;
+    }
+
     public function getIncludedProyects() {
         if (!$this->id) return null;
 

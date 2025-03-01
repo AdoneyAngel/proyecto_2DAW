@@ -106,7 +106,7 @@ class Proyect extends Model
     public static function getById($id) {
         $proyects = self::selectQuery(["id" => $id]);
 
-        if ($proyects[0]) {
+        if (count($proyects)) {
             return $proyects[0];
         }
 

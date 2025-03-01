@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `pulse` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
 USE `pulse`;
--- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
 --
 -- Host: localhost    Database: pulse
 -- ------------------------------------------------------
--- Server version	5.5.5-10.4.28-MariaDB
+-- Server version	5.5.5-10.4.32-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -32,7 +32,7 @@ CREATE TABLE `proyects` (
   PRIMARY KEY (`id`),
   KEY `fr_usersProyects_users_idx` (`owner_id`),
   CONSTRAINT `fr_usersProyects_users` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `proyects` (
 
 LOCK TABLES `proyects` WRITE;
 /*!40000 ALTER TABLE `proyects` DISABLE KEYS */;
-INSERT INTO `proyects` VALUES (1,18,'modificado','2025-02-27 21:37:56'),(2,1,'prueba','2025-02-27 21:37:59'),(3,18,'prueba2','2025-02-27 22:16:20'),(4,18,'prueba3','2025-02-27 22:17:38'),(5,18,'prueba4','2025-02-28 09:03:10'),(6,18,'proyecto modificado 3','2025-02-28 09:04:11');
+INSERT INTO `proyects` VALUES (1,18,'modificado','2025-02-27 21:37:56'),(2,1,'prueba','2025-02-27 21:37:59'),(3,18,'prueba2','2025-02-27 22:16:20'),(4,18,'prueba3','2025-02-27 22:17:38'),(5,18,'prueba4','2025-02-28 09:03:10'),(6,18,'proyecto modificado 3','2025-02-28 09:04:11'),(7,17,'prueba5','2025-02-28 17:03:13');
 /*!40000 ALTER TABLE `proyects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,7 +71,7 @@ CREATE TABLE `proyects_members` (
 
 LOCK TABLES `proyects_members` WRITE;
 /*!40000 ALTER TABLE `proyects_members` DISABLE KEYS */;
-INSERT INTO `proyects_members` VALUES (1,17,1,5);
+INSERT INTO `proyects_members` VALUES (1,6,0,15),(1,8,0,150),(1,15,0,5),(1,16,0,5),(1,17,1,5),(2,16,0,1),(2,18,0,5);
 /*!40000 ALTER TABLE `proyects_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +122,7 @@ CREATE TABLE `proyects_tasks` (
   `title` varchar(255) NOT NULL,
   `type` varchar(255) DEFAULT 'task',
   `user_id` int(11) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL COMMENT '"todo", "progress", "review", "done"',
+  `status` int(11) DEFAULT 1 COMMENT '"todo", "progress", "review", "done"',
   PRIMARY KEY (`id`),
   KEY `fr_proyectsTasks_proyects_idx` (`proyect_id`),
   KEY `fr_proyectsTasks_users_idx` (`user_id`),
@@ -130,7 +130,7 @@ CREATE TABLE `proyects_tasks` (
   CONSTRAINT `fr_proyectsTasks_proyects` FOREIGN KEY (`proyect_id`) REFERENCES `proyects` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fr_proyectsTasks_proyectsTasksStatus` FOREIGN KEY (`status`) REFERENCES `proyects_tasks_status` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
   CONSTRAINT `fr_proyectsTasks_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,6 +139,7 @@ CREATE TABLE `proyects_tasks` (
 
 LOCK TABLES `proyects_tasks` WRITE;
 /*!40000 ALTER TABLE `proyects_tasks` DISABLE KEYS */;
+INSERT INTO `proyects_tasks` VALUES (1,1,'prueba tarea','2025-02-28 15:28:25',1,1,'pruebas','prueba1','task',17,1),(2,1,'prueba tarea 2','2025-02-28 16:29:38',5,10,'','tarea 2','task',NULL,NULL),(3,1,'prueba tarea 3','2025-02-28 16:41:05',15,1,'pruebas','prueba3','task',NULL,NULL),(4,1,'prueba tarea 4','2025-02-28 16:43:17',15,0,'pruebas','prueba4','task',NULL,NULL),(5,1,'prueba tarea 5','2025-02-28 16:45:33',15,0,'pruebas','prueba5','task',NULL,NULL),(6,1,'prueba tarea 5','2025-02-28 16:47:35',15,0,'pruebas','prueba5','task',NULL,NULL),(7,1,'prueba tarea 5','2025-02-28 16:48:01',15,0,'pruebas','prueba5','task',NULL,NULL),(8,1,'prueba tarea 6','2025-02-28 17:07:02',15,0,'pruebas','prueba6','task',NULL,NULL);
 /*!40000 ALTER TABLE `proyects_tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,6 +222,7 @@ CREATE TABLE `proyects_tasks_status` (
 
 LOCK TABLES `proyects_tasks_status` WRITE;
 /*!40000 ALTER TABLE `proyects_tasks_status` DISABLE KEYS */;
+INSERT INTO `proyects_tasks_status` VALUES (1,'Todo');
 /*!40000 ALTER TABLE `proyects_tasks_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -345,7 +347,7 @@ CREATE TABLE `users_tokens` (
   PRIMARY KEY (`id`),
   KEY `fr_usersTokens_users_idx` (`user_id`),
   CONSTRAINT `fr_usersTokens_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -354,7 +356,7 @@ CREATE TABLE `users_tokens` (
 
 LOCK TABLES `users_tokens` WRITE;
 /*!40000 ALTER TABLE `users_tokens` DISABLE KEYS */;
-INSERT INTO `users_tokens` VALUES (1,8,'12341234','2025-02-27 18:07:18'),(2,16,'$2y$10$.m77It4b8WhpB6PxMnj1X.PiGM742sivMfLE7kDvhnppHJ1c1hUR.','0000-00-00 00:00:00'),(3,17,'$2y$10$5.w30epawc2MvXSvCqq/2Oqu8Mc/1Q5NQPr7obkDSQjMlgWE0TG5S','2025-02-28 18:15:31'),(4,17,'$2y$10$h.jbhyyI/QATAsjpllk4L.4NybdzUT7di20ki/64bQZZfRk4Oa5r6','2025-02-28 18:45:47'),(5,17,'$2y$10$rZvngctruU.NfNc2luoz1eXQtcolNeHu0wWiut.tpHYPn.3ZMp6h6','2025-02-28 18:56:10'),(6,17,'$2y$10$PUVDTFgCx55SKpm05o3LnO2tmhGT2AzRtuMCv2LgErgm5523Xe2ZG','2025-02-28 18:56:13'),(7,17,'$2y$10$qtk3QKUQl1/vrEdSjbTVCuA66V./uZ7wgl8p/Bjgh.7fbjq0Nqgk.','2025-02-28 18:56:56'),(8,17,'$2y$10$ymTuQErPbv96ibl7Pt2PZuWPXzux3d.eaZC/waS2CyJj51sf6ZBQS','2025-02-28 18:57:36'),(9,18,'$2y$10$aTbz18w5fUogqVErLREeheIY7ogybjIoYgiQ2hKSyVj39/mBCGjr2','2025-02-28 19:22:46'),(10,18,'$2y$10$Wo3OMfrli6zlznKv8eKkcuL8Eed8cZD6KT.aPhXzmv6cGwBnYd.Ai','2025-02-28 19:27:33'),(11,18,'$2y$10$jnuMkhZrkAdacW4cQNjmBu0byc.UKVJhDVODi52HHgkp38rvriDzK','2025-02-28 19:27:48'),(12,18,'$2y$10$ZW3Q9wjJ3j1pjFjaRaBkn.uk5bUFNQTgyX1JKJ4mexiLyKPlFyUDi','2025-02-28 19:29:01'),(13,18,'$2y$10$aT2tCoYObS38VzYWOPJdSe1NqCxGK5tHnFUBlzue9V0zSfSCCGpf.','2025-02-28 19:30:45'),(14,18,'$2y$10$ow5J9FYpFn8s9NC3rNVbDehJgDOpeLSKhw/RzrcaBkLowzyk21O6y','2025-02-28 19:32:49'),(15,18,'$2y$10$TEukJ89DEHBhKklbL8L4uek7tPJtWrKvt95wIUbkHue2z7tEfKN1O','2025-02-28 19:32:51'),(16,18,'$2y$10$m9bnMpQj7FtrY8W64sGqUuHCO0br//nhWy87FXPrnqHe2WJxKDrue','2025-02-28 19:33:00'),(17,18,'$2y$10$ZVG57gZO1vlOjLUY1GChPula76250tGDPMEaAklfUFtveCpzFoOlO','2025-02-28 19:33:32'),(18,18,'$2y$10$Pq.WL8FWiGMai4EFvABhtegbhJyGLl.U7DLPMrc0YQdqbn4KgiX7S','2025-02-28 19:33:54'),(19,18,'$2y$10$YhlHLaKU8JvbBZr3PNJ/EOsSb.7nyVah0kga4eWZihqHHbPz9ss36','2025-02-28 19:33:58'),(20,18,'$2y$10$5o8p4qllO5pyEZ2wNGBFouM1rx/pcu44Q6/gU3TdB4U/i04e7BYPa','2025-02-28 19:34:06'),(21,18,'$2y$10$SRcRRxIcNVk/c.e.RuOiKOGCSrYMti1/1Q8eolCMTVnLDVqyHRVhG','2025-02-28 20:30:46'),(22,18,'$2y$10$OZmL9uAWlX7rkSRFBUeqIemNlRW1lLk9d/azMV7RowNiTXZAfnCGu','2025-02-27 20:37:00'),(23,18,'$2y$10$DlyJ7NzdYgkCDPNzuj9FPul2wtKSOoWCzVREPswlzvxPB/mWnW6pK','2025-02-28 20:43:20'),(24,18,'$2y$10$.7AEOrulJ.6AJKDaUlb9bOzC4yYP/VHUD6xln9bbc37WwdA5uchlC','2025-02-28 20:52:44'),(25,10,'$2y$10$6WfxTQ.CwRMIIGfoCjWlze64VWGqEgrtyWs4zq93PbOdlecEbtSsO','2025-03-01 09:15:15'),(26,10,'$2y$10$AJvmAzvqFRXRNgzRd6KTWeUDKNYrOwfKr4SJ03tI6DsoOR7QUapLW','2025-03-01 09:15:21'),(27,10,'$2y$10$a9sZ0LfUDMbsOur7h9K1x.3YZHKToZpAGrn/GVqz1TB.TTUkez2iG','2025-03-01 10:42:13'),(28,10,'$2y$10$AGgJAo0YtxQw2QD/aDR2iuTlahYu7njzKNUjaM.ZnfBOGqJypjQ3C','2025-03-01 10:46:35'),(29,18,'$2y$10$.V4ED4z0GOUzJOkZTWijHeN1kXd389qReMi8Z23bBlcjQCvHrOb7y','2025-03-01 10:46:53'),(30,17,'$2y$10$Bwo7TlqLPqZlwGdZ7X6BGeSB/ekxKNFTNS9lTCd03b5YU2mhfaKCq','2025-03-01 11:06:30'),(31,18,'$2y$10$lrUJ2E1IELc8xUat2GlxEecr8uy5iOLpXzpCCcGh3L9G77PY7JIpm','2025-03-01 11:12:44'),(32,17,'$2y$10$UoT88.2kAdR4zlkJaMLB/u2u4Ss4FD6aX7wwTb79ywirx87TR1bLq','2025-03-01 12:01:52');
+INSERT INTO `users_tokens` VALUES (1,8,'12341234','2025-02-27 18:07:18'),(2,16,'$2y$10$.m77It4b8WhpB6PxMnj1X.PiGM742sivMfLE7kDvhnppHJ1c1hUR.','0000-00-00 00:00:00'),(3,17,'$2y$10$5.w30epawc2MvXSvCqq/2Oqu8Mc/1Q5NQPr7obkDSQjMlgWE0TG5S','2025-02-28 18:15:31'),(4,17,'$2y$10$h.jbhyyI/QATAsjpllk4L.4NybdzUT7di20ki/64bQZZfRk4Oa5r6','2025-02-28 18:45:47'),(5,17,'$2y$10$rZvngctruU.NfNc2luoz1eXQtcolNeHu0wWiut.tpHYPn.3ZMp6h6','2025-02-28 18:56:10'),(6,17,'$2y$10$PUVDTFgCx55SKpm05o3LnO2tmhGT2AzRtuMCv2LgErgm5523Xe2ZG','2025-02-28 18:56:13'),(7,17,'$2y$10$qtk3QKUQl1/vrEdSjbTVCuA66V./uZ7wgl8p/Bjgh.7fbjq0Nqgk.','2025-02-28 18:56:56'),(8,17,'$2y$10$ymTuQErPbv96ibl7Pt2PZuWPXzux3d.eaZC/waS2CyJj51sf6ZBQS','2025-02-28 18:57:36'),(9,18,'$2y$10$aTbz18w5fUogqVErLREeheIY7ogybjIoYgiQ2hKSyVj39/mBCGjr2','2025-02-28 19:22:46'),(10,18,'$2y$10$Wo3OMfrli6zlznKv8eKkcuL8Eed8cZD6KT.aPhXzmv6cGwBnYd.Ai','2025-02-28 19:27:33'),(11,18,'$2y$10$jnuMkhZrkAdacW4cQNjmBu0byc.UKVJhDVODi52HHgkp38rvriDzK','2025-02-28 19:27:48'),(12,18,'$2y$10$ZW3Q9wjJ3j1pjFjaRaBkn.uk5bUFNQTgyX1JKJ4mexiLyKPlFyUDi','2025-02-28 19:29:01'),(13,18,'$2y$10$aT2tCoYObS38VzYWOPJdSe1NqCxGK5tHnFUBlzue9V0zSfSCCGpf.','2025-02-28 19:30:45'),(14,18,'$2y$10$ow5J9FYpFn8s9NC3rNVbDehJgDOpeLSKhw/RzrcaBkLowzyk21O6y','2025-02-28 19:32:49'),(15,18,'$2y$10$TEukJ89DEHBhKklbL8L4uek7tPJtWrKvt95wIUbkHue2z7tEfKN1O','2025-02-28 19:32:51'),(16,18,'$2y$10$m9bnMpQj7FtrY8W64sGqUuHCO0br//nhWy87FXPrnqHe2WJxKDrue','2025-02-28 19:33:00'),(17,18,'$2y$10$ZVG57gZO1vlOjLUY1GChPula76250tGDPMEaAklfUFtveCpzFoOlO','2025-02-28 19:33:32'),(18,18,'$2y$10$Pq.WL8FWiGMai4EFvABhtegbhJyGLl.U7DLPMrc0YQdqbn4KgiX7S','2025-02-28 19:33:54'),(19,18,'$2y$10$YhlHLaKU8JvbBZr3PNJ/EOsSb.7nyVah0kga4eWZihqHHbPz9ss36','2025-02-28 19:33:58'),(20,18,'$2y$10$5o8p4qllO5pyEZ2wNGBFouM1rx/pcu44Q6/gU3TdB4U/i04e7BYPa','2025-02-28 19:34:06'),(21,18,'$2y$10$SRcRRxIcNVk/c.e.RuOiKOGCSrYMti1/1Q8eolCMTVnLDVqyHRVhG','2025-02-28 20:30:46'),(22,18,'$2y$10$OZmL9uAWlX7rkSRFBUeqIemNlRW1lLk9d/azMV7RowNiTXZAfnCGu','2025-02-27 20:37:00'),(23,18,'$2y$10$DlyJ7NzdYgkCDPNzuj9FPul2wtKSOoWCzVREPswlzvxPB/mWnW6pK','2025-02-28 20:43:20'),(24,18,'$2y$10$.7AEOrulJ.6AJKDaUlb9bOzC4yYP/VHUD6xln9bbc37WwdA5uchlC','2025-02-28 20:52:44'),(25,10,'$2y$10$6WfxTQ.CwRMIIGfoCjWlze64VWGqEgrtyWs4zq93PbOdlecEbtSsO','2025-03-01 09:15:15'),(26,10,'$2y$10$AJvmAzvqFRXRNgzRd6KTWeUDKNYrOwfKr4SJ03tI6DsoOR7QUapLW','2025-03-01 09:15:21'),(27,10,'$2y$10$a9sZ0LfUDMbsOur7h9K1x.3YZHKToZpAGrn/GVqz1TB.TTUkez2iG','2025-03-01 10:42:13'),(28,10,'$2y$10$AGgJAo0YtxQw2QD/aDR2iuTlahYu7njzKNUjaM.ZnfBOGqJypjQ3C','2025-03-01 10:46:35'),(29,18,'$2y$10$.V4ED4z0GOUzJOkZTWijHeN1kXd389qReMi8Z23bBlcjQCvHrOb7y','2025-03-01 10:46:53'),(30,17,'$2y$10$Bwo7TlqLPqZlwGdZ7X6BGeSB/ekxKNFTNS9lTCd03b5YU2mhfaKCq','2025-03-01 11:06:30'),(31,18,'$2y$10$lrUJ2E1IELc8xUat2GlxEecr8uy5iOLpXzpCCcGh3L9G77PY7JIpm','2025-03-01 11:12:44'),(32,17,'$2y$10$UoT88.2kAdR4zlkJaMLB/u2u4Ss4FD6aX7wwTb79ywirx87TR1bLq','2025-03-01 12:01:52'),(33,17,'$2y$10$zQ4XBXlO7SbPA/wRtWhaNemfbkhW.oh9WKfypOCK2HyzrpI7OGCja','2025-03-01 14:39:27');
 /*!40000 ALTER TABLE `users_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -392,6 +394,29 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `proyects_members_insert` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `proyects_members_insert`(IN proyectId INT, IN userId INT, IN effective_timeVar INT)
+BEGIN
+
+	INSERT INTO proyects_members (proyect_id, user_id, effective_time) VALUES (proyectId, userId, effective_timeVar);
+
+	SELECT * FROM proyects_members WHERE user_id=userId AND proyect_id=proyectId;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `proyects_of_member_id` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -408,6 +433,33 @@ BEGIN
 	SELECT * FROM proyects WHERE id IN (
 		SELECT proyect_id FROM proyects_members WHERE user_id = user_idVar
     );
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `proyects_tasks_insert` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `proyects_tasks_insert`(IN titleVar VARCHAR(255), IN descriptionVar VARCHAR(255), IN tagVar VARCHAR(255), IN timeVar INT, IN priorityVar INT, IN proyectId INT)
+BEGIN
+
+	DECLARE taskId INT DEFAULT 0;
+
+	INSERT INTO proyects_tasks (title, description, tag, time, priority, proyect_id) VALUES (titleVar, descriptionVar, tagVar, TimeVar, priorityVar, proyectId);
+    
+    SET taskId = last_insert_id();
+    
+    SELECT * FROM proyects_tasks WHERE id = taskId;
 
 END ;;
 DELIMITER ;
@@ -567,4 +619,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-28 12:21:10
+-- Dump completed on 2025-02-28 18:52:41

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\TaskStatusEnum;
 use App\TaskTypeEnum;
+use App\TaskUserStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -163,6 +164,36 @@ class Task extends Model
         return $tasks;
     }
 
+    public static function getByUserId($userId) {
+        $tasksDb = DB::select("CALL proyects_tasks_of_user_id(?)", [$userId]);
+        $tasks = [];
+
+        if (count($tasksDb)) {
+
+            foreach ($tasksDb as $actualTask) {
+                $task = new Task(
+                    $actualTask->id,
+                    $actualTask->title,
+                    $actualTask->description,
+                    $actualTask->tag,
+                    $actualTask->time,
+                    $actualTask->priority,
+                    $actualTask->proyect_id,
+                    $actualTask->status,
+                    $actualTask->date,
+                    TaskTypeEnum::from($actualTask->type),
+                );
+
+                $task->userStatus = $actualTask->user_status;
+
+                $tasks[] = $task;
+            }
+
+        }
+
+        return $tasks;
+    }
+
     public function getProyect() {
         if (!$this->proyectId) return null;
 
@@ -172,11 +203,61 @@ class Task extends Model
     }
 
     public function getUsers() {
+        if (!$this->id) return null;
+
+        $usersDb = DB::select("CALL users_of_proyects_tasks_id(?)", [$this->id]);
+
+        if (count($usersDb)) {
+            $users = [];
+
+            foreach ($usersDb as $actualUser) {
+                $user = new User(
+                    $actualUser->id,
+                    $actualUser->username,
+                    $actualUser->email,
+                    $actualUser->password,
+                    $actualUser->photo,
+                    $actualUser->registred
+                );
+
+                $user->taskStatus = $actualUser->status;
+
+                $users[] = $user;
+
+            }
+
+            return $users;
+
+        }
+
+        return [];
     }
 
     public function addUser(User $user) {
         if (!$this->id) return null;
         if (!$this->proyectId) return null;
+
+        $addedUser = DB::select("CALL proyects_tasks_users_insert(?,?,?)", [$user->getId(), $this->id, TaskUserStatusEnum::Todo->value]);
+
+        if (count($addedUser)) {
+            return true;
+
+        }
+
+        return false;
+    }
+
+    public function isJoined(User $user): bool {
+
+        $users = $this->getUsers();
+
+        foreach($users as $actualUser) {
+            if ($actualUser->getId() == $user->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getStatus() {
@@ -188,6 +269,42 @@ class Task extends Model
     }
 
     public function saveChanges() {
+        if(!$this->id) return null;
+        if(!$this->title || !strlen($this->title)) return null;
+        if(!$this->tag || !strlen($this->tag)) return null;
+        if(!$this->time) return null;
+        if(!$this->priority < 0) return null;
+        if(!$this->proyectId) return null;
+
+        $updatedTaskDb = DB::select("CALL proyects_tasks_update(?,?,?,?,?,?)", [$this->id, $this->title, $this->description, $this->tag, $this->time, $this->priority]);
+
+        if (count($updatedTaskDb)) {
+
+            $this->title = $updatedTaskDb[0]->title;
+            $this->description = $updatedTaskDb[0]->description;
+            $this->tag = $updatedTaskDb[0]->tag;
+            $this->time = $updatedTaskDb[0]->time;
+            $this->priority = $updatedTaskDb[0]->priority;
+            $this->status = $updatedTaskDb[0]->status;
+            $this->date = $updatedTaskDb[0]->date;
+            $this->type = TaskTypeEnum::from($updatedTaskDb[0]->type);
+
+            return new Task(
+                $this->id,
+                $updatedTaskDb[0]->title,
+                $updatedTaskDb[0]->description,
+                $updatedTaskDb[0]->tag,
+                $updatedTaskDb[0]->time,
+                $updatedTaskDb[0]->priority,
+                $updatedTaskDb[0]->proyect_id,
+                $updatedTaskDb[0]->status,
+                $updatedTaskDb[0]->date,
+                TaskTypeEnum::from($updatedTaskDb[0]->type)
+            );
+
+        } else {
+            return null;
+        }
     }
 
     public function create() {
