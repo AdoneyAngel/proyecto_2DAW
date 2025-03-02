@@ -16,7 +16,7 @@ class TaskStatus extends Model
         $this->name = $name;
 
         if ($id) {
-            $this->setStatus(TaskStatusEnum::cases()[$id]);
+            $this->setStatus(TaskStatusEnum::from($id));
         }
     }
 

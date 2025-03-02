@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Proyect\AddProyectMemberRequest;
 use App\Http\Requests\Proyect\StoreProyectRequest;
 use App\Http\Requests\Proyect\UpdateProyectRequest;
+use App\Http\Resources\MemberHistory\MemberHistoryCollection;
 use App\Http\Resources\Proyect\ProyectCollection;
 use App\Http\Resources\Proyect\ProyectResource;
 use App\Http\Resources\ProyectMember\ProyectMemberCollection;
 use App\Http\Resources\ProyectMember\ProyectMemberResource;
 use App\Http\Resources\Task\TaskCollection;
+use App\Http\Resources\TaskHistory\TaskHistoryCollection;
 use App\Models\Proyect;
 use App\Models\ProyectMember;
 use App\Models\responseUtils;
+use App\Models\TaskHistory;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -30,18 +33,10 @@ class ProyectController extends Controller
             //Load missing parameters
             $this->loadMissings($request, $proyects);
 
-            return response()->json([
-                "success" => true,
-                "data" => new ProyectCollection($proyects)
-            ]);
+            return responseUtils::successful(new ProyectCollection($proyects));
 
-        } catch (\Exception $err) {
-            error_log("Error getting proyects: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting proyects", $err);
         }
     }
 
@@ -65,27 +60,16 @@ class ProyectController extends Controller
             }
 
             if ($proyectTitleExist) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "You already have this proyect"
-                ]);
+                return responseUtils::conflict("You already have this proyect");
             }
 
             $newProyect = new Proyect(null, $request->title, $user->getId(), null);
             $newProyect->create();
 
-            return response()->json([
-                "success" => true,
-                "data" => new ProyectResource($newProyect)
-            ]);
+            return responseUtils::successful(new ProyectResource($newProyect));
 
-        } catch (\Exception $err) {
-            error_log("Error creating proyect: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error creating proyect", $err);
         }
     }
 
@@ -102,25 +86,14 @@ class ProyectController extends Controller
             if ($proyect->getOwnerId() == $user->getId() || $proyect->isMember($user->getId())) {
                 $this->loadMissing($request, $proyect);
 
-                return response()->json([
-                    "success" => true,
-                    "data" => new ProyectResource($proyect)
-                ]);
+                return responseUtils::successful(new ProyectResource($proyect));
 
             } else {
-                return response()->json([
-                    "success" => false,
-                    "You are not the owner of this proyect"
-                ], 401);
+                return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
-        } catch (\Exception $err) {
-            error_log("Error getting proyect: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting proyect", $err);
         }
     }
 
@@ -136,25 +109,14 @@ class ProyectController extends Controller
             if ($proyect->getOwnerId() == $user->getId() || $proyect->isMember($user->getId())) {
                 $members = $proyect->getMembers();
 
-                return response()->json([
-                    "success" => true,
-                    "data" => new ProyectMemberCollection($members)
-                ]);
+                return responseUtils::successful(new ProyectMemberCollection($members));
 
             } else {
-                return response()->json([
-                    "success" => false,
-                    "You are not the owner of this proyect"
-                ], 401);
+                return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
-        } catch (\Exception $err) {
-            error_log("Error getting proyect members: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting proyect members", $err);
         }
     }
 
@@ -223,6 +185,36 @@ class ProyectController extends Controller
         }
     }
 
+    /**
+     * Get members history of the proyect.
+     */
+    public function getMembersHistory(Request $request, $id) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($id);
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //Request user is owner/member of proyect
+            if ($proyect->getOwnerId() != $reqUser->getId() && !$proyect->isMember($reqUser->getId())) {
+                return responseUtils::unAuthorized("You are not owner/member of this proyect");
+            }
+
+            $history = $proyect->getMembersHistory();
+
+            return responseUtils::successful(new MemberHistoryCollection($history));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting member history, ProyectController", $err);
+        }
+    }
+
+    /**
+     * Get the task list of the proyect.
+     */
     public function getTasks(Request $request, $proyectId) {
         try {
             $user = $request["user"];
@@ -243,7 +235,34 @@ class ProyectController extends Controller
             return responseUtils::successful(new TaskCollection($tasks));
 
         } catch (Exception $err) {
-            return responseUtils::serverError("Error gettings tasks of proyect, ProyectController: ". $err->getMessage());
+            return responseUtils::serverError("Error gettings tasks of proyect, ProyectController", $err);
+        }
+    }
+
+    /**
+     * Get tasks history of the proyect.
+     */
+    public function getTasksHistory(Request $request, $proyectId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //Request user is owner/member of proyect
+            if ($proyect->getOwnerId() != $reqUser->getId() && !$proyect->isMember($reqUser->getId())) {
+                return responseUtils::unAuthorized("You are not owner/member of this proyect");
+            }
+
+            $history = TaskHistory::getByProyectId($proyect->getId());
+
+            return responseUtils::successful(new TaskHistoryCollection($history));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting tasks history of proyect, ProyectController", $err);
         }
     }
 
@@ -307,13 +326,8 @@ class ProyectController extends Controller
                 "data" => new ProyectResource($proyect)
             ]);
 
-        } catch (\Exception $err) {
-            error_log("Error updating proyect: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error updating proyect", $err);
         }
     }
 

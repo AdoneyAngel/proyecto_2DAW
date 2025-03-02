@@ -240,15 +240,59 @@ class Proyect extends Model
     }
 
     public function getMemberById($id) {
+        if (!$this->id) return null;
+
+        $userDb = DB::select("CALL users_of_proyect_id_user_id(?,?)", [$id, $this->id]);
+
+        if (count($userDb)) {
+            return new ProyectMember(
+                $userDb[0]->id,
+                $userDb[0]->username,
+                $userDb[0]->email,
+                $userDb[0]->password,
+                $userDb[0]->photo,
+                $userDb[0]->registred,
+                $userDb[0]->status,
+                $userDb[0]->effective_time,
+                $this->id
+            );
+        }
+
+        return null;
     }
 
     public function getMemberByEmail(string $email) {
+        if (!$this->id) return null;
+
+        $userDb = DB::select("CALL users_of_proyect_id_user_email(?,?)", [$email, $this->id]);
+
+        if (count($userDb)) {
+            return new ProyectMember(
+                $userDb[0]->id,
+                $userDb[0]->username,
+                $userDb[0]->email,
+                $userDb[0]->password,
+                $userDb[0]->photo,
+                $userDb[0]->registred,
+                $userDb[0]->status,
+                $userDb[0]->effective_time,
+                $this->id
+            );
+        }
+
+        return null;
     }
 
     public function getTasksHistory() {
+        if (!$this->id) return null;
     }
 
     public function getMembersHistory() {
+        if (!$this->id) return null;
+
+        $history = MemberHistory::getByProyectId($this->id);
+
+        return $history;
     }
 
     public function isMember($userId) {

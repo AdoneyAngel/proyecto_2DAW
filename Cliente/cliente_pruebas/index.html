@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="loginForm">
+        <input id="loginEmail" type="email" placeholder="email">
+        <input id="loginPassword" type="password" placeholder="password">
+        <button type="submit">Login</button>
+    </form>
+    <button onclick="usuarios()" id="users">Cargar usuarios</button>
+
+    <h1>Foto</h1>
+    <input id="fotoFile" type="file">
+    <button onclick="subirFoto()" type="submit">Subir</button>
+    <button onclick="verFoto()">Ver foto</button>
+    <img src="" id="photo" alt="">
+
+    <script>
+        const url = 'http://127.0.0.1:8000/api'
+
+        const loginForm = document.getElementById("loginForm")
+
+        loginForm.addEventListener("submit", async e => {
+            e.preventDefault()
+
+            const emailInput = document.getElementById("loginEmail")
+            const passwordInput = document.getElementById("loginPassword")
+
+            const res = await fetch(url+"/login",{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: "include",
+                body: JSON.stringify({email: emailInput.value, password: passwordInput.value})
+            })
+
+            const resJson = await res.json()
+
+            console.log(resJson)
+
+        })
+
+        async function usuarios() {
+            const res = await fetch(url+"/v1/users", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Accept": "application/json"
+                },
+                credentials: "include"
+            })
+
+            const resJson = await res.json()
+
+            console.log(resJson)
+        }
+
+        async function subirFoto () {
+            const fotoInput = document.getElementById("fotoFile")
+
+            const formData = new FormData()
+
+            formData.append("photo", fotoInput.files[0])
+
+            console.log(formData)
+
+            const res = await fetch(`${url}/v1/users/0/photo`, {
+                method: "POST",
+                credentials: "include",
+                body: formData
+            })
+
+            const resJson = await res.json()
+
+            console.log(resJson)
+        }
+
+        async function verFoto() {
+            const photoImg = document.getElementById("photo")
+
+            const res = await fetch(url+"/v1/users/0/photo", {
+                method: "GET",
+                credentials: "include"
+            });
+
+            const resBlob = await res.blob();
+            
+            photoImg.src = URL.createObjectURL(resBlob)
+        }
+    </script>
+
+</body>
+</html>

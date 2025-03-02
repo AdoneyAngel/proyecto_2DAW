@@ -107,13 +107,13 @@ class Task extends Model
 
     //Methods
     public static function getAll (){
-        $tasks = self::selectQuery();
+        $tasks = static::selectQuery();
 
         return $tasks;
     }
 
     public static function getById($id) {
-        $tasks = self::selectQuery(["id" => $id]);
+        $tasks = static::selectQuery(["id" => $id]);
 
         if (count($tasks)) {
             return $tasks[0];
@@ -123,43 +123,43 @@ class Task extends Model
     }
 
     public static function getByTitle($title) {
-        $tasks = self::selectQuery(["title" => $title]);
+        $tasks = static::selectQuery(["title" => $title]);
 
         return $tasks;
     }
 
     public static function getByDescription($description) {
-        $tasks = self::selectQuery(["description" => $description]);
+        $tasks = static::selectQuery(["description" => $description]);
 
         return $tasks;
     }
 
     public static function getByTag($tag) {
-        $tasks = self::selectQuery(["tag" => $tag]);
+        $tasks = static::selectQuery(["tag" => $tag]);
 
         return $tasks;
     }
 
     public static function getByTime($time) {
-        $tasks = self::selectQuery(["time" => $time]);
+        $tasks = static::selectQuery(["time" => $time]);
 
         return $tasks;
     }
 
     public static function getByPriority($priority) {
-        $tasks = self::selectQuery(["priority" => $priority]);
+        $tasks = static::selectQuery(["priority" => $priority]);
 
         return $tasks;
     }
 
     public static function getByStatusId($statusId) {
-        $tasks = self::selectQuery(["status" => $statusId]);
+        $tasks = static::selectQuery(["status" => $statusId]);
 
         return $tasks;
     }
 
     public static function getByProyectId($proyectId) {
-        $tasks = self::selectQuery(["proyect_id" => $proyectId]);
+        $tasks = static::selectQuery(["proyect_id" => $proyectId]);
 
         return $tasks;
     }
@@ -233,6 +233,12 @@ class Task extends Model
         return [];
     }
 
+    public function loadUsers() {
+        $users = $this->getUsers();
+
+        $this->users = $users;
+    }
+
     public function addUser(User $user) {
         if (!$this->id) return null;
         if (!$this->proyectId) return null;
@@ -268,6 +274,19 @@ class Task extends Model
         return $status;
     }
 
+    public function getStatusByUser(User $user) {
+        if (!$this->id) return null;
+
+        $statusDb = DB::select("CALL proyects_tasks_user_status_of_proyects_tasks_id_users_id(?,?)", [$this->id, $user->getId()]);
+
+        if (count($statusDb)) {
+            return new TaskStatus($statusDb[0]->id, $statusDb[0]->name);
+        }
+
+        return null;
+
+    }
+
     public function saveChanges() {
         if(!$this->id) return null;
         if(!$this->title || !strlen($this->title)) return null;
@@ -276,7 +295,7 @@ class Task extends Model
         if(!$this->priority < 0) return null;
         if(!$this->proyectId) return null;
 
-        $updatedTaskDb = DB::select("CALL proyects_tasks_update(?,?,?,?,?,?)", [$this->id, $this->title, $this->description, $this->tag, $this->time, $this->priority]);
+        $updatedTaskDb = DB::select("CALL proyects_tasks_update(?,?,?,?,?,?,?)", [$this->id, $this->title, $this->description, $this->tag, $this->time, $this->priority, $this->statusId]);
 
         if (count($updatedTaskDb)) {
 
@@ -286,6 +305,7 @@ class Task extends Model
             $this->time = $updatedTaskDb[0]->time;
             $this->priority = $updatedTaskDb[0]->priority;
             $this->status = $updatedTaskDb[0]->status;
+            $this->statusId = $updatedTaskDb[0]->status;
             $this->date = $updatedTaskDb[0]->date;
             $this->type = TaskTypeEnum::from($updatedTaskDb[0]->type);
 
@@ -347,21 +367,53 @@ class Task extends Model
     }
 
     public function delete() {
+        if (!$this->id) return null;
+
+        $taskDeleted = DB::statement("CALL proyects_tasks_delete(?)", [$this->id]);
+
+        return $taskDeleted;
+
     }
 
     public function addComment() {
     }
 
+    public function setNextStatus() {
+        if (!$this->id) return null;
+        if (!$this->statusId) return null;
+
+        $newStatus = TaskStatusEnum::tryFrom($this->statusId+1);
+
+        if ($newStatus) {
+            $newStatus = $newStatus->value;
+            $this->statusId = $newStatus;
+        }
+
+        $this->saveChanges();
+
+        return $newStatus;
+    }
+
     public static function selectQuery(array $whereValues = null) {
-        $queryString = "SELECT * FROM proyects_tasks ";
-        $queryValues = [];
+        $queryString = "SELECT * FROM proyects_tasks WHERE type=? ";
+        $queryValues = [TaskTypeEnum::Task->value];
 
         if ($whereValues && count($whereValues)) {
-            $queryString = "SELECT * FROM proyects_tasks WHERE ";
+            $queryString = "SELECT * FROM proyects_tasks WHERE type=? AND ";
+
+            $nWhereValues = 0;
 
             foreach ($whereValues as $actualWhereAttr => $actualWhereValue) {
-                $queryString .= (string)$actualWhereAttr ."=? ";
+                if ($nWhereValues) {
+                    $queryString .= (string)$actualWhereAttr ."=? AND";
+
+                } else {
+                    $queryString .= (string)$actualWhereAttr ."=? ";
+                }
+
                 $queryValues[] = (string)$actualWhereValue;
+
+                $nWhereValues++;
             }
         }
 

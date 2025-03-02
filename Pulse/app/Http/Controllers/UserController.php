@@ -13,6 +13,7 @@ use App\Models\responseUtils;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -85,28 +86,16 @@ class UserController extends Controller
             $userToken = $userLogin->login();
 
             if ($userToken) {
-                $tokenCookie = cookie("access_token", $userToken, 60*24, null, null, true, true);
+                $tokenCookie = cookie('access_token', $userToken, 60*24, '/', null, false, false, false, false);
 
-                return response()->json([
-                    "success" => true,
-                    "data" => new UserResource($userLogin),
-                    "token" => $userToken
-                ])->withCookie($tokenCookie);
+                return responseUtils::successful(new UserResource($userLogin))->withCookie($tokenCookie);
 
             } else {
-                return response()->json([
-                    "success" => false,
-                    "error" => "Invalid email or password"
-                ], 401);
+                return responseUtils::invalidParams("Invalid email or password");
             }
 
-        } catch (\Exception $err) {
-            error_log("Error login user: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error login user", $err);
         }
     }
 
@@ -269,7 +258,56 @@ class UserController extends Controller
             return responseUtils::successful(new TaskCollection($tasks));
 
         } catch (Exception $err) {
-            return responseUtils::serverError("Error gettings users tasks, UserController: ". $err->getMessage());
+            return responseUtils::serverError("Error gettings users tasks, UserController", $err);
+        }
+    }
+
+    public function uploadPhoto(Request $request, $userId) {
+        try {
+
+            if (!$request->hasFile("photo")) {
+                return responseUtils::invalidParams("Missing photo");
+            }
+
+            $reqUser = $request["user"];
+            $user = $reqUser;
+
+            $uploadedPhoto = $request->file("photo");
+            $uploadedPhoto->move(Storage::disk("photos")->path("/".$user->getId()), "photo.".$uploadedPhoto->getClientOriginalExtension());
+
+            $photoPath = $user->getId()."/photo.".$uploadedPhoto->getClientOriginalExtension();
+
+            //Update photo path on DB
+            $user->setPhoto($photoPath);
+            $user->saveChanges();
+
+            return responseUtils::successful(new UserResource($reqUser));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error uploading photo, UserController", $err);
+        }
+    }
+
+    public function getPhoto(Request $request, $userId) {
+        try {
+            $reqUser = $request["user"];
+            $user = $userId ? User::getById($userId) : $reqUser;
+
+            //User exist
+            if (!$user) {
+                return responseUtils::notFound("User not found");
+            }
+
+            $photoExist = Storage::disk("photos")->exists($user->getPhoto());
+
+            if (!$photoExist) {
+                return responseUtils::successful(null);
+            }
+
+            return responseUtils::file(Storage::disk("photos")->path($user->getPhoto()));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting user photo, UserController", $err);
         }
     }
 }
