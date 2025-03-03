@@ -1,0 +1,7 @@
+<div id="notification">
+  @for (notificationItem of notifications; track $index) {
+    @if (notificationItem.type === "error") {
+      <div id="notificationItem" class="error">{{notificationItem.message}}</div>
+    }
+  }
+</div>

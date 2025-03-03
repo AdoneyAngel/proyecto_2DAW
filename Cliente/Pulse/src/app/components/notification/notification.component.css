@@ -1,0 +1,29 @@
+#notification {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+#notification div {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px 0;
+  animation: showAni .2s ease-out;
+}
+
+#notification .error {
+  border: 2px solid var(--red-color);
+  background-color: var(--secondary-color);
+  box-shadow: 0px 0px 10px -5px var(--red-color);
+}
+
+@keyframes showAni {
+  0% {
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}

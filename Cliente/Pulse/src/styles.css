@@ -1,1 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  color-scheme: dark;
+  --secondary-color: #1E1E1E;
+  --tr-secondary-color: #1f1f1f83;
+  --tertiary-color: #2C2723;
+  --dark-color: #121212;
+  --light-color: #a0a0a0;
+  --hg-padding: 35px;
+  --md-padding: 20px;
+  --md-border-radius: 10px;
+  --lg-border-radius: 5px;
+  --link-color: #af835e;
+  --red-color: #a12e00;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  outline: none;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+label {
+  color: rgba(255, 255, 255, 0.589);
+  padding: 0 10px;
+}
+
+html, body {
+  background: black;
+}
+
+html {
+  padding: 5px;
+}
+
+input {
+  border-radius: var(--lg-border-radius);
+  border: 2px solid var(--tertiary-color);
+  padding: 5px 10px;
+  background-color: var(--dark-color);
+}
+
+button {
+  padding: 5px;
+  display: inline;
+  border: 1px solid var(--tertiary-color);
+  border-radius: var(--lg-border-radius);
+  background-color: var(--secondary-color);
+  cursor: pointer;
+}
+
+a {
+  color: var(--link-color);
+}

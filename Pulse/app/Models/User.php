@@ -276,6 +276,69 @@ class User extends Model
 
     }
 
+    public static function searchByUsername(string $username) {
+        $usersDb = DB::select("CALL users_search_username(?)", [$username]);
+
+        $users = [];
+
+        if (count($usersDb)) {
+            foreach ($usersDb as $user) {
+                $users[] = new User(
+                    $user->id,
+                    $user->username,
+                    $user->email,
+                    $user->password,
+                    $user->photo,
+                    $user->registred
+                );
+            }
+        }
+
+        return $users;
+    }
+
+    public static function searchByEmail(string $email) {
+        $usersDb = DB::select("CALL users_search_email(?)", [$email]);
+
+        $users = [];
+
+        if (count($usersDb)) {
+            foreach ($usersDb as $user) {
+                $users[] = new User(
+                    $user->id,
+                    $user->username,
+                    $user->email,
+                    $user->password,
+                    $user->photo,
+                    $user->registred
+                );
+            }
+        }
+
+        return $users;
+    }
+
+    public static function search(string $info) {
+        $usersDb = DB::select("CALL users_search(?)", [$info]);
+
+        $users = [];
+
+        if (count($usersDb)) {
+            foreach ($usersDb as $user) {
+                $users[] = new User(
+                    $user->id,
+                    $user->username,
+                    $user->email,
+                    $user->password,
+                    $user->photo,
+                    $user->registred
+                );
+            }
+        }
+
+        return $users;
+    }
+
     private function genToken() {
         $validToken = false;
         $newToken = "";

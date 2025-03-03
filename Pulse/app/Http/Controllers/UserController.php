@@ -20,20 +20,45 @@ class UserController extends Controller
     /**
      * Display all of users.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $users = User::getAll();
+            $users = null;
 
-            return response()->json(new UserCollection($users));
+            //Search username param
+            if ($request->query("username")) {
+                $users = User::searchByUsername($request->query("username"));
 
-        } catch (\Exception $err) {
-            error_log("Error getting users: ". $err->getMessage());
+            } else if ($request->query("email")) {
+                $users = User::searchByEmail($request->query("email"));
 
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+            } else {
+                $users = User::getAll();
+            }
+
+            return responseUtils::successful(new UserCollection($users));
+
+        } catch (Exception $err) {
+            responseUtils::serverError("Error getting users", $err);
+        }
+    }
+
+    /**
+     * Search user with the username y email.
+     */
+    public function searchUser(Request $request) {
+        try {
+            //Its necessary to send "info" param
+            if (!$request->query("info")) {
+                return responseUtils::invalidParams("Missing info parameter");
+            }
+
+            $users = User::search($request->query("info"));
+
+            return responseUtils::successful(new UserCollection($users));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error searching user with username/email, UserController", $err);
         }
     }
 
@@ -109,7 +134,7 @@ class UserController extends Controller
             $userWithEmail = User::getByEmail($request->email);
 
             if (count($userWithEmail)) {
-                return response("The email is already in use", 409);
+                return responseUtils::conflict("The email is already in use");
             }
 
             $newUser = new User(null, $request->username, $request->email, $request->password, $request->photo ?? null);
@@ -119,19 +144,10 @@ class UserController extends Controller
 
             $tokenCookie = cookie("access_token", $userToken, 60*24, null, null, true, true);
 
-            return response()->json([
-                "success" => true,
-                "data" => new UserResource($newUser),
-                "token" => $userToken
-            ], 201)->withCookie($tokenCookie);
+            return responseUtils::successful(new UserResource($newUser))->withCookie($tokenCookie);
 
-        } catch (\Exception $err) {
-            error_log("Error creating user: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            responseUtils::serverError("Error creating user", $err);
         }
     }
 
@@ -217,26 +233,15 @@ class UserController extends Controller
             $user = $request["user"] ?? $userId;
 
             if (!$user) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "User not found"
-                ], 404);
+                return responseUtils::notFound("User not found");
             }
 
             $proyects = $user->getIncludedProyects();
 
-            return response()->json([
-                "success" => true,
-                "data" => new ProyectCollection($proyects)
-            ]);
+            return responseUtils::successful(new ProyectCollection($proyects));
 
-        } catch (\Exception $err) {
-            error_log("Error getting proyects of user: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            responseUtils::serverError("Error getting proyects of user", $err);
         }
     }
 
