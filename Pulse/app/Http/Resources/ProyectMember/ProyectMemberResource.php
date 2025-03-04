@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\ProyectMember;
 
+use App\Http\Resources\Proyect\ProyectResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,7 +15,7 @@ class ProyectMemberResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $resource = [
             "id" => $this->getId(),
             "username" => $this->getUserName(),
             "email" => $this->getEmail(),
@@ -24,5 +25,11 @@ class ProyectMemberResource extends JsonResource
             "effectiveTime" => $this->getEffectiveTime(),
             "proyectId" => $this->getProyectId()
         ];
+
+        if ($this->getProyect()) {
+            $resource["proyect"] = new ProyectResource($this->getProyect());
+        }
+
+        return $resource;
     }
 }

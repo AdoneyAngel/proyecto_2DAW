@@ -1,3 +1,15 @@
+<head>
+  <title>{{title}}</title>
+</head>
+
+@if(visibleAccept) {
+  <app-accept [closeCallback]="hideAccept.bind(this)" [callback]="acceptCallback.bind(this)" />
+}
+
+@if(visibleOptions) {
+  <app-options [closeCallback]="hideOptions.bind(this)" title="{{optionsTitle}}" [buttons]="optionsButtons"/>
+}
+
 <app-notification [notifications]="notificationList" />
 
 <router-outlet></router-outlet>

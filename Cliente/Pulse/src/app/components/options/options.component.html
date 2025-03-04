@@ -1,0 +1,13 @@
+<app-popup-background [closeCallback]="closeCallback.bind(this)">
+
+  <div id="acceptBox">
+    <h1>{{title}}</h1>
+
+    <div id="options">
+      @for (button of buttons; track $index) {
+        <button class="{{button.type}}" (click)="actionAndClose(button.action)">{{button.name}}</button>
+      }
+    </div>
+  </div>
+
+</app-popup-background>

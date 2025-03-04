@@ -6,12 +6,12 @@ import { SignupComponent } from './view/signup/signup.component';
 
 const dashboardRoutes = {
   path: "dashboard",
-  title: "Dashboard",
+  data: {title: "dashboard"},
   loadComponent: () => DashboardComponent,
   children: [
     {
       path: "board",
-      title: "Board",
+      data: {title: "board"},
       loadComponent: () => BoardComponent
     },
     // {

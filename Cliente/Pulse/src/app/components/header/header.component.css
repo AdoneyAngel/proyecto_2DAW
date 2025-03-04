@@ -1,0 +1,43 @@
+header {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+header div {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+  padding: var(--lg-padding);
+  padding: var(--xlg-padding) var(--lg-padding);
+}
+
+section#logo {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+section#logo img {
+  height: calc(100% - var(--md-padding));
+}
+
+section#routes {
+  display: flex;
+  align-items: center;
+}
+
+.link {
+  color: white;
+  margin: 0 23px;
+  text-decoration: none;
+  font-size: 1.5rem;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+.link:first-child {
+  margin-left: 35px;
+}
+
+#arrow {
+  opacity: .5;
+}

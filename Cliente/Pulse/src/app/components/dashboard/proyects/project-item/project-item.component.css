@@ -1,0 +1,27 @@
+#user {
+  margin-left: auto;
+  font-size: 1em;
+  opacity: .6;
+  font-style: oblique;
+  text-align: right;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#user .email {
+  opacity: .6;
+}
+
+#date {
+  top: 20px;
+  right: 20px;
+  opacity: .5;
+  position: absolute;
+  text-align: right;
+}
+
+#membersList {
+  padding: 10px 15px;
+  font-size: .8rem;
+}

@@ -22,14 +22,20 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
     Route::get("/users/{id}/tasks", [UserController::class, "getTasks"]);
     Route::get("/users/{id}/photo", [UserController::class, "getPhoto"]);
     Route::post("/users/{id}/photo", [UserController::class, "uploadPhoto"]);
+    Route::get("/users/{id}/pendingRequests", [UserController::class, "getUserPendingJoin"]);
 
     //----Proyects
     Route::apiResource("/proyects", ProyectController::class);
     Route::get("/proyects/{id}/members", [ProyectController::class, "getMembers"]);
     Route::post("/proyects/{id}/members", [ProyectController::class, "addMember"]);
+    Route::get("/proyects/{id}/members/{memberId}", [ProyectController::class, "showMember"]);
+    Route::put("/proyects/{id}/members/{memberId}", [ProyectController::class, "updateMember"]);
     Route::get("/proyects/{id}/tasks", [ProyectController::class, "getTasks"]);
     Route::get("/proyects/{id}/membersHistory", [ProyectController::class, "getMembersHistory"]);
     Route::get("/proyects/{id}/tasksHistory", [ProyectController::class, "getTasksHistory"]);
+    Route::get("/proyects/{id}/pendingRequests", [ProyectController::class, "getUserPendingJoinOfProyect"]);
+    Route::put("/acceptRequest/{proyectId}", [ProyectController::class, "acceptProyectRequest"]);
+    Route::put("/rejectRequest/{proyectId}", [ProyectController::class, "rejectProyectRequest"]);
 
     //----Tasks
     Route::apiResource("/tasks", TaskController::class);

@@ -1,0 +1,32 @@
+#popupBackground {
+  background: rgba(0, 0, 0, 0.479);
+  backdrop-filter: blur(var(--md-blur));
+  width: 100%;
+  height: calc(100dvh - var(--hg-padding));
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  padding-top: var(--hg-padding);
+  animation: .3s showAni ease-in-out;
+}
+#closeBackground {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+@keyframes showAni {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(var(--md-blur));
+  }
+}

@@ -1,0 +1,7 @@
+<app-main-content-box title="invitations">
+
+  @for (invitation of invitations; track $index) {
+    <app-invitation-item [invitation]="invitation"/>
+  }
+
+</app-main-content-box>

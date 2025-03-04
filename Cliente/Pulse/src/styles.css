@@ -1,17 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
   color-scheme: dark;
+  --primary-color: #BC6F31;
   --secondary-color: #1E1E1E;
   --tr-secondary-color: #1f1f1f83;
   --tertiary-color: #2C2723;
   --dark-color: #121212;
   --light-color: #a0a0a0;
+  --grey-color: #262626;
+  --green-color: #85a727;
   --hg-padding: 35px;
   --md-padding: 20px;
+  --lg-padding: 10px;
+  --xlg-padding: 5px;
   --md-border-radius: 10px;
   --lg-border-radius: 5px;
   --link-color: #af835e;
   --red-color: #a12e00;
+  --md-blur: 3px;
+
+  /* Dashboard */
+  --ds-background-color: var(--secondary-color);
+  --ds-padding: var(--lg-padding) var(--md-padding);
+  --ds-border-radius: var(--md-border-radius);
+  --ds-border: 2px solid var(--light-color);
+  --ds-overflow: hidden;
 }
 
 * {
@@ -39,22 +52,27 @@ html {
   padding: 5px;
 }
 
-input {
+input, .input {
   border-radius: var(--lg-border-radius);
   border: 2px solid var(--tertiary-color);
   padding: 5px 10px;
   background-color: var(--dark-color);
 }
 
-button {
+button, .button{
   padding: 5px;
   display: inline;
   border: 1px solid var(--tertiary-color);
   border-radius: var(--lg-border-radius);
   background-color: var(--secondary-color);
   cursor: pointer;
+  user-select: none;
 }
 
-a {
+button:hover, .button:hover {
+  filter: brightness(.9);
+}
+
+a, .a {
   color: var(--link-color);
 }

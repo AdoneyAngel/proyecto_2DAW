@@ -1,0 +1,32 @@
+body {
+  display: grid;
+  grid-template-columns: 20% 1fr;
+  grid-template-rows: 55px 1fr;
+  grid-gap: 20px;
+}
+
+#header {
+  grid-column: span 2;
+}
+
+.section {
+  background: var(--secondary-color);
+  border-radius: var(--md-border-radius);
+  border: 2px solid var(--tertiary-color);
+}
+.section > h1 {
+  text-transform: capitalize;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  margin-left: 20px;
+  font-size: 2rem;
+}
+
+body {
+  padding: 20px;
+  height: calc(100dvh - 60px);
+}
+
+main {
+  padding: var(--md-padding);
+}

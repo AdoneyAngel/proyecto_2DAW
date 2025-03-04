@@ -1,3 +1,29 @@
-<p>dashboard works!</p>
+<body>
 
-<router-outlet></router-outlet>
+  <div class="section" id="header">
+    <app-header [routes]="routes" />
+  </div>
+
+  <div class="section" id="lateralBar">
+    <app-lateral-bar />
+  </div>
+
+  <main class="section">
+    <h1>{{title}}</h1>
+
+    @if (isOnDashboard) {
+
+      @if (invitations.length) {
+        <app-invitations [invitations]="invitations"/>
+      }
+
+      @if (projects.length) {
+        <app-projects [projects]="projects"/>
+      }
+
+    } @else {
+      <router-outlet></router-outlet>
+    }
+  </main>
+
+</body>

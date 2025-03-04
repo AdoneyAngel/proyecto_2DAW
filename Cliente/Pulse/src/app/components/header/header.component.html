@@ -1,0 +1,27 @@
+<header>
+
+  <div>
+
+    <section id="logo">
+      <img src="assets/images/Logo.svg" alt="">
+    </section>
+
+    <section id="routes">
+      @for (route of routes; track $index) {
+        @if (!$first) {
+          <img id="arrow" src="assets/images/arrow_white.png">
+        }
+
+        @if ($last) {
+          <a class="link">{{route.title}}</a>
+
+        } @else {
+          <a class="link" href="{{route.url}}">{{route.title}}</a>
+        }
+
+      }
+    </section>
+
+  </div>
+
+</header>

@@ -83,6 +83,11 @@ class ProyectController extends Controller
 
             $proyect = Proyect::getById($id);
 
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
             if ($proyect->getOwnerId() == $user->getId() || $proyect->isMember($user->getId())) {
                 $this->loadMissing($request, $proyect);
 
@@ -337,13 +342,184 @@ class ProyectController extends Controller
     public function destroy(string $id) {
     }
 
-    private function loadMissings(Request $request, &$proyects) {            //Load missing parameters
+    /**
+     * Get the pendings proyect join requests of the proyect
+     */
+    public function getUserPendingJoinOfProyect(Request $request, $proyectId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //User is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You are not the owner of the proyect");
+            }
+
+            $pendingRequests = ProyectMember::getPendingProyectMemberRequestByProyectId($proyect->getId());
+
+            return responseUtils::successful(new ProyectMemberCollection($pendingRequests));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting pending join request of proyect, ProyectController", $err);
+        }
+    }
+
+    /**
+     * Get the member of the proyect, only if he's joined
+     */
+    public function showMember(Request $request, $id, $memberId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($id);
+            $member = null;
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            $member = ProyectMember::getByMemberIdProyectId($memberId, $proyect->getId());
+            //Request user is owner/member of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId() && !$proyect->isMember($reqUser->getId())) {
+                return responseUtils::unAuthorized("You cant access to this proyect");
+            }
+
+            //Member exist
+            if (!$member) {
+                return responseUtils::notFound("Member not found");
+            }
+
+            //The user found is member
+            if (!$proyect->getId() == $member->getProyectId()) {
+                return responseUtils::notFound("Member not found");
+            }
+
+            return responseUtils::successful(new ProyectMemberResource($member));
+
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting an especific member on proyect, ProyectController", $err);
+        }
+    }
+
+    /**
+     * Update the member of the proyect
+     */
+    public function updateMember(Request $request, $id, $memberId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($id);
+            $member = null;
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("ProyectNotFound");
+            }
+
+            //Request user is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You are unauthorized to modify members on this proyect");
+            }
+
+            $member = ProyectMember::getByMemberIdProyectId($memberId, $proyect->getId());
+
+            //Member exist
+            if (!$member) {
+                return responseUtils::notFound("Member not found");
+            }
+
+            //Changes
+            if ($request->status) {
+                $member->setStatus($request->status);
+            }
+            if ($request->effectiveTime) {
+                $member->setEffectiveTime($request->effectiveTime);
+            }
+
+            $member->saveMemberChanges();
+
+            return responseUtils::successful(new ProyectMemberResource($member));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error updating member, ProyectController", $err);
+        }
+    }
+
+    public function acceptProyectRequest(Request $request, $proyectId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+            $member = null;
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            $member = ProyectMember::getByMemberIdProyectId($reqUser->getId(), $proyect->getId());
+
+            //The request user is the same who receved
+            if ($member->getProyectId() != $proyect->getId()) {
+                return responseUtils::unAuthorized("Can't accept this request");
+            }
+
+            //The request is on waiting status
+            if ($member->getStatus() != 0) {
+                return responseUtils::unAuthorized("Can't accept this request");
+            }
+
+            //Changes
+            $member->setStatus(1);
+            $member->saveMemberChanges();
+
+            return responseUtils::successful(new ProyectMemberResource($member));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error accepting join request, ProyectController", $err);
+        }
+    }
+
+    public function rejectProyectRequest(Request $request, $proyectId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+            $member = null;
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            $member = ProyectMember::getByMemberIdProyectId($reqUser->getId(), $proyect->getId());
+
+            //The request user is the same who receved
+            if ($member->getProyectId() != $proyect->getId()) {
+                return responseUtils::unAuthorized("Can't reject this request");
+            }
+
+            //Changes
+            $member->setStatus(-1);
+            $member->saveMemberChanges();
+
+            return responseUtils::successful(new ProyectMemberResource($member));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error rejecting join request, ProyectController", $err);
+        }
+    }
+
+    public function loadMissings(Request $request, &$proyects) {            //Load missing parameters
         foreach ($proyects as $proyect) {
             $this->loadMissing($request, $proyect);
         }
     }
 
-    private function loadMissing(Request $request, &$proyect) {            //Load missing parameters
+    public function loadMissing(Request $request, &$proyect) {            //Load missing parameters
         if ($request->query("members")) {
             $proyect->loadMembers();
         }

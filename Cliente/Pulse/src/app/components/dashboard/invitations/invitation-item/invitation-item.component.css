@@ -1,0 +1,14 @@
+#user {
+  margin-left: auto;
+  font-size: 1em;
+  opacity: .6;
+  font-style: oblique;
+  text-align: right;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#user .email {
+  opacity: .6;
+}

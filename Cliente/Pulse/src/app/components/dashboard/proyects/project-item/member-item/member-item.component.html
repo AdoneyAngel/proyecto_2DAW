@@ -1,0 +1,10 @@
+<div id="memberItem">
+  @if (userPhoto) {
+    <img id="memberIcon" [src]="userPhoto">
+
+  } @else {
+    <img id="memberIcon" src="/assets/images/user_white.png">
+  }
+
+  <p>{{user.username}} <span id="email"> - {{user.email}}</span></p>
+</div>
