@@ -1,0 +1,43 @@
+#item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  grid-column: 3;
+}
+#item.assigned {
+  border-color: var(--primary-color);
+  opacity: .5;
+}
+#item.unssigned img {
+  top: 0;
+  left: 0;
+  transform: translate(-27%, -25%);
+  width: 50px;
+}
+#item img {
+  width: 30px;
+  position: absolute;
+  left: 10px;
+}
+
+#item p {
+  display: flex;
+  align-items: center;
+}
+
+#item #content {
+  text-transform: capitalize;
+  padding-left: 30px;
+}
+
+#item #description {
+  font-size: .9em;
+  margin-left: 10px;
+  opacity: .7;
+}
+
+#item #date {
+  margin-left: auto;
+  opacity: .7;
+  font-size: .9em;
+}

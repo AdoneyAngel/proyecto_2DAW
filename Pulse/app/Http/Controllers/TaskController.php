@@ -554,17 +554,21 @@ class TaskController extends Controller
         return $this->destroy($request, $id);
     }
 
-    private function loadMissings(Request $request, &$tasks)
+    public function loadMissings(Request $request, &$tasks)
     {            //Load missing parameters
         foreach ($tasks as $task) {
             $this->loadMissing($request, $task);
         }
     }
 
-    private function loadMissing(Request $request, &$task)
-    {            //Load missing parameters
+    public function loadMissing(Request $request, &$task)
+    {
+        //Load missing parameters
         if ($request->query("users")) {
             $task->loadUsers();
+        }
+        if ($request->query("proyect")) {
+            $task->loadProyect();
         }
     }
 }

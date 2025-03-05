@@ -48,20 +48,24 @@ export class AppComponent {
       .pipe(filter(event => event instanceof NavigationEnd))  // Filtramos solo los eventos de finalización de navegación
       .subscribe(async e => {
         //Check if the user is logged
-        const logged = await isLogged()
-        const routeTitle = this.getTitle();
+        await isLogged()
+        .then(logged => {
+          const routeTitle = this.getTitle();
 
-        this.title = "Pulse - " + routeTitle
+          this.title = "Pulse - " + routeTitle
 
-        //Save the route titles
-        this.routeHistory = this.getRouteInfo(this.activatedRoute.root, '');
+          //Save the route titles
+          this.routeHistory = this.getRouteInfo(this.activatedRoute.root, '');
 
-        if (!logged) {
-          if (routeTitle !== "login" && routeTitle !== "signup") {
-            this.router.navigate(["/login"])
+          if (!logged.success) {
+            if (routeTitle !== "login" && routeTitle !== "signup") {
+              this.router.navigate(["/login"])
+            }
+
+          } else {
+            this.user = logged.data
           }
-        }
-
+        })
       });
   }
 
@@ -163,6 +167,10 @@ export class AppComponent {
     return this.routeHistory
   }
 
+  getUser() {
+    return this.user
+  }
+
   // Función que recorre las rutas activas y obtiene el título
   getTitle(): string {
     let route = this.activatedRoute.root;  // Obtenemos la raíz de la ruta actual
@@ -173,5 +181,15 @@ export class AppComponent {
     const title = route.snapshot.data['title'];  // Accedemos al título desde los datos de la ruta
 
     return title
+  }
+
+  async onRouteChanges(callback:VoidFunction) {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))  // Filtramos solo los eventos de finalización de navegación
+      .subscribe(async e => {
+
+        callback()
+
+      });
   }
 }

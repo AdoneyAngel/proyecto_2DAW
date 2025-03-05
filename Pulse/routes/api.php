@@ -5,13 +5,12 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\userTokenAuthMiddleware;
 use App\Models\responseUtils;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
 
 
 Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class], function () {
-    Route::get("/isLogged", function () {
-        return responseUtils::successful(true);
-    });
+    Route::get("/isLogged", [UserController::class, "isLogged"]);
 
     //----users
     Route::apiResource("/users", UserController::class);
@@ -36,6 +35,7 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
     Route::get("/proyects/{id}/pendingRequests", [ProyectController::class, "getUserPendingJoinOfProyect"]);
     Route::put("/acceptRequest/{proyectId}", [ProyectController::class, "acceptProyectRequest"]);
     Route::put("/rejectRequest/{proyectId}", [ProyectController::class, "rejectProyectRequest"]);
+    Route::get("/proyects/{id}/unassignedTasks", [ProyectController::class, "getUnassignedTasks"]);
 
     //----Tasks
     Route::apiResource("/tasks", TaskController::class);

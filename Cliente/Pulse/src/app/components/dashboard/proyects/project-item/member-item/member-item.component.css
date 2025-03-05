@@ -12,10 +12,14 @@
   height: 30px;
   margin-right: 20px;
   border-radius: 1000px;
-  overflow: hidden;
+  overflow: revert;
 }
 #memberItem #email {
   opacity: .5;
   font-style: oblique;
   font-size: .95em;
+}
+#memberItem #sameUser {
+  color: var(--primary-color);
+  opacity: .7;
 }

@@ -1,6 +1,6 @@
 #box {
   background: black;
-  padding: 20px 30px;
+  padding: 30px 30px;
   border-radius: var(--md-border-radius);
   border: 2px solid var(--tertiary-color);
   font-size: 1rem;

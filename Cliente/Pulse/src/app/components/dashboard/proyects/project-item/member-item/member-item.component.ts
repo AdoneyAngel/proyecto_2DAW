@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { getUserPhoto } from '../../../../../../API/api';
+import { AppComponent } from '../../../../../app.component';
 
 @Component({
   selector: 'app-member-item',
@@ -10,10 +11,16 @@ import { getUserPhoto } from '../../../../../../API/api';
 })
 export class MemberItemComponent {
   @Input() user:any = {}
-  userPhoto:any = null
+  @Input() userPhoto:any = null
+  sameUser:boolean = false
+
+  constructor (protected app:AppComponent){}
 
   async ngOnInit() {
-    this.loadPhoto(this.user.id)
+    if (!this.user.photo) {
+      this.loadPhoto(this.user.id)
+    }
+    this.sameUser = this.app.getUser().id == this.user.id
   }
 
   async loadPhoto(userId:number|string) {

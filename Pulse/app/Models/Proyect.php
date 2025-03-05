@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\TaskTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -310,6 +311,32 @@ class Proyect extends Model
         }
 
         return $exist;
+    }
+
+    public function getUnassignedTasks() {
+        if (!$this->id) return null;
+
+        $unassingedTasksDb = DB::select("CALL tasks_select_unassigned_of_proyect_id(?)", [$this->id]);
+        $tasks = [];
+
+        if (count($unassingedTasksDb)) {
+            foreach ($unassingedTasksDb as $taskDb) {
+                $tasks[] = new Task(
+                    $taskDb->id,
+                    $taskDb->title,
+                    $taskDb->description,
+                    $taskDb->tag,
+                    $taskDb->time,
+                    $taskDb->priority,
+                    $taskDb->proyect_id,
+                    $taskDb->status,
+                    $taskDb->date,
+                    TaskTypeEnum::from($taskDb->type)
+                );
+            }
+        }
+
+        return $tasks;
     }
 
     public static function selectQuery(array $whereValues = null) {

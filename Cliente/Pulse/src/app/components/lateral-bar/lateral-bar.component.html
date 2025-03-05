@@ -1,18 +1,15 @@
 <section id="lateralBar">
-  <a id="bRoute" class="button">
+  <a routerLink="/dashboard/rack" id="bRoute" class="button">
     <img src="assets/images/rack_white.png" alt="">
     Rack
-  </a>
-  <a href="/dashboard/board" id="bRoute" class="button">
-    <img src="assets/images/board_white.png" alt="">
-    Board
-  </a>
-  <a id="bRoute" class="button">
-    <img src="assets/images/project_white.png" alt="">
-    Projects
   </a>
   <a id="bRoute" class="button">
     <img src="assets/images/issue_white.png" alt="">
     Issues
   </a>
+  <a routerLink="/dashboard/projects" id="bRoute" class="button">
+    <img src="assets/images/project_white.png" alt="">
+    Projects
+  </a>
+  <app-project-list [projects]="projects" />
 </section>

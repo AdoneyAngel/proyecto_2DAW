@@ -3,6 +3,9 @@ body {
   grid-template-columns: 20% 1fr;
   grid-template-rows: 55px 1fr;
   grid-gap: 20px;
+  padding: 20px;
+  height: calc(100dvh - 60px);
+  overflow: hidden;
 }
 
 #header {
@@ -22,11 +25,9 @@ body {
   font-size: 2rem;
 }
 
-body {
-  padding: 20px;
-  height: calc(100dvh - 60px);
-}
-
 main {
   padding: var(--md-padding);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }

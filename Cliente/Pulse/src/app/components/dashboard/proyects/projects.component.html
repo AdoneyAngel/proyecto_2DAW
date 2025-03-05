@@ -1,5 +1,5 @@
 <app-main-content-box title="Projects">
   @for (project of projects; track $index) {
-    <app-project-item [project]="project" />
+    <app-project-item [usersPhotos]="usersPhotos" [project]="project" />
   }
 </app-main-content-box>

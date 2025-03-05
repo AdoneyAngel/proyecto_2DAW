@@ -239,6 +239,14 @@ class Task extends Model
         $this->users = $users;
     }
 
+    public function loadProyect() {
+        if (!$this->proyectId) return null;
+
+        $proyect = Proyect::getById($this->proyectId);
+
+        $this->proyect = $proyect;
+    }
+
     public function addUser(User $user) {
         if (!$this->id) return null;
         if (!$this->proyectId) return null;

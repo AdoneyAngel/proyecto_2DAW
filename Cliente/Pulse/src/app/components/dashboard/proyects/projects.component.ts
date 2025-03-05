@@ -11,4 +11,5 @@ import { ProjectItemComponent } from './project-item/project-item.component';
 })
 export class ProjectsComponent {
   @Input() projects:any = []
+  @Input() usersPhotos:{}[] = []
 }

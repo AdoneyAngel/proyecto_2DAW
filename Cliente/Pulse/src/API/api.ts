@@ -1,25 +1,124 @@
 import axios from "axios"
 import { apiUrl, prefix } from "./config"
 
-export async function isLogged() {
-  return await axios.get(`${apiUrl}/${prefix}/isLogged`, {
-    withCredentials: true
-  })
-  .then(res => {
-    return res
+async function get(url:string, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}) {
+  let requestPath = `${apiUrl}/${prefix}/${url}`
 
-  })
-  .catch (err => {
-    if (err.response.data.error) {
-      return err.response.data
+  if (params.length) requestPath += "?"
 
-    }else {
+  params.map((actualParam, index) => {
+    if (index) {
+      requestPath += `&`
+    }
+
+    requestPath += `${actualParam.name}=${actualParam.value}`
+  })
+
+  try {
+    const res = await axios({
+      url: requestPath,
+      withCredentials: true,
+      method: "GET"
+    })
+
+    if (res.data) {
+      return res.data
+
+    } else {
       return {
         success: false,
         error: "Server error"
       }
     }
+
+  } catch (err) {
+    return {
+      success: false,
+      error: "Server error"
+    }
+  }
+
+
+}
+
+async function put(url:string, data:any = {}, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}) {
+  let requestPath = `${apiUrl}/${prefix}/${url}`
+
+  if (params.length) requestPath += "?"
+
+  params.map((actualParam, index) => {
+    if (index) {
+      requestPath += `&`
+    }
+
+    requestPath += `${actualParam.name}=${actualParam.value}`
   })
+
+  try {
+    const res = await axios({
+      url: requestPath,
+      withCredentials: true,
+      method: "PUT",
+      data
+    })
+
+    if (res.data) {
+      return res.data
+
+    } else {
+      return {
+        success: false,
+        error: "Server error"
+      }
+    }
+  } catch (err) {
+    return {
+      success: false,
+      error: "Server error"
+    }
+  }
+}
+
+async function post(url:string, data:any = {}, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}) {
+  let requestPath = `${apiUrl}/${prefix}/${url}`
+
+  if (params.length) requestPath += "?"
+
+  params.map((actualParam, index) => {
+    if (index) {
+      requestPath += `&`
+    }
+
+    requestPath += `${actualParam.name}=${actualParam.value}`
+  })
+
+  try {
+    const res = await axios({
+      url: requestPath,
+      withCredentials: true,
+      method: "POST",
+      data
+    })
+
+    if (res.data) {
+      return res.data
+
+    } else {
+      return {
+        success: false,
+        error: "Server error"
+      }
+    }
+  } catch (err) {
+    return {
+      success: false,
+      error: "Server error"
+    }
+  }
+}
+
+export async function isLogged() {
+  return await get("isLogged")
 }
 
 export async function login(email: string, password: string) {
@@ -71,89 +170,44 @@ export async function signup(username:string, email:string, password:string) {
 }
 
 export async function getInvitations() {
-  return await axios.get(`${apiUrl}/${prefix}/users/0/pendingRequests?proyect=true&owner=true`, {
-    withCredentials: true
-  })
-  .then(res => {
-    return res.data
-
-  })
-  .catch(err => {
-    if (err.response.data.error) {
-      return err.response.data
-
-    }else {
-      return {
-        success: false,
-        error: "Server error"
-      }
+  return await get('users/0/pendingRequests', [
+    {
+      name:"proyect",
+      value: true
+    },
+    {
+      name: "owner",
+      value: true
     }
-  })
+  ])
 }
 
 export async function acceptInvitation(proyectId:number|string) {
-  return await axios.put(`${apiUrl}/${prefix}/acceptRequest/${proyectId}`, {}, {
-    withCredentials: true
-  })
-  .then(res => {
-    return res.data
-
-  })
-  .catch(err => {
-    if (err.response.data.error) {
-      return err.response.data
-
-    }else {
-      return {
-        success: false,
-        error: "Server error"
-      }
-    }
-  })
+  return await put(`acceptRequest/${proyectId}`)
 }
 
 export async function rejectInvitation(proyectId:number|string) {
-  return await axios.put(`${apiUrl}/${prefix}/rejectRequest/${proyectId}`, {}, {
-    withCredentials: true
-  })
-  .then(res => {
-    return res.data
-
-  })
-  .catch(err => {
-    if (err.response.data.error) {
-      return err.response.data
-
-    }else {
-      return {
-        success: false,
-        error: "Server error"
-      }
-    }
-  })
+  return await put(`rejectRequest/${proyectId}`)
 }
 
-export async function getIncludedProjects() {
-  const res = await axios({
-    url: `${apiUrl}/${prefix}/users/0/includedProyects?members=true`,
-    method: "GET",
-    withCredentials: true
-  })
-
-  if (res.data) {
-    return res.data
-
-  } else {
-    return {
-      success: false,
-      error: "Server error"
+export async function getIncludedProjects(members:boolean = false, owner:boolean = false) {
+  return await get("users/0/includedProyects", [
+    {
+      name: "members",
+      value: members
+    },
+    {
+      name: "owner",
+      value: owner
     }
-  }
+  ])
 }
 
 export async function getUserPhoto(userId:number|string) {
+  const date = new Date()
+
   const res = await axios({
-    url: `${apiUrl}/${prefix}/users/${userId}/photo`,
+    url: `${apiUrl}/${prefix}/users/${userId}/photo?d=${date.getTime()}`,
     responseType: "blob",
     method: "GET",
     headers: {
@@ -162,11 +216,38 @@ export async function getUserPhoto(userId:number|string) {
     withCredentials: true
   })
 
-  console.log("USER: " + userId)
-
   if (!res.data.size) return null;
 
-  console.log("SI")
-
   return URL.createObjectURL(res.data)
+}
+
+export async function getRackOfProyect(proyectId:number|string) {
+  return await get(`proyects/${proyectId}/unassignedTasks`, [{
+    name: "proyect",
+    value: true
+  }])
+}
+
+export async function getProjects(members:boolean = false, owner:boolean = false) {
+  return await get(`users/0/proyects`, [
+    {
+      name: "members",
+      value: members
+    },
+    {
+      name: "owner",
+      value: owner
+    }
+  ])
+}
+
+export async function getTaskOfProject(projectId:string|number, project:boolean = false, users:boolean = false) {
+  return await get(`proyects/${projectId}/tasks`, [{
+    name: "proyect",
+    value: project
+  },
+  {
+    name: "users",
+    value: users
+  }])
 }

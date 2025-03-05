@@ -1,27 +1,25 @@
-#user {
-  margin-left: auto;
-  font-size: 1em;
-  opacity: .6;
-  font-style: oblique;
-  text-align: right;
-  max-width: 90%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-#user .email {
-  opacity: .6;
+.projectInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #date {
-  top: 20px;
-  right: 20px;
   opacity: .5;
+  margin-left: auto;
+  text-align: right;
+}
+
+#owner {
   position: absolute;
+  bottom: 5px;
+  right: 10px;
+  opacity: .4;
   text-align: right;
 }
 
 #membersList {
   padding: 10px 15px;
+  padding-bottom: 15px;
   font-size: .8rem;
 }

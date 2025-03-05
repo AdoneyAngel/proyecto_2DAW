@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Task;
 
+use App\Http\Resources\Proyect\ProyectResource;
 use App\Http\Resources\User\UserCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,6 +31,10 @@ class TaskResource extends JsonResource
 
         if ($this->users) {
             $resource["users"] = new UserCollection($this->users);
+        }
+
+        if ($this->proyect) {
+            $resource["proyect"] = new ProyectResource($this->proyect);
         }
 
         return $resource;

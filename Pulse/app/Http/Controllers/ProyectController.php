@@ -222,6 +222,7 @@ class ProyectController extends Controller
      */
     public function getTasks(Request $request, $proyectId) {
         try {
+            $taskController = new TaskController();
             $user = $request["user"];
             $proyect = Proyect::getById($proyectId);
 
@@ -236,6 +237,8 @@ class ProyectController extends Controller
             }
 
             $tasks = $proyect->getTasks();
+
+            $taskController->loadMissings($request, $tasks);
 
             return responseUtils::successful(new TaskCollection($tasks));
 
@@ -510,6 +513,33 @@ class ProyectController extends Controller
 
         } catch (Exception $err) {
             return responseUtils::serverError("Error rejecting join request, ProyectController", $err);
+        }
+    }
+
+    public function getUnassignedTasks(Request $request, $proyectId) {
+        try {
+            $taskController = new TaskController();
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //Request user is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You can't see the unassigned task of this proyect");
+            }
+
+            $tasks = $proyect->getUnassignedTasks();
+
+            $taskController->loadMissings($request, $tasks);
+
+            return responseUtils::successful(new TaskCollection($tasks));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting unassigned tasks of proyect, ProyectController", $err);
         }
     }
 

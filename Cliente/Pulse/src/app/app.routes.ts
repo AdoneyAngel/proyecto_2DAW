@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './view/dashboard/dashboard.component';
-import { BoardComponent } from './view/board/board.component';
 import { LoginComponent } from './view/login/login.component';
 import { SignupComponent } from './view/signup/signup.component';
+import { RackComponent } from './view/rack/rack.component';
+import { ProjectsComponent } from './view/projects/projects.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -10,20 +11,15 @@ const dashboardRoutes = {
   loadComponent: () => DashboardComponent,
   children: [
     {
-      path: "board",
-      data: {title: "board"},
-      loadComponent: () => BoardComponent
+      path: "rack",
+      data: {title: "rack"},
+      loadComponent: () => RackComponent
     },
-    // {
-    //   path: "rack",
-    //   title: "Rack",
-    //   loadComponent: () => BoardComponent
-    // },
-    // {
-    //   path: "proyects",
-    //   title: "Proyects",
-    //   // loadComponent: () =>
-    // },
+    {
+      path: "projects",
+      data: {title: "projects"},
+      loadComponent: () => ProjectsComponent
+    },
     // {
     //   path: "proyects/:id",
     //   title: "Proyects",

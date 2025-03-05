@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from "@angular/forms"
 import { login } from '../../../API/api';
 import { AppComponent } from '../../app.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ import { AppComponent } from '../../app.component';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor (private appComponent: AppComponent) {}
+  constructor (private appComponent: AppComponent, private router:Router) {}
 
   person = {
     email: "",
@@ -30,6 +31,9 @@ export class LoginComponent {
 
     if (!res.success) {
       this.showError(res.error)
+
+    } else {
+      this.router.navigate(["/dashboard"])
     }
 
   }

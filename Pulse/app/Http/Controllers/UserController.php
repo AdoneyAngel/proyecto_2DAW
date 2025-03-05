@@ -187,16 +187,12 @@ class UserController extends Controller
     }
 
     /**
-     * Get the proyects of user. (if ID is undefined or $id<1, it will use the id of the user who make the request)
+     * Get the proyects of user.
      */
-    public function getProyects(Request $request, $userId)
+    public function getProyects(Request $request)
     {
         try {
-            $user = $userId > 0 ? User::getById($userId) : $request["user"];
-
-            if (!$user) {
-                return responseUtils::notFound("User not found");
-            }
+            $user = $request["user"];
 
             $proyects = $user->getProyects();
 
@@ -325,6 +321,15 @@ class UserController extends Controller
             return responseUtils::successful(new ProyectMemberCollection($pendingRequests));
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting pending join request of the user, UserController", $err);
+        }
+    }
+
+    public function isLogged(Request $request) {
+        try {
+            return responseUtils::successful(new UserResource($request["user"]));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error checking if logged, UserController", $err);
         }
     }
 

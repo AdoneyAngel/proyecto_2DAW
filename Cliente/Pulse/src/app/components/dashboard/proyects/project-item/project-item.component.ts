@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { getUserPhoto } from '../../../../../API/api';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MemberItemComponent } from './member-item/member-item.component';
 
 @Component({
@@ -9,7 +8,20 @@ import { MemberItemComponent } from './member-item/member-item.component';
   templateUrl: './project-item.component.html',
   styleUrls: ['./project-item.component.css', "../../../../../styles/dashboardItem.css"]
 })
-export class ProjectItemComponent {
+export class ProjectItemComponent implements OnChanges {
   @Input() project:any = {}
+  @Input() usersPhotos:any = []
+
+  ngOnChanges(changes: SimpleChanges) {
+
+    this.project.members = this.project.members.map((actualMember: {id:string|number,photoUrl:string|null}) => {
+
+      const photoData = this.usersPhotos.find((actualPhoto:{id:string|number, photo:string|null}) => actualPhoto.id==actualMember.id)
+
+      const updatedMember = {...actualMember, photo:photoData?photoData.photo:""}
+
+      return updatedMember
+    })
+  }
 
 }

@@ -251,7 +251,7 @@ class User extends Model
     public function getIncludedProyects() {
         if (!$this->id) return null;
 
-        $proyectsOfmember = DB::select("CALL proyects_of_member_id(?)", [$this->id]);
+        $proyectsOfmember = DB::select("CALL proyects_of_user_id(?)", [$this->id]);
 
         if (count($proyectsOfmember)) {
             $proyects = [];
