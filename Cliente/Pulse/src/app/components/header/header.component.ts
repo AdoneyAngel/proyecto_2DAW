@@ -9,5 +9,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  @Input() routes = [{title: "", url:""}]
+  @Input() routes:any = []
 }

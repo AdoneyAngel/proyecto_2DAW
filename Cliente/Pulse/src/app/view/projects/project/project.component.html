@@ -1,0 +1,98 @@
+<div id="projectBody">
+  <div id="titleContainer">
+    @if (project.ownerId == app.getUser().id) {
+      @if (project.title) {
+        <input class="title" [(ngModel)]="newProjectTitle" type="text" id="inputTitle" placeholder="{{project.title}}" value="{{project.title}}">
+
+        @if (newProjectTitle.length && newProjectTitle != project.title) {
+          <button id="bSave" (click)="updateTitle()">save change</button>
+        }
+
+      } @else {
+        <h1 class="title">Project</h1>
+      }
+
+
+    } @else {
+      <h1 class="title">{{project.title ?? "Project"}}</h1>
+    }
+
+  </div>
+
+  <main style="flex-grow: 1;">
+    <app-main-content-box display="list" title="Tasks">
+      @if (tasks.onRack.length) {
+        <div id="deployable">
+          <app-content-box-delimiter (click)="deploySection('deployContent-rack')" title="On Rack" />
+
+          <div class="closed" id="deployContent-rack">
+            @for (task of tasks.onRack; track $index) {
+              <app-task [task]="task" />
+            }
+          </div>
+        </div>
+      }
+
+      @if (tasks.todo.length) {
+        <div id="deployable">
+          <app-content-box-delimiter (click)="deploySection('deployContent-todo')" title="To Do" />
+
+          <div class="opened" id="deployContent-todo">
+            @for (task of tasks.todo; track $index) {
+              <app-task [task]="task" />
+            }
+          </div>
+        </div>
+      }
+
+      @if (tasks.progress.length) {
+        <div id="deployable">
+          <app-content-box-delimiter (click)="deploySection('deployContent-progress')" title="In Progress" />
+
+          <div class="opened" id="deployContent-progress">
+            @for (task of tasks.progress; track $index) {
+              <app-task [task]="task" />
+            }
+          </div>
+        </div>
+      }
+
+      @if (tasks.review.length) {
+        <div id="deployable">
+          <app-content-box-delimiter (click)="deploySection('deployContent-review')" title="Review" />
+
+          <div class="opened" id="deployContent-review">
+            @for (task of tasks.review; track $index) {
+              <app-task [task]="task" />
+            }
+          </div>
+        </div>
+      }
+
+      @if (tasks.done.length) {
+        <div id="deployable">
+          <app-content-box-delimiter (click)="deploySection('deployContent-done')" title="Done" />
+
+          <div class="opened" id="deployContent-done">
+            @for (task of tasks.done; track $index) {
+              <app-task [task]="task" />
+            }
+          </div>
+        </div>
+      }
+    </app-main-content-box>
+  </main>
+
+  <div style="flex-grow: 1; height: 100%;width: 10px; background-color: red;margin-top: auto;"></div>
+
+  <div id="memberList">
+    @for (member of project.members; track $index) {
+      <div id="member" title="{{member.username}} - {{member.email}}">
+
+        <app-profile-image image="{{member.photoUrl}}" />
+
+      </div>
+    }
+  </div>
+
+</div>

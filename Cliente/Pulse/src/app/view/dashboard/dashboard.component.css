@@ -16,6 +16,7 @@ body {
   background: var(--secondary-color);
   border-radius: var(--md-border-radius);
   border: 2px solid var(--tertiary-color);
+  position: relative;
 }
 .section > h1 {
   text-transform: capitalize;

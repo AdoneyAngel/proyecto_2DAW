@@ -3,6 +3,7 @@
   flex-direction: row;
   align-items: center;
   grid-column: 3;
+  margin: 3px 0;
 }
 #item.assigned {
   border-color: var(--primary-color);
@@ -38,6 +39,6 @@
 
 #item #date {
   margin-left: auto;
-  opacity: .7;
+  opacity: var(--md-opacity);
   font-size: .9em;
 }

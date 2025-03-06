@@ -1,10 +1,5 @@
 <div id="memberItem">
-  @if (user.photo) {
-    <img id="memberIcon" [src]="user.photo">
-
-  } @else {
-    <img id="memberIcon" src="/assets/images/user_white.png">
-  }
+  <app-profile-image [image]="user.photo" />
 
   @if (sameUser) {
     <p title="{{user.username}}">{{user.username}} <span title="{{user.email}}" id="sameUser">(You)</span> <span id="email"> - {{user.email}}</span></p>

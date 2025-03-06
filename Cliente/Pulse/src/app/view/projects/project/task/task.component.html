@@ -1,0 +1,17 @@
+<div id="item" class="{{task.statusId==todoEnum?'todo':(task.statusId==progressEnum?'progress':(task.statusId==reviewEnum?'review':'done')) }} {{!task.users||!task.users.length ? 'rack':''}}">
+  <div id="info">
+    <h1>{{task.title}}</h1>
+    <div id="date">{{task.date}}</div>
+  </div>
+
+  <div id="userList">
+    @for (user of task.users; track $index) {
+      <div id="user" title="{{user.username}} - {{user.email}}" class="">
+        <app-profile-image [image]="user.photoUrl" styles="
+          border-color: {{user.taskStatus==userDoneEnum?'var(--green-color)':(user.taskStatus==userProgressEnum?'var(--primary-color)':'todo')}};
+        " />
+
+      </div>
+    }
+  </div>
+</div>

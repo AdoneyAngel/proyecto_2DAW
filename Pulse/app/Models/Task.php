@@ -402,6 +402,19 @@ class Task extends Model
         return $newStatus;
     }
 
+    public static function getTags($proyectId) {
+        $tagsDb = DB::select("CALL proyects_tasks_select_tag_of_proyect_id(?)", [$proyectId]);
+        $tags = [];
+
+        if (count($tagsDb)) {
+            foreach ($tagsDb as $actualTag) {
+                $tags[] = $actualTag->tag;
+            }
+        }
+
+        return $tags;
+    }
+
     public static function selectQuery(array $whereValues = null) {
         $queryString = "SELECT * FROM proyects_tasks WHERE type=? ";
         $queryValues = [TaskTypeEnum::Task->value];

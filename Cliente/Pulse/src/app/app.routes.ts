@@ -4,6 +4,8 @@ import { LoginComponent } from './view/login/login.component';
 import { SignupComponent } from './view/signup/signup.component';
 import { RackComponent } from './view/rack/rack.component';
 import { ProjectsComponent } from './view/projects/projects.component';
+import { ProjectComponent } from './view/projects/project/project.component';
+import { CreateTaskComponent } from './view/projects/project/create-task/create-task.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -20,16 +22,23 @@ const dashboardRoutes = {
       data: {title: "projects"},
       loadComponent: () => ProjectsComponent
     },
-    // {
-    //   path: "proyects/:id",
-    //   title: "Proyects",
-    //   // loadComponent: () =>,
-    //   children: [
-    //     {
-    //       path: "tasks",
-    //       title: "Tasks",
-    //       // loadComponent: () =>,
-    //     },
+    {
+      path: "projects/:id",
+      data: {title: "project"},
+      loadComponent: () => ProjectComponent,
+      children: [
+        {
+          path: "tasks",
+          data: {title: "tasks"},
+          loadComponent: () => ProjectsComponent,
+        }
+      ]
+      },
+      {
+        path: "projects/:id/createTask",
+        data: {title: "create task"},
+        loadComponent: () => CreateTaskComponent
+      }
     //     {
     //       path: "taks/:id",
     //       title: "Tasks",

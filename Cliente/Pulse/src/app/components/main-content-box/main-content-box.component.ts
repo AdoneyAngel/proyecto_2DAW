@@ -10,4 +10,5 @@ import { Component, Input } from '@angular/core';
 export class MainContentBoxComponent {
   @Input() title: string = ""
   @Input() hidden: boolean = false
+  @Input() display: string = "grid"
 }

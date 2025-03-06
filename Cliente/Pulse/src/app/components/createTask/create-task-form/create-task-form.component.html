@@ -1,0 +1,44 @@
+<app-main-content-box display="list">
+
+  <div id="titleSection">
+    <div class="inputSection">
+      <label>Title</label>
+      <input [(ngModel)]="title" type="text" id="inputTitle" placeholder="Primary name of task">
+    </div>
+
+    <div class="inputSection">
+      <div class="inputSection" id="tagSection">
+        <div class="inputTagSection">
+          <label>Tag</label>
+          <input [(ngModel)]="tag" type="text" id="inputTag" placeholder="Tag of group">
+        </div>
+
+        <div id="tagList">
+          @for (actualTag of tags; track $index) {
+            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
+          }
+          @for (actualTag of tags; track $index) {
+            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
+          }
+          @for (actualTag of tags; track $index) {
+            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
+          }
+          @for (actualTag of tags; track $index) {
+            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
+          }
+          @for (actualTag of tags; track $index) {
+            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
+          }
+          @for (actualTag of tags; track $index) {
+            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="delimiter"></div>
+
+
+
+</app-main-content-box>

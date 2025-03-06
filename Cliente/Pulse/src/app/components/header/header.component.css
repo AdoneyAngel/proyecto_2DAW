@@ -34,6 +34,9 @@ section#routes {
   text-transform: capitalize;
   cursor: pointer;
 }
+.link:hover {
+  text-decoration: underline;
+}
 .link:first-child {
   margin-left: 35px;
 }

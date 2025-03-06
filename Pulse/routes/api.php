@@ -36,6 +36,7 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
     Route::put("/acceptRequest/{proyectId}", [ProyectController::class, "acceptProyectRequest"]);
     Route::put("/rejectRequest/{proyectId}", [ProyectController::class, "rejectProyectRequest"]);
     Route::get("/proyects/{id}/unassignedTasks", [ProyectController::class, "getUnassignedTasks"]);
+    Route::get("/proyects/{id}/tags", [ProyectController::class, "getTags"]);
 
     //----Tasks
     Route::apiResource("/tasks", TaskController::class);

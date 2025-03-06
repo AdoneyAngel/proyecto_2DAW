@@ -19,11 +19,17 @@ export class DashboardComponent {
   routes: any = []
   invitations: any[] = []
   projects: any = []
-  title:string = "Dashboard"
+  title:string = ""
   usersPhotos: {id:number|string, photo:string|null}[] = []
   cache:{name:string, data:any}[] = []
 
   constructor(private appComponent: AppComponent, private activatedRoute: ActivatedRoute){}
+
+  async ngOnInit() {
+    this.onRouteChanges()
+
+    this.appComponent.onRouteChanges(this.onRouteChanges.bind(this))
+  }
 
   getCache(name:string) {
     const cacheFound = this.cache.find(actualCache => actualCache.name == name)
@@ -75,12 +81,6 @@ export class DashboardComponent {
     }
   }
 
-  async ngOnInit() {
-    this.onRouteChanges()
-
-    this.appComponent.onRouteChanges(this.onRouteChanges.bind(this))
-  }
-
   private onRouteChanges() {
     this.routes = this.appComponent.getRouteInfo(this.activatedRoute.root, '');
     this.title = this.appComponent.getTitle()
@@ -97,6 +97,17 @@ export class DashboardComponent {
       this.loadInvitations()
       this.loadProjects()
     }
+  }
+
+  setTitle(title:string) {
+    this.title = title
+  }
+  setRouteCustomTitle(routeTitle:string, newTitle:string) {
+    this.routes.forEach((actualRoute:any) => {
+      if (actualRoute.title == routeTitle) {
+        actualRoute.customTitle = newTitle
+      }
+    })
   }
 
   //Loads
@@ -183,5 +194,8 @@ export class DashboardComponent {
   }
   getUsersPhotos() {
     return this.usersPhotos
+  }
+  addUserPhoto(userId:number|string, photo:string) {
+    this.usersPhotos = [...this.usersPhotos, {id:userId, photo}]
   }
 }

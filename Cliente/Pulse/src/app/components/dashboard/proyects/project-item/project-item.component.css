@@ -23,3 +23,8 @@
   padding-bottom: 15px;
   font-size: .8rem;
 }
+
+#owner.sameUser {
+  opacity: 1;
+  color: var(--primary-color);
+}

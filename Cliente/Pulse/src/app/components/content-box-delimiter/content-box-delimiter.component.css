@@ -1,0 +1,32 @@
+#delimiter {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  opacity: .6;
+  margin: 10px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+h2 {
+  text-align: center;
+  z-index: 1;
+  background: black;
+  padding: 0 20px;
+  text-transform: uppercase;
+}
+#delimiter::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--grey-color);
+  height: 4px;
+  width: 100%;
+  border-radius: 100px;
+}

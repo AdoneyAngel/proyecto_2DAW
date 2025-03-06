@@ -31,10 +31,15 @@ async function get(url:string, params:{name:any, value:any}[] = [], config:any =
       }
     }
 
-  } catch (err) {
-    return {
-      success: false,
-      error: "Server error"
+  } catch (err: any) {
+    if (err.response.data) {
+      return err.response.data
+
+    } else {
+      return {
+        success: false,
+        error: "Server error"
+      }
     }
   }
 
@@ -71,10 +76,16 @@ async function put(url:string, data:any = {}, params:{name:any, value:any}[] = [
         error: "Server error"
       }
     }
-  } catch (err) {
-    return {
-      success: false,
-      error: "Server error"
+
+  } catch (err: any) {
+    if (err.response.data) {
+      return err.response.data
+
+    } else {
+      return {
+        success: false,
+        error: "Server error"
+      }
     }
   }
 }
@@ -109,10 +120,16 @@ async function post(url:string, data:any = {}, params:{name:any, value:any}[] = 
         error: "Server error"
       }
     }
-  } catch (err) {
-    return {
-      success: false,
-      error: "Server error"
+
+  } catch (err: any) {
+    if (err.response.data) {
+      return err.response.data
+
+    } else {
+      return {
+        success: false,
+        error: "Server error"
+      }
     }
   }
 }
@@ -250,4 +267,49 @@ export async function getTaskOfProject(projectId:string|number, project:boolean 
     name: "users",
     value: users
   }])
+}
+
+export async function getProject(projectId:number|string, members:boolean = false, owner:boolean = false) {
+  return await get(`proyects/${projectId}`, [
+    {
+      name: "members",
+      value: members
+    },
+    {
+      name: "owner",
+      value: owner
+    }
+  ])
+}
+
+export async function updateProjectTitle(projectId:number|string, newTitle:string, members:boolean = false, owner:boolean = false) {
+  return await put(`proyects/${projectId}`, {title:newTitle}, [
+    {
+      name: "memebrs",
+      value: members
+    },
+    {
+      name: "owner",
+      value: owner
+    }
+  ])
+}
+
+export async function getProjectTasks(projectId:number|string, users:boolean = false) {
+  return await get(`proyects/${projectId}/tasks`, [
+    {
+      name: "users",
+      value: users
+    }
+  ])
+}
+
+export async function createTask(projectId:number|string, title:string, description:string, time:number, priority:number, tag:string, users:any = []) {
+  return await post(`tasks`, {
+    title, description, time, priority, tag, users, projectId
+  })
+}
+
+export async function getTags(projectId:number|string) {
+  return await get(`proyects/${projectId}/tags`)
 }

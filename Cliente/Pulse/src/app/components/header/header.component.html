@@ -13,10 +13,10 @@
         }
 
         @if ($last) {
-          <a class="link">{{route.title}}</a>
+          <a class="link">{{route.customTitle ?? route.title}}</a>
 
         } @else {
-          <a class="link" routerLink="{{route.url}}">{{route.title}}</a>
+          <a class="link" routerLink="{{route.url}}">{{route.customTitle ?? route.title}}</a>
         }
 
       }

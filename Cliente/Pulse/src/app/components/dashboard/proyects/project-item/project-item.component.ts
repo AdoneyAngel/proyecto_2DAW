@@ -1,16 +1,20 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MemberItemComponent } from './member-item/member-item.component';
+import { AppComponent } from '../../../../app.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-project-item',
   standalone: true,
-  imports: [MemberItemComponent],
+  imports: [MemberItemComponent, RouterLink],
   templateUrl: './project-item.component.html',
   styleUrls: ['./project-item.component.css', "../../../../../styles/dashboardItem.css"]
 })
 export class ProjectItemComponent implements OnChanges {
   @Input() project:any = {}
   @Input() usersPhotos:any = []
+
+  constructor (protected app:AppComponent){}
 
   ngOnChanges(changes: SimpleChanges) {
 

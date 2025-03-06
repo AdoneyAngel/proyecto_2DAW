@@ -1,0 +1,21 @@
+#profileImage img {
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  background-position: center;
+  background-size: cover;
+  overflow: revert;
+  transform: rotate(-45deg);
+  background: black;
+}
+
+#profileImage {
+  border-radius: 10px;
+  transform: rotate(45deg);
+  overflow: hidden;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.233);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

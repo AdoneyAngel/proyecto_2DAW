@@ -61,11 +61,29 @@ class TaskController extends Controller
             //Validate if the user is owner of the proyect
             $user = $request["user"];
             $proyect = Proyect::getById($request->proyectId);
+            $users = [];
 
             if ($proyect->getOwnerId() != $user->getId()) {
-                return responseUtils::unAuthorized("You are not the owner of the proyect");
+                return responseUtils::unAuthorized("You are not the owner of the project");
             }
 
+            //Can create and add users in the same request
+            if ($request->users && count($request->users)) {
+                //Users exist and is member of the proyect
+                foreach ($request->users as $actualUser) {
+                    $userFound = User::getById($actualUser);
+
+                    if (!$userFound) {
+                        return responseUtils::notFound("One of the users was not found");
+                    }
+
+                    if (!$proyect->isMember($actualUser)) {
+                        return responseUtils::invalidParams("One of the users is not member of the project");
+                    }
+
+                    $users[] = $userFound;
+                }
+            }
 
             $newTask = new Task(
                 null,
@@ -82,12 +100,20 @@ class TaskController extends Controller
 
             $createdTask = $newTask->create();
 
+            //Add users
+            if (count($users)) {
+                foreach ($users as $actualUser) {
+                    $createdTask->addUser($actualUser);
+                }
+            }
+
             if ($createdTask) {
                 return responseUtils::created(new TaskResource($newTask));
 
             } else {
                 return responseUtils::serverError("Can't make this task", null, "Can't make this task");
             }
+
         } catch (Exception $err) {
             responseUtils::serverError("Error creating task", $err);
         }

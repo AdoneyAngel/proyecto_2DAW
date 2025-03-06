@@ -15,6 +15,7 @@ use App\Http\Resources\TaskHistory\TaskHistoryCollection;
 use App\Models\Proyect;
 use App\Models\ProyectMember;
 use App\Models\responseUtils;
+use App\Models\Task;
 use App\Models\TaskHistory;
 use App\Models\User;
 use Exception;
@@ -284,10 +285,7 @@ class ProyectController extends Controller
             $proyect = Proyect::getById($id);
 
             if ($proyect->getOwnerId() != $user->getId()) {
-                return response()->json([
-                    "success" => false,
-                    "You are not the owner of this proyect"
-                ], 401);
+                return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
             //Validate if the proyect title is duplicated of the current user
@@ -295,29 +293,23 @@ class ProyectController extends Controller
 
             $proyectTitleExist = false;
 
-            foreach ($proyectsOfUser as $proyect) {
-                if ($proyect->getTitle() == $request->title) {
+            foreach ($proyectsOfUser as $actualProyect) {
+                if ($actualProyect->getTitle() == $request->title) {
                     $proyectTitleExist = true;
                 }
             }
 
             if ($proyectTitleExist) {
 
-                return response()->json([
-                    "success" => false,
-                    "error" => "You already have this proyect"
-                ], 500);
+                return responseUtils::conflict("You already have this proyect");
             }
 
             //Update proyect
-            if ((!$request->title || !strlen($request->title)) && !$request->ownerId) {
+            if ((!$request->title && !strlen($request->title)) && !$request->ownerId) {
                 //Load missing parameters
                 $this->loadMissing($request, $proyect);
 
-                return response()->json([
-                    "success" => true,
-                    "data" => new ProyectResource($proyect)
-                ]);
+                return responseUtils::successful(new ProyectResource($proyect));
             }
 
             if ($request->title) {
@@ -329,10 +321,7 @@ class ProyectController extends Controller
 
             $proyect->saveChanges();
 
-            return response()->json([
-                "success" => true,
-                "data" => new ProyectResource($proyect)
-            ]);
+            return responseUtils::successful(new ProyectResource($proyect));
 
         } catch (Exception $err) {
             return responseUtils::serverError("Error updating proyect", $err);
@@ -540,6 +529,30 @@ class ProyectController extends Controller
 
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting unassigned tasks of proyect, ProyectController", $err);
+        }
+    }
+
+    public function getTags(Request $request, $proyectId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //User is owner/member of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId() && !$proyect->isMember($reqUser->getId())) {
+                return responseUtils::unAuthorized("You can't access here");
+            }
+
+            $tags = Task::getTags($proyectId);
+
+            return responseUtils::successful($tags);
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting all tags of project", $err);
         }
     }
 

@@ -18,4 +18,5 @@
   text-overflow: ellipsis;
   color: var(--light-color);
   cursor: pointer;
+  text-decoration: none;
 }

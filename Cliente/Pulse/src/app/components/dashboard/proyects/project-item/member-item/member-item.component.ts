@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { getUserPhoto } from '../../../../../../API/api';
 import { AppComponent } from '../../../../../app.component';
+import { ProfileImageComponent } from '../../../../profile-image/profile-image.component';
 
 @Component({
   selector: 'app-member-item',
   standalone: true,
-  imports: [],
+  imports: [ProfileImageComponent],
   templateUrl: './member-item.component.html',
   styleUrl: './member-item.component.css'
 })

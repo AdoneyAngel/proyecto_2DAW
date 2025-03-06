@@ -1,4 +1,4 @@
-<app-main-content-box title="{{project.title}}" [hidden]="!project.tasks.length">
+<app-main-content-box display="list" title="{{project.title}}" [hidden]="!project.tasks.length">
 
   @for (task of project.tasks; track $index) {
     @if (task.users && task.users.length) {

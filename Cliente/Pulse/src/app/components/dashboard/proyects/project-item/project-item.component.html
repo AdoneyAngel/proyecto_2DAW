@@ -1,4 +1,4 @@
-<div id="item" title="{{project.title}}">
+<div routerLink="/dashboard/projects/{{project.id}}" id="item" title="{{project.title}}">
   <div class="projectInfo">
     <h1>{{project.title}}</h1>
     <p id="date">{{project.date}}</p>
@@ -10,5 +10,12 @@
     }
   </div>
 
-  <p title="owner: {{project.owner.username}}" id="owner">{{project.owner.email}}</p>
+  @if (project.owner.id == app.getUser().id) {
+    <p title="owner: {{project.owner.username}}" id="owner" class="sameUser">You</p>
+
+  } @else {
+    <p title="owner: {{project.owner.username}}" id="owner">{{project.owner.email}}</p>
+  }
+
+
 </div>
