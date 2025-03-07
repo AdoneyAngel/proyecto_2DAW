@@ -15,6 +15,7 @@
 }
 #info h1 {
   text-transform: capitalize;
+  font-size: 1.3em;
 }
 #date {
   margin-left: auto;

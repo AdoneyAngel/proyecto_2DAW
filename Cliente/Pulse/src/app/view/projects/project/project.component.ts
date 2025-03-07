@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { getProject, getProjectTasks, getUserPhoto, updateProjectTitle } from '../../../../API/api';
+import { ActivatedRoute, Params, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { getProject, getProjectTasks, updateProjectTitle } from '../../../../API/api';
 import { AppComponent } from '../../../app.component';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { Title } from '@angular/platform-browser';
@@ -10,11 +10,12 @@ import { ProfileImageComponent } from '../../../components/profile-image/profile
 import TaskStatusEnum from '../../../enums/TaskStatusEnmu';
 import { TaskComponent } from './task/task.component';
 import { ContentBoxDelimiterComponent } from '../../../components/content-box-delimiter/content-box-delimiter.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [FormsModule, MainContentBoxComponent, ProfileImageComponent, TaskComponent, ContentBoxDelimiterComponent],
+  imports: [FormsModule, MainContentBoxComponent, ProfileImageComponent, TaskComponent, ContentBoxDelimiterComponent, RouterLink, RouterOutlet, NgIf],
   templateUrl: './project.component.html',
   styleUrl: './project.component.css'
 })
@@ -23,6 +24,9 @@ export class ProjectComponent {
   project:any = {}
   newProjectTitle:string = ""
   memberPhotos:any = []
+  isOnMain:boolean = false
+  title:string = "Project"
+  isOwner:boolean = false
   tasks: any = {
     onRack: [],
     todo: [],
@@ -31,28 +35,66 @@ export class ProjectComponent {
     done: []
   }
 
-  constructor (protected activedRouter:ActivatedRoute, protected app:AppComponent, protected dashboard:DashboardComponent, protected titleService:Title){}
+  constructor (protected activedRouter:ActivatedRoute, protected app:AppComponent, protected dashboard:DashboardComponent, protected titleService:Title, protected router:Router){}
 
   ngOnInit() {
-    this.activedRouter.params.subscribe(
-      (param: Params) => {
-        this.project = {}
-        this.newProjectTitle = ""
-        this.tasks = {
-          onRack: [],
-          todo: [],
-          progress: [],
-          review: [],
-          done: []
-        }
+    this.clearPage()
 
-        this.projectId = param["id"]
-        this.loadProject()
-      }
-    )
+    this.onRouteChanges()
   }
 
+  clearPage() {
+    this.project = {}
+    this.newProjectTitle = ""
+    this.tasks = {
+      onRack: [],
+      todo: [],
+      progress: [],
+      review: [],
+      done: []
+    }
+  }
+
+  onRouteChanges() {
+    this.title = this.app.getTitle()
+    this.dashboard.setRouteCustomTitle("project", this.project.title)
+
+    if (this.title != "project") {
+      this.isOnMain = false
+
+    } else {
+      this.isOnMain = true
+    }
+
+    this.activedRouter.params.subscribe(
+      (param: Params) => {
+        if (this.projectId != param["id"] && this.isOnMain) {
+          this.clearPage()
+          this.projectId = param["id"]
+          this.loadProject()
+
+        } else if (this.isOnMain && !this.project.id) {
+          this.clearPage()
+          this.projectId = param["id"]
+          this.loadProject()
+
+        } else if (!this.isOnMain && !this.project.id) {
+          this.projectId = param["id"]
+          this.loadProject()
+        }
+
+      }
+    )
+
+    this.app.onRouteChanges(this.onRouteChanges.bind(this))
+  }
+
+
   ngAfterViewInit() {
+    this.setMemberListPosition()
+  }
+
+  setMemberListPosition() {
     const projectBody = document.getElementById("projectBody")
     const memberList:any = document.getElementById("memberList")
 
@@ -71,12 +113,23 @@ export class ProjectComponent {
       this.project = res.data
       this.dashboard.setRouteCustomTitle("project", res.data.title)
 
+      const user = this.app.getUser()
+
+      this.isOwner = user.id == this.project.owner.id
+
       this.loadMemberPhotos()
       this.loadTasks()
 
     } else {
       this.app.notificationError(res.error)
     }
+  }
+
+  getProject() {
+    return this.project
+  }
+  getProjectId() {
+    return this.projectId
   }
 
   async loadTasks() {
@@ -119,28 +172,11 @@ export class ProjectComponent {
   async loadMemberPhotos() {
     this.memberPhotos = this.dashboard.getUsersPhotos()
 
-    this.project.members.forEach((member:any) => {
-      //Load local
-      const photoFound = this.memberPhotos.find((photo:any) => photo.id==member.id)
+    this.project.members.forEach(async (member:any) => {
+      const photoFound = await this.dashboard.findUserPhoto(member.id)
 
-      if (photoFound) {
-        member.photoUrl = photoFound.photo
-
-      } else {
-        //Load API
-        getUserPhoto(member.id)
-        .then((res:any) => {
-          if (res) {
-            member.photoUrl = res
-
-            this.memberPhotos = [...this.memberPhotos, {id:member.id, photo:res}]
-            this.dashboard.addUserPhoto(member.id, res)
-
-          } else {
-            member.photoUrl = null
-          }
-        })
-      }
+      member.photoUrl = photoFound.photo
+      this.memberPhotos = [...this.memberPhotos, photoFound]
     })
   }
 

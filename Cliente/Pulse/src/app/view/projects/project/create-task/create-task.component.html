@@ -1,1 +1,1 @@
-<app-create-task-form [tags]="tags" [submit]="submit" />
+<app-create-task-form [members]="project.members" [tags]="tags" [submit]="submit.bind(this)" />

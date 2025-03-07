@@ -299,8 +299,8 @@ class Task extends Model
         if(!$this->id) return null;
         if(!$this->title || !strlen($this->title)) return null;
         if(!$this->tag || !strlen($this->tag)) return null;
-        if(!$this->time) return null;
-        if(!$this->priority < 0) return null;
+        if($this->time <= 0) return null;
+        if($this->priority <= 0) return null;
         if(!$this->proyectId) return null;
 
         $updatedTaskDb = DB::select("CALL proyects_tasks_update(?,?,?,?,?,?,?)", [$this->id, $this->title, $this->description, $this->tag, $this->time, $this->priority, $this->statusId]);
@@ -338,9 +338,8 @@ class Task extends Model
     public function create() {
         if (!$this->title || !strlen($this->title)) return null;
         if (!$this->tag || !strlen($this->tag)) return null;
-        if (!$this->description || !strlen($this->description)) return null;
-        if (!$this->time) return null;
-        if ($this->priority < 0) return null;
+        if ($this->time <= 0) return null;
+        if ($this->priority <= 0) return null;
         if (!$this->proyectId) return null;
 
         $createdTaskDb = DB::select("CALL proyects_tasks_insert(?,?,?,?,?,?)", [

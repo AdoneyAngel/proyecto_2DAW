@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter, shareReplay, take } from 'rxjs/operators';
 import { isLogged } from "../API/api"
 import { NotificationComponent } from './components/notification/notification.component';
 import { AcceptComponent } from './components/accept/accept.component';

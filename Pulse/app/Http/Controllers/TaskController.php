@@ -18,10 +18,13 @@ use App\Models\responseUtils;
 use App\Models\Task;
 use App\Models\TaskComment;
 use App\Models\User;
+use App\Models\Utils;
 use App\TaskStatusEnum;
 use App\TaskTypeEnum;
 use Exception;
 use Illuminate\Http\Request;
+
+use function PHPUnit\Framework\isTrue;
 
 class TaskController extends Controller
 {
@@ -85,6 +88,13 @@ class TaskController extends Controller
                 }
             }
 
+            if ($request->time <= 0) {
+                return responseUtils::invalidParams("The time must be more than 0");
+            }
+            if ($request->priority <= 0) {
+                return responseUtils::invalidParams("The priority must be more than 0");
+            }
+
             $newTask = new Task(
                 null,
                 $request->title,
@@ -100,14 +110,13 @@ class TaskController extends Controller
 
             $createdTask = $newTask->create();
 
-            //Add users
-            if (count($users)) {
-                foreach ($users as $actualUser) {
-                    $createdTask->addUser($actualUser);
-                }
-            }
-
             if ($createdTask) {
+                //Add users
+                if (count($users)) {
+                    foreach ($users as $actualUser) {
+                        $createdTask->addUser($actualUser);
+                    }
+                }
                 return responseUtils::created(new TaskResource($newTask));
 
             } else {
@@ -115,7 +124,7 @@ class TaskController extends Controller
             }
 
         } catch (Exception $err) {
-            responseUtils::serverError("Error creating task", $err);
+            return responseUtils::serverError("Error creating task", $err);
         }
     }
 
@@ -240,10 +249,17 @@ class TaskController extends Controller
                 $hasChanges = true;
             }
             if ($request->priority) {
+                if ($request->priority <= 0) {
+                    return responseUtils::invalidParams("The priority must be more than 0");
+                }
+
                 $task->setPriority($request->priority);
                 $hasChanges = true;
             }
             if ($request->time) {
+                if ($request->time <= 0) {
+                    return responseUtils::invalidParams("The time must be more than 0");
+                }
                 $task->setTime($request->time);
                 $hasChanges = true;
             }
@@ -590,10 +606,10 @@ class TaskController extends Controller
     public function loadMissing(Request $request, &$task)
     {
         //Load missing parameters
-        if ($request->query("users")) {
+        if (Utils::parseBool($request->query("users"))) {
             $task->loadUsers();
         }
-        if ($request->query("proyect")) {
+        if (Utils::parseBool($request->query("proyect"))) {
             $task->loadProyect();
         }
     }

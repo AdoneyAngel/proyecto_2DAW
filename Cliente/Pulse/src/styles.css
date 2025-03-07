@@ -20,6 +20,10 @@
   --red-color: #a12e00;
   --md-blur: 3px;
   --md-opacity: .6;
+  --profile-red: rgb(185, 127, 101);
+  --profile-green: rgb(122, 184, 138);
+  --profile-blue: rgb(101, 153, 184);
+  --profile-purple: rgb(146, 122, 184);
 
   /* Dashboard */
   --ds-background-color: var(--secondary-color);

@@ -14,6 +14,7 @@ use App\Models\Proyect;
 use App\Models\ProyectMember;
 use App\Models\responseUtils;
 use App\Models\User;
+use App\Models\Utils;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -335,7 +336,7 @@ class UserController extends Controller
 
     public function loadMissings(Request $request, &$users = [])
     {
-        if ($request->query("proyect")) { //Only when "$users" is a collection of ProyectMember
+        if (Utils::parseBool($request->query("proyect"))) { //Only when "$users" is a collection of ProyectMember
             foreach ($users as $user) {
                 if ($user::class != ProyectMember::class)
                     continue;
@@ -344,7 +345,7 @@ class UserController extends Controller
                 $user->loadProyect();
 
                 //Load owner
-                if ($request->query("owner")) {
+                if (Utils::parseBool($request->query("owner"))) {
                     $user->getProyect()->loadOwner();
                 }
             }

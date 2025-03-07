@@ -27,7 +27,7 @@ body {
 }
 
 main {
-  padding: var(--md-padding);
+  padding: var(--hg-padding);
   overflow-y: auto;
   display: flex;
   flex-direction: column;

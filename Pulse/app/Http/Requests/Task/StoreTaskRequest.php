@@ -23,7 +23,7 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             "title" => ["required"],
-            "description" => ["sometimes", "required"],
+            "description" => ["sometimes"],
             "proyectId" => ["required"],
             "tag" => ["required"],
             "priority" => ["required"],

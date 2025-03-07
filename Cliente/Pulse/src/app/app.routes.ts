@@ -6,6 +6,7 @@ import { RackComponent } from './view/rack/rack.component';
 import { ProjectsComponent } from './view/projects/projects.component';
 import { ProjectComponent } from './view/projects/project/project.component';
 import { CreateTaskComponent } from './view/projects/project/create-task/create-task.component';
+import { TaskComponent } from './view/task/task.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -19,7 +20,7 @@ const dashboardRoutes = {
     },
     {
       path: "projects",
-      data: {title: "projects"},
+      data: {title: "all projects"},
       loadComponent: () => ProjectsComponent
     },
     {
@@ -28,16 +29,16 @@ const dashboardRoutes = {
       loadComponent: () => ProjectComponent,
       children: [
         {
-          path: "tasks",
-          data: {title: "tasks"},
-          loadComponent: () => ProjectsComponent,
+          path: "tasks/:id",
+          data: {title: "task"},
+          loadComponent: () => TaskComponent
+        },
+        {
+          path: "createTask",
+          data: {title: "create task"},
+          loadComponent: () => CreateTaskComponent
         }
       ]
-      },
-      {
-        path: "projects/:id/createTask",
-        data: {title: "create task"},
-        loadComponent: () => CreateTaskComponent
       }
     //     {
     //       path: "taks/:id",

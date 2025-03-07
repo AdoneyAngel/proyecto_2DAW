@@ -123,7 +123,7 @@ export class DashboardComponent {
   }
 
   async loadProjects() {
-    const projects = await getIncludedProjects();
+    const projects = await getIncludedProjects(true, true);
 
     if (projects.success) {
       //Validate if there are changes with the last load
@@ -146,6 +146,7 @@ export class DashboardComponent {
               email:string
             }[]
           } = this.projects[projectIndex]
+
           if (actualLoadedProject.id == actualProject.id) {
             isLoaded = true
 
@@ -178,11 +179,11 @@ export class DashboardComponent {
   async loadPorjectsUsersPhotos() {
     for(let actualProject of this.projects){
       for(let actualMember of actualProject.members) {
-        const photoUrl = await getUserPhoto(actualMember.id)
+        const photoUrl = await this.findUserPhoto(actualMember.id)
 
         this.usersPhotos = [...this.usersPhotos, {
           id: actualMember.id,
-          photo: photoUrl
+          photo: photoUrl.photo
         }]
       }
     }
@@ -197,5 +198,41 @@ export class DashboardComponent {
   }
   addUserPhoto(userId:number|string, photo:string) {
     this.usersPhotos = [...this.usersPhotos, {id:userId, photo}]
+  }
+
+  findLocalUserPhoto(userId:number|string) {
+    const photoFound = this.usersPhotos.find(actualPhoto => actualPhoto.id==userId)
+
+    if (photoFound) {
+      return photoFound
+
+    } else {
+      return null
+    }
+  }
+  async findUserPhoto(userId:number|string) {
+    //Locad local
+    const photoFound = this.findLocalUserPhoto(userId)
+
+    if (photoFound) {
+      return photoFound
+    }
+    //Load API if dont exist on local
+    const res = await getUserPhoto(userId)
+
+    if (res) {
+      this.usersPhotos = [...this.usersPhotos,{id:userId, photo:res}]
+
+      return {
+        id: userId,
+        photo: res
+      }
+    }
+
+    this.usersPhotos = [...this.usersPhotos,{id:userId, photo: null}]
+    return {
+      id: userId,
+      photo: null
+    }
   }
 }

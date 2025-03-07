@@ -47,8 +47,20 @@
     </div>
 
     <div class="inputSection" class="usersSection">
-
+      <label>Users <input (keyup)="filterUsers()" type="text" placeholder="Search user" id="inputSearchUser" [(ngModel)]="searchUser"></label>
+      <div id="userList">
+        @for (user of (searchUser.length?filteredUsers:members); track $index) {
+          <div (click)="selectUser(user.id)" class="{{user.selected?'selected':'unselected'}}" id="user">
+            <div id="image">
+              <app-profile-image [username]="user.username" [image]="user.photoUrl" />
+            </div>
+            <p>{{user.username}}</p>
+          </div>
+        }
+      </div>
     </div>
   </div>
+
+  <button (click)="submit(title, description, tag, time, priority, users)" id="bSubmit">Create Task</button>
 
 </app-main-content-box>

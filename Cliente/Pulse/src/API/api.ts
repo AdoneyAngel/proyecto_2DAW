@@ -108,7 +108,8 @@ async function post(url:string, data:any = {}, params:{name:any, value:any}[] = 
       url: requestPath,
       withCredentials: true,
       method: "POST",
-      data
+      data,
+      ...config
     })
 
     if (res.data) {
@@ -304,12 +305,25 @@ export async function getProjectTasks(projectId:number|string, users:boolean = f
   ])
 }
 
-export async function createTask(projectId:number|string, title:string, description:string, time:number, priority:number, tag:string, users:any = []) {
+export async function createTask(projectId:number|string, title:string, description:string = "", time:number, priority:number, tag:string, users:any = []) {
   return await post(`tasks`, {
-    title, description, time, priority, tag, users, projectId
+    title, description, time, priority, tag, users, proyectId:projectId
   })
 }
 
 export async function getTags(projectId:number|string) {
   return await get(`proyects/${projectId}/tags`)
+}
+
+export async function getTask(taskId:number|string, users:boolean = false, project:boolean = false) {
+  return await get(`tasks/${taskId}`, [
+    {
+      name: "users",
+      value: users
+    },
+    {
+      name: "proyect",
+      value: project
+    }
+  ])
 }

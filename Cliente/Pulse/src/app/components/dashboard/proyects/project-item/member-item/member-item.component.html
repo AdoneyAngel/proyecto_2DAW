@@ -1,5 +1,5 @@
 <div id="memberItem">
-  <app-profile-image [image]="user.photo" />
+  <app-profile-image [username]="user.username" [image]="user.photo" />
 
   @if (sameUser) {
     <p title="{{user.username}}">{{user.username}} <span title="{{user.email}}" id="sameUser">(You)</span> <span id="email"> - {{user.email}}</span></p>

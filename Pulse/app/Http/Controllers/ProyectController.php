@@ -18,6 +18,7 @@ use App\Models\responseUtils;
 use App\Models\Task;
 use App\Models\TaskHistory;
 use App\Models\User;
+use App\Models\Utils;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -563,13 +564,13 @@ class ProyectController extends Controller
     }
 
     public function loadMissing(Request $request, &$proyect) {            //Load missing parameters
-        if ($request->query("members")) {
+        if (Utils::parseBool($request->query("members"))) {
             $proyect->loadMembers();
         }
-        if ($request->query("tasks")) {
+        if (Utils::parseBool($request->query("tasks"))) {
             $proyect->loadTasks();
         }
-        if ($request->query("owner")) {
+        if (Utils::parseBool($request->query("owner"))) {
             $proyect->loadOwner();
         }
     }

@@ -3,6 +3,6 @@
     <img [src]="image" alt="">
 
   } @else {
-    <img src="/assets/images/user_white.png" alt="">
+    <p id="letter" [style]="setLetterStyles()">{{username[0]}}</p>
   }
 </div>
