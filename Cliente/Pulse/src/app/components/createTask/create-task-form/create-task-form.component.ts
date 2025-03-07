@@ -18,4 +18,5 @@ export class CreateTaskFormComponent {
   users:any = []
   @Input() submit:VoidFunction = ()=>{}
   @Input() tags:any = []
+  @Input() memberes:any = []
 }

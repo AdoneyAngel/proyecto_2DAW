@@ -17,21 +17,6 @@
           @for (actualTag of tags; track $index) {
             <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
           }
-          @for (actualTag of tags; track $index) {
-            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
-          }
-          @for (actualTag of tags; track $index) {
-            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
-          }
-          @for (actualTag of tags; track $index) {
-            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
-          }
-          @for (actualTag of tags; track $index) {
-            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
-          }
-          @for (actualTag of tags; track $index) {
-            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
-          }
         </div>
       </div>
     </div>
@@ -39,6 +24,31 @@
 
   <div id="delimiter"></div>
 
+  <div class="inputSection">
+    <textarea [(ngModel)]="description" id="inputDescription" placeholder="Detailed description"></textarea>
+  </div>
 
+  <div id="delimiter"></div>
+
+  <div id="dataSection">
+    <div class="numericsSection">
+      <div class="inputSection">
+        <label>Estimated Time</label>
+        <input type="number" step="1" value="1" min="1" placeholder="ET" [(ngModel)]="time">
+      </div>
+
+      <br>
+
+      <div class="inputSection">
+        <label>Priority</label>
+        <input type="number" step="1" value="1" min="1" placeholder="Priority" [(ngModel)]="priority">
+      </div>
+
+    </div>
+
+    <div class="inputSection" class="usersSection">
+
+    </div>
+  </div>
 
 </app-main-content-box>

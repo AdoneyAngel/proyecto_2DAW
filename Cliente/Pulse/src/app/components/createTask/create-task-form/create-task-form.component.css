@@ -14,7 +14,7 @@
 .inputSection {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .inputTagSection {
   display: flex;
@@ -23,7 +23,7 @@
 }
 label {
   font-weight: bold;
-  font-size: 1.8rem;
+  font-size: 1.8em;
   margin-left: 10px;
   margin-bottom: 3px;
 }
@@ -57,5 +57,27 @@ input {
   height: 2px;
   background: var(--grey-color);
   border-radius: 100px;
-  opacity: .5;
+  opacity: .7;
+}
+
+#inputDescription {
+  resize: none;
+  width: 100%;
+  background-color: black;
+  padding: 10px;
+  border: none;
+}
+
+#dataSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  font-size: 1rem;
+}
+
+#dataSection label {
+  font-size: 1.3em;
+}
+#dataSection input {
+  font-size: 1em;
+  width: min-content;
 }
