@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { getProjects, getTaskOfProject } from '../../../API/api';
+import { getIncludedProjects, getProjects, getTaskOfProject } from '../../../API/api';
 import { AppComponent } from '../../app.component';
 import { ProjectItemComponent } from '../../components/rack/project-item/project-item.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
@@ -29,7 +29,7 @@ export class RackComponent {
     }
 
     //API load
-    const projects = await getProjects(true)
+    const projects = await getIncludedProjects(true)
 
     if (!projects.success) {
       this.app.notificationError(projects.error)

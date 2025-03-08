@@ -55,6 +55,10 @@ export class ProjectComponent {
     }
   }
 
+  setOnMain(value:boolean) {
+    this.isOnMain = value
+  }
+
   onRouteChanges() {
     this.title = this.app.getTitle()
     this.dashboard.setRouteCustomTitle("project", this.project.title)
@@ -85,8 +89,6 @@ export class ProjectComponent {
 
       }
     )
-
-    this.app.onRouteChanges(this.onRouteChanges.bind(this))
   }
 
 

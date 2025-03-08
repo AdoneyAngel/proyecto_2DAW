@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { distinctUntilChanged, filter, shareReplay, take } from 'rxjs/operators';
 import { isLogged } from "../API/api"
@@ -17,6 +17,7 @@ import { OptionsComponent } from './components/options/options.component';
 export class AppComponent {
   title = 'Pulse';
   user:any = {}
+  routeSuscripcions:any = []
 
   //Notifications
   notificationList = [
@@ -66,6 +67,14 @@ export class AppComponent {
             this.user = logged.data
           }
         })
+      });
+
+      this.router.events
+      .pipe(filter(event => event instanceof NavigationStart))  // Filtramos solo los eventos de finalización de navegación
+      .subscribe(async e => {
+
+        console.log(e.url)
+
       });
   }
 
@@ -183,13 +192,40 @@ export class AppComponent {
     return title
   }
 
-  async onRouteChanges(callback:VoidFunction) {
-    this.router.events
+  async onRouteChanges(id:string|number, callback:VoidFunction) {
+    let suscripcionExist = false
+
+    this.routeSuscripcions.forEach((suscripcion:any) => {
+      if (suscripcion.id == id) {
+        suscripcionExist = true
+        console.log("found: " + id)
+
+        const newSuscripcion = this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))  // Filtramos solo los eventos de finalización de navegación
+        .subscribe(async e => {
+
+          callback()
+
+        });
+
+        suscripcion.suscripcion.unsubscribe()
+
+        suscripcion.suscripcion = newSuscripcion
+      }
+    })
+
+    if (!suscripcionExist) {
+      console.log("new: " + id)
+      const newSuscripcion = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))  // Filtramos solo los eventos de finalización de navegación
       .subscribe(async e => {
 
         callback()
 
       });
+
+      this.routeSuscripcions = [...this.routeSuscripcions, {id, suscripcion:newSuscripcion}]
+
+    }
   }
 }

@@ -23,6 +23,7 @@ use App\TaskStatusEnum;
 use App\TaskTypeEnum;
 use Exception;
 use Illuminate\Http\Request;
+use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 
 use function PHPUnit\Framework\isTrue;
 
@@ -218,20 +219,14 @@ class TaskController extends Controller
 
             //Task exist
             if (!$task) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "Task not found"
-                ], 404);
+                return responseUtils::notFound("Task not found");
             }
 
             //The use is owner of the proyect
             $proyect = Proyect::getById($task->getProyectId());
 
             if ($proyect->getOwnerId() != $user->getId()) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "You don't own the proyect of this task"
-                ], 401);
+                return responseUtils::unAuthorized("You don't own the proyect of this task");
             }
 
             $hasChanges = false;
@@ -268,33 +263,68 @@ class TaskController extends Controller
                 $hasChanges = true;
             }
 
+            if ($request->users && count($request->users)) {
+                $hasChanges = true;
+            }
+
+            //Update the user list
+
+            if ($request->users || is_array($request->users)) {
+                $task->loadUsers();
+                $taskUsers = $task->getUsers();
+
+                 //Delete users
+                foreach ($taskUsers as $user) {
+                    $isIncluded = false;
+
+                    foreach($request->users as $userFromRequest) {
+                        if ($userFromRequest == $user->getId()) {
+                            $isIncluded = true;
+                        }
+                    }
+
+                    if (!$isIncluded) {
+                        $task->removeUser($user);
+                    }
+                }
+
+                //Add new users
+                foreach ($request->users as $userFromRequest) {
+                    $isIncluded = false;
+
+                    foreach ($taskUsers as $user) {
+                        if ($user->getId() == $userFromRequest) {
+                            $isIncluded = true;
+                        }
+                    }
+
+                    if (!$isIncluded) {
+                        $newUser = User::getById($userFromRequest);
+
+                        //User exist
+                        if (!$newUser) {
+                            return responseUtils::notFound("One of the users not found");
+                        }
+
+                        $task->addUser($newUser);
+                    }
+                }
+            }
+
             if (!$hasChanges) {
-                return response()->json([
-                    "success" => true,
-                    "data" => new TaskResource($task)
-                ]);
+                return responseUtils::successful(new TaskResource($task));
             }
 
             $updatedTask = $task->saveChanges();
 
             if ($updatedTask) {
-                return response()->json([
-                    "success" => true,
-                    "data" => new TaskResource($task)
-                ]);
+                return responseUtils::successful(new TaskResource($task));
             }
 
-            return response()->json([
-                "success" => false,
-                "error" => "Something gone worng"
-            ], 500);
-        } catch (\Exception $err) {
-            error_log("Error updating task: " . $err->getMessage());
+            return responseUtils::serverError("Something gone worng");
 
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error updating task", $err);
         }
     }
 
@@ -345,6 +375,150 @@ class TaskController extends Controller
             return responseUtils::serverError("Something gone wrong adding user into a task", null, "Can't add the user, try again later");
         } catch (Exception $err) {
             return responseUtils::serverError("Error adding user into a task", $err);
+        }
+    }
+
+    /**
+     * Add a list of users into a task.
+    */
+    public function addUsers(Request $request, $taskId) {
+        try {
+            $reqUser = $request["user"];
+            $task = null;
+            $proyect = null;
+
+            if (!$request->users || !count($request->users)) {
+                return responseUtils::invalidParams("Missing users");
+            }
+
+            $task = Task::getById($taskId);
+
+            //Task exist
+            if (!$task) {
+                return responseUtils::notFound("Task not found");
+            }
+
+            $proyect = Proyect::getById($task->getProyectId());
+
+            //Request user is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You can't update this project");
+            }
+
+            $users = [];
+
+            foreach ($request->users as $userId) {
+                $user = User::getById($userId);
+
+                if (!$user) {
+                    return responseUtils::notFound("One of users not found");
+                }
+
+                $users[] = $user;
+            }
+
+            foreach ($users as $user) {
+                $task->addUser($user);
+            }
+
+            return responseUtils::successful(true);
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error adding list of user into a task, TaskController", $err);
+        }
+    }
+
+    /**
+     * Remove user from task.
+     */
+    public function removeUser(Request $request, $id) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = null;
+            $task = null;
+            $user = null;
+
+            if (!$request->userId) {
+                return responseUtils::invalidParams("Missing user");
+            }
+
+            $task = Task::getById($id);
+
+            //Task exist
+            if (!$task) {
+                return responseUtils::notFound("Task not found");
+            }
+
+            $proyect = Proyect::getById($task->getProyectId());
+
+            //User is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You can't update this proyect");
+            }
+
+            $user = User::getById($request->userId);
+
+            //User exist
+            if (!$user) {
+                return responseUtils::notFound("User not found");
+            }
+
+            $removedUser = $task->removeUser($user);
+
+            return responseUtils::successful(true);
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error removing user from task, TaskCotroller", $err);
+        }
+    }
+
+    /**
+     * Remove a list of users from task.
+     */
+    public function removeUsers(Request $request, $taskId) {
+        try {
+            $reqUser = $request["user"];
+            $task = null;
+            $proyect = null;
+
+            if (!$request->users || !count($request->users)) {
+                return responseUtils::invalidParams("Missing users");
+            }
+
+            $task = Task::getById($taskId);
+
+            //Task exist
+            if (!$task) {
+                return responseUtils::notFound("Task not found");
+            }
+
+            $proyect = Proyect::getById($task->getProyectId());
+
+            //Request user is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You can't update this project");
+            }
+
+            $users = [];
+
+            foreach ($request->users as $userId) {
+                $user = User::getById($userId);
+
+                if (!$user) {
+                    return responseUtils::notFound("One of users not found");
+                }
+
+                $users[] = $user;
+            }
+
+            foreach ($users as $user) {
+                $task->removeUser($user);
+            }
+
+            return responseUtils::successful(true);
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error removing list of user into a task, TaskController", $err);
         }
     }
 

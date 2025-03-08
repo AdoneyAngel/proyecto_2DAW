@@ -1,0 +1,145 @@
+#titleContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: -40px;
+}
+#title {
+  font-size: 1.8rem;
+  color: white;
+  background-color: transparent;
+  border: none;
+  opacity: 1;
+  font-weight: bold;
+  width: 100%;
+}
+
+#description {
+  resize: none;
+  width: -webkit-fill-available;
+  height: 100%;
+}
+
+#bSave {
+  border: none;
+  color: white;
+  background: var(--primary-color);
+  position: fixed;
+  bottom: 80px;
+  right: 80px;
+  padding: var(--lg-padding) var(--md-padding);
+}
+
+.container h1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: normal;
+  opacity: .6;
+  margin-bottom: 10px;
+}
+.container h1 img {
+  height: 20px;
+  margin-right: 10px;
+}
+.container {
+  margin-bottom: 30px;
+  border: 2px solid var(--secondary-color);
+  border-radius: var(--lg-border-radius);
+  padding: 10px;
+}
+
+#numericsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+input:disabled, textarea:disabled {
+  border: none;
+}
+
+#bEdit {
+  padding: var(--lg-padding) var(--md-padding);
+  background: var(--light-color);
+  margin-left: 10px;
+  margin-bottom: 10px;
+  border-width: 2px;
+}
+
+#bEdit.bEditin {
+  background: transparent;
+}
+#bEdit.bCancel {
+  background: var(--red-color);
+}
+
+#user {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 20px;
+  cursor: pointer;
+  align-items: center;
+  background: var(--secondary-color);
+  padding: 10px;
+  border: 2px solid var(--tertiary-color);
+  border-radius: var(--md-border-radius);
+}
+#user p::first-letter {
+  text-transform: uppercase;
+}
+#user span::first-letter {
+  text-transform: uppercase;
+}
+#user.unassigned {
+  opacity: var(--md-opacity);
+}
+#user.removed {
+  border-color: var(--red-color);
+}
+#user.added {
+  border-color: var(--green-color);
+}
+#user p {
+  margin-left: 10px;
+}
+#user #email {
+  opacity: var(--md-opacity);
+  font-size: .9rem;
+}
+#user.draggable::before {
+  content: "|||";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  position: relative;
+  opacity: .5;
+  letter-spacing: -.2px;
+  margin-left: -10px;
+}
+
+#bUserAction {
+  margin-left: auto;
+  border: none;
+}
+#bUserAction.remove {
+  background: var(--red-color);
+}
+#bUserAction.add {
+  background: var(--green-color);
+}
+
+#title.titleEditing {
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid var(--light-color);
+}
+
+#youSpan {
+  margin-right: 10px;
+  color: var(--primary-color);
+}

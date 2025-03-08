@@ -1,8 +1,10 @@
-<div id="memberItem">
-  <app-profile-image [username]="user.username" [image]="user.photo" />
+<div id="memberItem" class="{{owner?'owner':''}}">
+  <app-profile-image styles="
+      {{owner?'margin-left: 10px':''}}
+  " [username]="user.username" [image]="user.photo" />
 
-  @if (sameUser) {
-    <p title="{{user.username}}">{{user.username}} <span title="{{user.email}}" id="sameUser">(You)</span> <span id="email"> - {{user.email}}</span></p>
+  @if (sameUser || owner) {
+    <p title="{{user.username}}">{{user.username}} <span title="{{user.email}}" id="sameUser">{{owner?'Owner':'You'}}</span> <span id="email"> - {{user.email}}</span></p>
 
   } @else {
     <p title="{{user.username}}">{{user.username}} <span title="{{user.email}}" id="email"> - {{user.email}}</span></p>

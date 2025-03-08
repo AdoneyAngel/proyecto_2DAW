@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { ProfileImageComponent } from '../../../../components/profile-image/profile-image.component';
 import TaskStatusEnum from '../../../../enums/TaskStatusEnmu';
 import UserTaskStatusEnum from '../../../../enums/UserTaskStatusEnum';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [ProfileImageComponent],
+  imports: [ProfileImageComponent, RouterLink],
   templateUrl: './task.component.html',
   styleUrls: ["../../../../../styles/dashboardItem.css", './task.component.css']
 })

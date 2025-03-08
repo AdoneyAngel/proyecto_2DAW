@@ -135,6 +135,51 @@ async function post(url:string, data:any = {}, params:{name:any, value:any}[] = 
   }
 }
 
+async function remove(url:string, data:any = {}, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}) {
+  let requestPath = `${apiUrl}/${prefix}/${url}`
+
+  if (params.length) requestPath += "?"
+
+  params.map((actualParam, index) => {
+    if (index) {
+      requestPath += `&`
+    }
+
+    requestPath += `${actualParam.name}=${actualParam.value}`
+  })
+
+  try {
+    const res = await axios({
+      url: requestPath,
+      withCredentials: true,
+      method: "DELETE",
+      data,
+      ...config
+    })
+
+    if (res.data) {
+      return res.data
+
+    } else {
+      return {
+        success: false,
+        error: "Server error"
+      }
+    }
+
+  } catch (err: any) {
+    if (err.response.data) {
+      return err.response.data
+
+    } else {
+      return {
+        success: false,
+        error: "Server error"
+      }
+    }
+  }
+}
+
 export async function isLogged() {
   return await get("isLogged")
 }
@@ -311,6 +356,17 @@ export async function createTask(projectId:number|string, title:string, descript
   })
 }
 
+export async function updateTask(taskId:number|string, title:string, description:string = "", time:number, priority:number, tag:string, users:any = null) {
+  return put(`tasks/${taskId}`, {
+    title,
+    description,
+    time,
+    priority,
+    tag,
+    users
+  })
+}
+
 export async function getTags(projectId:number|string) {
   return await get(`proyects/${projectId}/tags`)
 }
@@ -326,4 +382,12 @@ export async function getTask(taskId:number|string, users:boolean = false, proje
       value: project
     }
   ])
+}
+
+export async function getProjectMembers(projectId:number|string) {
+  return await get(`proyects/${projectId}/members`)
+}
+
+export async function removeUserFromTask(taskId:number|string, userId:number|string) {
+  return await remove(`tasks/${taskId}/users/${userId}`)
 }

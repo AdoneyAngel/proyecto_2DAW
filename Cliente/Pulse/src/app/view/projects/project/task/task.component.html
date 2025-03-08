@@ -1,4 +1,4 @@
-<div id="item" class="{{task.statusId==todoEnum?'todo':(task.statusId==progressEnum?'progress':(task.statusId==reviewEnum?'review':'done')) }} {{!task.users||!task.users.length ? 'rack':''}}">
+<div title="{{task.description}}" routerLink="/dashboard/projects/{{task.proyectId}}/tasks/{{task.id}}" id="item" class="{{task.statusId==todoEnum?'todo':(task.statusId==progressEnum?'progress':(task.statusId==reviewEnum?'review':'done')) }} {{!task.users||!task.users.length ? 'rack':''}}">
   <div id="info">
     <h1>{{task.title}}</h1>
     <div id="date">{{task.date}}</div>

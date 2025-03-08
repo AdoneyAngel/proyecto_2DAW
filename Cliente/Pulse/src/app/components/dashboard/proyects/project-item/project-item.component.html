@@ -5,6 +5,7 @@
   </div>
 
   <div id="membersList">
+    <app-member-item [owner]="true" [user]="project.owner" />
     @for (user of project.members; track $index) {
       <app-member-item [user]="user" />
     }

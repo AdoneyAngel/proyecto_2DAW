@@ -28,7 +28,7 @@ export class DashboardComponent {
   async ngOnInit() {
     this.onRouteChanges()
 
-    this.appComponent.onRouteChanges(this.onRouteChanges.bind(this))
+    this.appComponent.onRouteChanges("dashboard", this.onRouteChanges.bind(this))
   }
 
   getCache(name:string) {
@@ -52,6 +52,9 @@ export class DashboardComponent {
     if (!cacheExist) {
       this.cache = [...this.cache, {name, data}]
     }
+  }
+  removeCache(name:string) {
+    this.cache = this.cache.filter((actualCache:any) => actualCache.name !== name)
   }
 
   //Invitations

@@ -13,6 +13,7 @@ import { DashboardComponent } from '../../../../../view/dashboard/dashboard.comp
 export class MemberItemComponent {
   @Input() user:any = {}
   @Input() userPhoto:any = null
+  @Input() owner:boolean = false
   sameUser:boolean = false
 
   constructor (protected app:AppComponent, private dashboard:DashboardComponent){}

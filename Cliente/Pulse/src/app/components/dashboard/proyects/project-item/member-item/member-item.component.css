@@ -8,14 +8,10 @@
   font-size: 1em;
   margin-left: 20px;
 }
-#memberItem img {
-  width: 30px;
-  height: 30px;
-  margin-right: 20px;
-  border-radius: 10px;
-  transform: rotate(45deg);
-  image-orientation: flip;
-  overflow: revert;
+.owner {
+  background: var(--tertiary-color);
+  padding: 10px 0;
+  border-radius: var(--lg-border-radius);
 }
 #memberItem #email {
   opacity: .5;
@@ -25,4 +21,5 @@
 #memberItem #sameUser {
   color: var(--primary-color);
   opacity: .7;
+  font-size: 1.2em;
 }

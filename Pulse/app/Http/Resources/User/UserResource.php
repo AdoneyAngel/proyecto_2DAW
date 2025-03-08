@@ -18,7 +18,7 @@ class UserResource extends JsonResource
             "id" => $this->getId(),
             "username" => $this->getUserName(),
             "email" => $this->getEmail(),
-            "photo" => $this->getPhoto(),
+            // "photo" => $this->getPhoto(),
             "registred" => $this->getRegistred()
         ];
 

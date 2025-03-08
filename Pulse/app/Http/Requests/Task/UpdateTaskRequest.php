@@ -23,11 +23,12 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             "title" => ["sometimes", "required"],
-            "description" => ["sometimes", "required"],
-            "tag" => ["sometimes", "required"],
+            "description" => ["sometimes"],
+            "tag" => ["sometimes"],
             "priority" => ["sometimes", "required"],
             "time" => ["sometimes", "required"],
-            "statusId" => ["sometimes", "required"]
+            "statusId" => ["sometimes", "required"],
+            "users" => ["sometimes", "array"]
         ];
     }
 }

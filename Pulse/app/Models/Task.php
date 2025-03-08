@@ -261,6 +261,15 @@ class Task extends Model
         return false;
     }
 
+    public function removeUser(User $user) {
+        if (!$this->id) return null;
+        if (!$this->proyectId) return null;
+
+        $deletedUser = DB::statement("CALL proyects_tasks_users_delete(?, ?)", [$this->id, $user->getId()]);
+
+        return true;
+    }
+
     public function isJoined(User $user): bool {
 
         $users = $this->getUsers();

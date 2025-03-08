@@ -6,6 +6,7 @@
   overflow: revert;
   transform: rotate(-45deg);
   background: black;
+  user-select: none;
 }
 
 #profileImage {
@@ -18,6 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 
 #letter {
@@ -29,4 +31,5 @@
   align-items: center;
   font-weight: bold;
   text-transform: uppercase;
+  user-select: none;
 }

@@ -389,7 +389,7 @@ class ProyectController extends Controller
 
             //The user found is member
             if (!$proyect->getId() == $member->getProyectId()) {
-                return responseUtils::notFound("Member not found");
+                return responseUtils::notFound("The user is not member of the project");
             }
 
             return responseUtils::successful(new ProyectMemberResource($member));

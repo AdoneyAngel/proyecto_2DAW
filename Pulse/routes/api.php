@@ -41,6 +41,7 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
     //----Tasks
     Route::apiResource("/tasks", TaskController::class);
     Route::post("/tasks/{id}/users", [TaskController::class, "addUser"]);
+    Route::delete("/tasks/{id}/users", [TaskController::class, "removeUser"]);
     Route::get("/tasks/{id}/users", [TaskController::class, "getUsers"]);
     Route::put("/tasks/{id}/nextStatus", [TaskController::class, "nextStatus"]);
     Route::get("/tasks/{id}/users/{userId}/status", [TaskController::class, "getUserStatus"]);

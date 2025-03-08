@@ -1,1 +1,72 @@
-<p>task works!</p>
+<main>
+  <div class="container" id="titleContainer">
+    <input [(ngModel)]="newTitle" class="{{editing?'titleEditing':''}}" id="title" value="{{task.title}}" type="text" placeholder="{{task.title}}" disabled="{{!editing}}">
+  </div>
+
+  <button class="{{!editing?'bEditin':'bCancel'}}" (click)="setEditing()" *ngIf="isOwner" id="bEdit">{{editing?'Cancel':'Edit'}}</button>
+
+  <app-main-content-box display="list">
+
+    <div class="container" id="descriptionContainer">
+      <h1> <img src="assets/images/description_white.png" alt=""> Description</h1>
+      <textarea [(ngModel)]="newDescription" class="input" id="description" [disabled]="!isOwner || !editing">{{task.description}}</textarea>
+    </div>
+
+    <div class="container" id="tagContainer">
+      <h1> <img src="assets/images/tag_white.png" alt="">Tag</h1>
+      <input [(ngModel)]="newTag" type="text" id="tag" placeholder="{{task.tag}}" value="{{task.tag}}" [disabled]="!isOwner || !editing">
+    </div>
+
+    <div class="container" id="numericsContainer">
+      <div class="subContainer">
+        <h1> <img src="assets/images/time_white.png" alt="">Time</h1>
+        <input [(ngModel)]="newTime" type="number" value="{{task.time}}" placeholder="{{task.time}}" [disabled]="!isOwner || !editing">
+      </div>
+
+      <div class="subContainer">
+        <h1> <img src="assets/images/priority_white.png" alt="">Priority</h1>
+        <input [(ngModel)]="newPriority" type="number" value="{{task.priority}}" placeholder="{{task.priority}}" [disabled]="!isOwner || !editing">
+      </div>
+    </div>
+
+    <app-content-box-delimiter title="Assigned users" />
+
+    <div (dragover)="onDragOver($event)" (drop)="onDropAssignedUsers($event)" class="container" id="users">
+      @for (user of newUsers; track $index) {
+        @if (user.added) {
+          <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner}}" title="{{user.username}}-{{user.email}}" class="assigned {{editing?'draggable':''}} {{!user.original?'added':''}}" id="user">
+
+            <app-profile-image [image]="user.photoUrl" [username]="user.username" />
+            <p><span id="youSpan" *ngIf="app.getUser().id==user.id">You</span>{{user.username}} <span id="email">- {{user.email}}</span></p>
+            <button *ngIf="editing" (click)="removeUser(user.id)" id="bUserAction" class="remove">Remove</button>
+
+          </div>
+        }
+      }
+    </div>
+
+    @if (isOwner) {
+      <app-content-box-delimiter title="Unassigned users" />
+
+      <div (dragover)="onDragOver($event)" (drop)="onDropUnassignedUsers($event)" class="container" id="users">
+        @for (user of newUsers; track $index) {
+          @if (!user.added) {
+            <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner}}" title="{{user.username}}-{{user.email}}" class="unassigned {{editing?'draggable':''}} {{user.original?'removed':''}}" id="user">
+
+              <app-profile-image [image]="user.photoUrl" [username]="user.username" />
+              <p><span id="youSpan" *ngIf="app.getUser().id==user.id">You</span> {{user.username}} <span id="email">- {{user.email}}</span></p>
+              <button *ngIf="editing" (click)="addUser(user.id)" id="bUserAction" class="add">Add</button>
+
+            </div>
+          }
+        }
+      </div>
+    }
+  </app-main-content-box>
+
+  @if (isChanged) {
+    <button (click)="submit()" id="bSave">Save</button>
+  }
+
+
+</main>

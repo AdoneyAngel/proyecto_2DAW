@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MemberItemComponent } from './member-item/member-item.component';
 import { AppComponent } from '../../../../app.component';
 import { RouterLink } from '@angular/router';
+import { DashboardComponent } from '../../../../view/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-project-item',
@@ -14,9 +15,9 @@ export class ProjectItemComponent implements OnChanges {
   @Input() project:any = {}
   @Input() usersPhotos:any = []
 
-  constructor (protected app:AppComponent){}
+  constructor (protected app:AppComponent, private dashboard:DashboardComponent){}
 
-  ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges) {
 
     this.project.members = this.project.members.map((actualMember: {id:string|number,photoUrl:string|null}) => {
 
@@ -26,6 +27,10 @@ export class ProjectItemComponent implements OnChanges {
 
       return updatedMember
     })
+
+    const ownerPhoto = await this.dashboard.findUserPhoto(this.project.owner.id)
+
+    this.project.owner.photo = ownerPhoto.photo
   }
 
 }

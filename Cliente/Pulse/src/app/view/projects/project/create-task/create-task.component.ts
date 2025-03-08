@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { CreateTaskFormComponent } from '../../../../components/createTask/create-task-form/create-task-form.component';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { createTask, getProject, getTags } from '../../../../../API/api';
 import { AppComponent } from '../../../../app.component';
 import { DashboardComponent } from '../../../dashboard/dashboard.component';
 import { ProjectComponent } from '../project.component';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-create-task',
@@ -25,7 +24,13 @@ export class CreateTaskComponent {
   ngOnInit() {
     this.projectId = this.projectComponent.getProjectId()
 
+    this.projectComponent.setOnMain(false)
+
     this.loadProject()
+  }
+
+  ngOnDestroy() {
+    this.projectComponent.setOnMain(true)
   }
 
   async submit(title:string, description:string, tag:string, time:number, priority:number, users:any = []) {
@@ -97,6 +102,9 @@ export class CreateTaskComponent {
     .then(res => {
       if (res.success) {
         this.project = res.data
+
+        this.dashboard.setTitle("create task")
+        this.dashboard.setRouteCustomTitle("project", this.project.title)
 
         this.loadTags()
         this.loadMemberPhotos()

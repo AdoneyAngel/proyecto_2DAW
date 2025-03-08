@@ -1,6 +1,6 @@
 <div id="projectBody">
   <div id="titleContainer">
-    @if (project.ownerId == app.getUser().id) {
+    @if (project.ownerId == app.getUser().id && isOnMain) {
       @if (project.title) {
         <input class="title" [(ngModel)]="newProjectTitle" type="text" id="inputTitle" placeholder="{{project.title}}" value="{{project.title}}">
 
@@ -14,12 +14,14 @@
 
 
     } @else {
-      <h1 class="title">{{project.title ?? "Project"}}</h1>
+      @if (isOnMain) {
+        <h1 class="title">{{project.title ?? "Project"}}</h1>
+      }
     }
 
   </div>
 
-  <main style="flex-grow: 1;">
+  <main style="margin-top: {{isOnMain?'-60px':''}};">
     <router-outlet></router-outlet>
 
     @if (isOnMain) {
@@ -97,8 +99,16 @@
   <div style="flex-grow: 1; height: 100%;width: 10px; background-color: red;margin-top: auto;"></div>
 
   <div id="memberList" [style]="'display: '+(isOnMain?'flex':'none')">
+
+
+    @if (project.owner) {
+      <div id="member" class="owner" title="{{project.owner.username}} - {{project.owner.email}}">
+        <app-profile-image [username]="project.owner.username" image="{{project.owner.photoUrl}}" />
+      </div>
+    }
+
     @for (member of project.members; track $index) {
-      <div id="member" title="{{member.username}} - {{member.email}}">
+      <div id="member" class="{{app.getUser().id==member.id?'sameUser':''}}" title="{{member.username}} - {{member.email}}">
 
         <app-profile-image [username]="member.username" image="{{member.photoUrl}}" />
 

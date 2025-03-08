@@ -45,10 +45,6 @@ h1 {
   color: var(--light-color);
 }
 
-main {
-  margin-top: -60px;
-}
-
 #memberList {
   position: fixed;
   bottom: 50px;
@@ -64,6 +60,31 @@ main {
 #memberList #member {
   margin: 0 10px;
   cursor: pointer;
+  position: relative;
+}
+#member.owner, #member.sameUser {
+  padding: 5px;
+  /* border: 2px solid var(--primary-color); */
+  border-radius: var(--lg-border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.753);
+}
+#member.owner::before, #member.sameUser::before {
+  margin-right: 10px;
+  text-align: center;
+  width: 100%;
+  margin: auto;
+  display: block;
+  margin-bottom: 5px;
+}
+#member.owner::before {
+  content: "Onwer";
+}
+#member.sameUser::before {
+  content: "You";
 }
 
 #deployable .closed {
