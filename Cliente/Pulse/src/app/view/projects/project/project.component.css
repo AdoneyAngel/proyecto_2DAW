@@ -53,9 +53,10 @@ h1 {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow-x: visible;
+  overflow-y: visible;
   padding: 5px 30px;
+  z-index: 10;
 }
 #memberList #member {
   margin: 0 10px;
@@ -111,8 +112,58 @@ h1 {
   justify-content: flex-end;
 }
 
-#bCreateTask {
+#bCreateTask, #bMembersSearch {
   font-size: 1em;
   background: var(--primary-color);
   padding: 10px 15px;
+}
+
+#bDeployMembers {
+  transform: rotate(0deg);
+}
+#bDeployMembers.opened {
+  transform: rotate(-90deg);
+}
+#bDeployMembers.closed {
+  transform: rotate(0deg);
+}
+
+#fullMemberList {
+  position: absolute;
+  top: 0;
+  transform: translate(0, -110%);
+  background: black;
+  padding: var(--md-padding);
+  border-radius: var(--md-border-radius);
+  max-height: 500px;
+  max-width: 300px;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: showFullMemberListAni .2s ease-out;
+}
+#fullMemberList #member {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 0;
+}
+#fullMemberList #member p {
+  margin-left: 10px;
+}
+
+#bMembersSearch {
+  margin-right: auto;
+
+}
+
+@keyframes showFullMemberListAni {
+  0% {
+    opacity: 0;
+    transform: translate(0, -105%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, -110%);
+  }
 }

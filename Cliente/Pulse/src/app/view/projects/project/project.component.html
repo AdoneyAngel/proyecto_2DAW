@@ -26,6 +26,7 @@
 
     @if (isOnMain) {
       <div id="optionSection">
+        <button (click)="openShowMemberSearch()" id="bMembersSearch">Members</button>
         <button *ngIf="isOwner" routerLink="/dashboard/projects/{{projectId}}/createTask" id="bCreateTask">Create new task</button>
       </div>
 
@@ -107,13 +108,36 @@
       </div>
     }
 
-    @for (member of project.members; track $index) {
+    @for (member of project.members.slice(0, 4); track $index) {
       <div id="member" class="{{app.getUser().id==member.id?'sameUser':''}}" title="{{member.username}} - {{member.email}}">
 
         <app-profile-image [username]="member.username" image="{{member.photoUrl}}" />
 
       </div>
     }
+
+    @if (project.members.length > 4) {
+      <button class="{{showMemberList?'opened':'closed'}}" (click)="showMemberList=!showMemberList" id="bDeployMembers">
+        <img src="assets/images/arrow_white.png">
+      </button>
+    }
+
+    @if (showMemberList) {
+      <div id="fullMemberList">
+        @for (member of project.members; track $index) {
+          <div id="member" class="{{app.getUser().id==member.id?'sameUser':''}}" title="{{member.username}} - {{member.email}}">
+
+            <app-profile-image [username]="member.username" image="{{member.photoUrl}}" />
+            <p>{{member.username}} <span>- {{member.email}}</span></p>
+
+          </div>
+        }
+      </div>
+    }
   </div>
 
 </div>
+
+@if (showMemberSearch) {
+  <app-member-search [close]="closeShowMemberSearch.bind(this)" />
+}

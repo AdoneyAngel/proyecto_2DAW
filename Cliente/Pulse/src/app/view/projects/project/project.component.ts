@@ -11,15 +11,18 @@ import TaskStatusEnum from '../../../enums/TaskStatusEnmu';
 import { TaskComponent } from './task/task.component';
 import { ContentBoxDelimiterComponent } from '../../../components/content-box-delimiter/content-box-delimiter.component';
 import { NgIf } from '@angular/common';
+import { MemberSearchComponent } from './member-search/member-search.component';
 
 @Component({
   selector: 'app-project',
   standalone: true,
-  imports: [FormsModule, MainContentBoxComponent, ProfileImageComponent, TaskComponent, ContentBoxDelimiterComponent, RouterLink, RouterOutlet, NgIf],
+  imports: [FormsModule, MainContentBoxComponent, ProfileImageComponent, TaskComponent, ContentBoxDelimiterComponent, RouterLink, RouterOutlet, NgIf, MemberSearchComponent],
   templateUrl: './project.component.html',
   styleUrl: './project.component.css'
 })
 export class ProjectComponent {
+  showMemberSearch:boolean = false
+  showMemberList:boolean = false
   projectId:number|string = 0
   project:any = {}
   newProjectTitle:string = ""
@@ -41,6 +44,13 @@ export class ProjectComponent {
     this.clearPage()
 
     this.onRouteChanges()
+  }
+
+  openShowMemberSearch() {
+    this.showMemberSearch = true
+  }
+  closeShowMemberSearch() {
+    this.showMemberSearch = false
   }
 
   clearPage() {
