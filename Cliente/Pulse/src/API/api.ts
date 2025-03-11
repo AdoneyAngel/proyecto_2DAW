@@ -1,7 +1,7 @@
 import axios from "axios"
 import { apiUrl, prefix } from "./config"
 
-async function get(url:string, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}) {
+async function get(url:string, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}, data:any = {}) {
   let requestPath = `${apiUrl}/${prefix}/${url}`
 
   if (params.length) requestPath += "?"
@@ -18,7 +18,8 @@ async function get(url:string, params:{name:any, value:any}[] = [], config:any =
     const res = await axios({
       url: requestPath,
       withCredentials: true,
-      method: "GET"
+      method: "GET",
+      data
     })
 
     if (res.data) {
@@ -390,4 +391,17 @@ export async function getProjectMembers(projectId:number|string) {
 
 export async function removeUserFromTask(taskId:number|string, userId:number|string) {
   return await remove(`tasks/${taskId}/users/${userId}`)
+}
+
+export async function searchUser(userInfo:string) {
+  return await get("searchUser", [
+    {
+      name: "info",
+      value: userInfo
+    }
+  ])
+}
+
+export async function getUser(userId:string|number) {
+  return await get(`users/${userId}`)
 }

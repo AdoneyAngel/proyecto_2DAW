@@ -253,7 +253,7 @@ export class TaskComponent {
 
   validateForm():boolean {
     this.newTitle = this.newTitle.trim()
-    this.newDescription = this.newDescription.trim()
+    this.newDescription = this.newDescription?.trim()
     this.newTag = this.newTag.trim()
 
     if (!this.isOwner) {

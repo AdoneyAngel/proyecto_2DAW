@@ -1,8 +1,19 @@
-<div [style]="styles" id="profileImage">
+<div (click)="toggleShowProfileInfo($event)" class="{{show?'deployable': ''}}" [style]="styles" id="profileImage">
   @if (image) {
     <img [src]="image" alt="">
 
   } @else {
     <p id="letter" [style]="setLetterStyles()">{{username[0]}}</p>
+  }
+
+  @if (showProfileInfo) {
+    <div id="profileInfo">
+      <div id="head">
+        <img [src]="image" alt="">
+        <h1>{{profile?.username}}</h1>
+      </div>
+
+      <p>{{profile?.email}}</p>
+    </div>
   }
 </div>

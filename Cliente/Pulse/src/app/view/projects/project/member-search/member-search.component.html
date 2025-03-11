@@ -1,3 +1,45 @@
 <app-popup-background [closeCallback]="close">
-  <h1>Prueba</h1>
+  <div id="memberSearch">
+
+    <div id="header">
+      <button (click)="close()" id="bBack">
+        <img src="assets/images/back_white.png">
+      </button>
+
+      @if (isLoading) {
+        <div id="loadingIcon">
+          <app-loading />
+        </div>
+      }
+    </div>
+
+    @if (!searchMember && project.ownerId == app.getUser().id) {
+      <section id="searchUser">
+        <h1>Search user</h1>
+        <input [(ngModel)]="usersString" type="text" placeholder="Username/email" (keyup)="onKeyUpUser($event)">
+
+        <div id="userList" class="userList">
+          @for (user of filteredUsers; track $index) {
+            <div title="{{user.username}} - {{user.email}}" id="user"><app-profile-image [username]="user.username"/><p>{{user.username}} <span id="email"> - {{user.email}}</span></p></div>
+          }
+        </div>
+      </section>
+    }
+
+    <div id="separator"></div>
+
+    @if (!searchUser) {
+      <section id="searchMember">
+        <h1>Members</h1>
+        <input type="text" placeholder="Search member" (keyup)="onKeyUpMember($event)">
+
+         <div id="userList" class="memberList">
+          @for (user of (!searchMember?project?.members : filteredMembers); track $index) {
+            <div title="{{user.username}} - {{user.email}}" id="user"><app-profile-image [username]="user.username"/><p>{{user.username}} <span id="email"> - {{user.email}}</span></p></div>
+          }
+         </div>
+      </section>
+    }
+
+  </div>
 </app-popup-background>
