@@ -1,3 +1,7 @@
+#profileImageContainer {
+  position: relative;
+}
+
 #profileImage img {
   width: calc(100% + 8px);
   height: calc(100% + 8px);
@@ -11,8 +15,6 @@
 #profileImage.deployable:hover {
   border: 2px solid rgba(255, 255, 255, 0.842);
   box-shadow: 0px 0px 10px -5px white;
-  /* transform: rotate(45deg) scale(1.1); */
-  transform-origin: center;
   transition: .1s;
   cursor: pointer;
 }
@@ -28,6 +30,7 @@
   justify-content: center;
   align-items: center;
   user-select: none;
+  position: relative;
 }
 
 #letter {
@@ -43,9 +46,46 @@
 }
 
 #profileInfo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: red;
-  transform: rotate(-45deg);
+  position: fixed;
+  background: black;
+  transform: translate(-50%, calc(-100% - 10px));
+  width: 250px;
+  z-index: 1000;
+  overflow: visible;
+  border: 2px solid var(--tertiary-color);
+  border-radius: var(--md-border-radius);
+  box-shadow: 0px 0px 15px -5px black;
+  animation: showProfileInfo .2s ease-out;
+  padding: var(--md-padding);
+}
+
+#profileInfo #head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5px;
+}
+#head h1 {
+  margin-left: 10px;
+  text-transform: capitalize;
+}
+
+#profileInfo p#email {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: right;
+  opacity: var(--md-opacity);
+}
+
+@keyframes showProfileInfo {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 0px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, calc(-100% - 10px));
+  }
 }

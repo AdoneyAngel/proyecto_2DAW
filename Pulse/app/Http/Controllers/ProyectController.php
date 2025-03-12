@@ -36,7 +36,6 @@ class ProyectController extends Controller
             $this->loadMissings($request, $proyects);
 
             return responseUtils::successful(new ProyectCollection($proyects));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting proyects", $err);
         }
@@ -69,7 +68,6 @@ class ProyectController extends Controller
             $newProyect->create();
 
             return responseUtils::successful(new ProyectResource($newProyect));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error creating proyect", $err);
         }
@@ -94,11 +92,9 @@ class ProyectController extends Controller
                 $this->loadMissing($request, $proyect);
 
                 return responseUtils::successful(new ProyectResource($proyect));
-
             } else {
                 return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting proyect", $err);
         }
@@ -107,7 +103,8 @@ class ProyectController extends Controller
     /**
      * Get members of the proyect.
      */
-    public function getMembers(Request $request, $id) {
+    public function getMembers(Request $request, $id)
+    {
         try {
             $user = $request["user"];
 
@@ -117,11 +114,9 @@ class ProyectController extends Controller
                 $members = $proyect->getMembers();
 
                 return responseUtils::successful(new ProyectMemberCollection($members));
-
             } else {
                 return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting proyect members", $err);
         }
@@ -130,7 +125,8 @@ class ProyectController extends Controller
     /**
      * Add a new member to the proyect.
      */
-    public function addMember(AddProyectMemberRequest $request, $proyectId) {
+    public function addMember(AddProyectMemberRequest $request, $proyectId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($proyectId);
@@ -138,64 +134,58 @@ class ProyectController extends Controller
 
             //User exist
             if (!$user) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "User not found"
-                ], 404);
+                return responseUtils::notFound("User not found");
             }
 
             //Proyect exist
             if (!$proyect) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "Proyect not found"
-                ], 404);
+                return responseUtils::notFound("Proyect not found");
             }
 
             //Current user is owner of the proyect
             if ($proyect->getOwnerId() != $reqUser->getId()) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "You are not the owner of this proyect"
-                ], 401);
+                return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
             //User is already joined
             if ($proyect->isMember($user->getId())) {
-                return response()->json([
-                    "success" => false,
-                    "error" => "The user is already in"
-                ], 422);
+                return responseUtils::invalidParams("The user is already in");
+            }
+
+            //member was invited
+            $proyectMember = ProyectMember::getByMemberIdProyectId($user->getId(), $proyectId);
+
+            if ($proyectMember) {
+                if ($proyectMember->getStatus() == 0) {
+                    return responseUtils::successful(new ProyectMemberResource($proyectMember));
+                } else if ($proyectMember->getStatus() == -1) {
+                    //If the user rejected the request, update it to status 0 (pending)
+                    $proyectMember->setStatus(0);
+                    $proyectMember->saveMemberChanges();
+
+                    return responseUtils::successful(new ProyectMemberResource($proyectMember));
+                }
             }
 
             //Add member
             $newMember = new ProyectMember();
-            $newMember->buildFromUser($user, 0, $request->effectiveTime, $proyect->getId());
+            $newMember->buildFromUser($user, 0, $request->effectiveTime ?? 1, $proyect->getId());
 
             $addedMember = $proyect->addMember($newMember);
 
             if ($addedMember) {
-                return response()->json([
-                    "success" => true,
-                    "data" => new ProyectMemberResource($addedMember)
-                ], 201);
-
+                return responseUtils::successful(new ProyectMemberResource($addedMember));
             }
-
-        } catch (\Exception $err) {
-            error_log("Error adding member: ". $err->getMessage());
-
-            return response()->json([
-                "success" => false,
-                "error" => "Server error"
-            ], 500);
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error adding member", $err);
         }
     }
 
     /**
      * Get members history of the proyect.
      */
-    public function getMembersHistory(Request $request, $id) {
+    public function getMembersHistory(Request $request, $id)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($id);
@@ -213,7 +203,6 @@ class ProyectController extends Controller
             $history = $proyect->getMembersHistory();
 
             return responseUtils::successful(new MemberHistoryCollection($history));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting member history, ProyectController", $err);
         }
@@ -222,7 +211,8 @@ class ProyectController extends Controller
     /**
      * Get the task list of the proyect.
      */
-    public function getTasks(Request $request, $proyectId) {
+    public function getTasks(Request $request, $proyectId)
+    {
         try {
             $taskController = new TaskController();
             $user = $request["user"];
@@ -243,7 +233,6 @@ class ProyectController extends Controller
             $taskController->loadMissings($request, $tasks);
 
             return responseUtils::successful(new TaskCollection($tasks));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error gettings tasks of proyect, ProyectController", $err);
         }
@@ -252,7 +241,8 @@ class ProyectController extends Controller
     /**
      * Get tasks history of the proyect.
      */
-    public function getTasksHistory(Request $request, $proyectId) {
+    public function getTasksHistory(Request $request, $proyectId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($proyectId);
@@ -270,7 +260,6 @@ class ProyectController extends Controller
             $history = TaskHistory::getByProyectId($proyect->getId());
 
             return responseUtils::successful(new TaskHistoryCollection($history));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting tasks history of proyect, ProyectController", $err);
         }
@@ -323,7 +312,6 @@ class ProyectController extends Controller
             $proyect->saveChanges();
 
             return responseUtils::successful(new ProyectResource($proyect));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error updating proyect", $err);
         }
@@ -332,13 +320,13 @@ class ProyectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) {
-    }
+    public function destroy(string $id) {}
 
     /**
      * Get the pendings proyect join requests of the proyect
      */
-    public function getUserPendingJoinOfProyect(Request $request, $proyectId) {
+    public function getUserPendingJoinOfProyect(Request $request, $proyectId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($proyectId);
@@ -356,7 +344,6 @@ class ProyectController extends Controller
             $pendingRequests = ProyectMember::getPendingProyectMemberRequestByProyectId($proyect->getId());
 
             return responseUtils::successful(new ProyectMemberCollection($pendingRequests));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting pending join request of proyect, ProyectController", $err);
         }
@@ -365,7 +352,8 @@ class ProyectController extends Controller
     /**
      * Get the member of the proyect, only if he's joined
      */
-    public function showMember(Request $request, $id, $memberId) {
+    public function showMember(Request $request, $id, $memberId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($id);
@@ -393,8 +381,6 @@ class ProyectController extends Controller
             }
 
             return responseUtils::successful(new ProyectMemberResource($member));
-
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting an especific member on proyect, ProyectController", $err);
         }
@@ -403,7 +389,8 @@ class ProyectController extends Controller
     /**
      * Update the member of the proyect
      */
-    public function updateMember(Request $request, $id, $memberId) {
+    public function updateMember(Request $request, $id, $memberId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($id);
@@ -437,13 +424,13 @@ class ProyectController extends Controller
             $member->saveMemberChanges();
 
             return responseUtils::successful(new ProyectMemberResource($member));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error updating member, ProyectController", $err);
         }
     }
 
-    public function acceptProyectRequest(Request $request, $proyectId) {
+    public function acceptProyectRequest(Request $request, $proyectId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($proyectId);
@@ -471,13 +458,13 @@ class ProyectController extends Controller
             $member->saveMemberChanges();
 
             return responseUtils::successful(new ProyectMemberResource($member));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error accepting join request, ProyectController", $err);
         }
     }
 
-    public function rejectProyectRequest(Request $request, $proyectId) {
+    public function rejectProyectRequest(Request $request, $proyectId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($proyectId);
@@ -500,13 +487,13 @@ class ProyectController extends Controller
             $member->saveMemberChanges();
 
             return responseUtils::successful(new ProyectMemberResource($member));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error rejecting join request, ProyectController", $err);
         }
     }
 
-    public function getUnassignedTasks(Request $request, $proyectId) {
+    public function getUnassignedTasks(Request $request, $proyectId)
+    {
         try {
             $taskController = new TaskController();
             $reqUser = $request["user"];
@@ -527,13 +514,13 @@ class ProyectController extends Controller
             $taskController->loadMissings($request, $tasks);
 
             return responseUtils::successful(new TaskCollection($tasks));
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting unassigned tasks of proyect, ProyectController", $err);
         }
     }
 
-    public function getTags(Request $request, $proyectId) {
+    public function getTags(Request $request, $proyectId)
+    {
         try {
             $reqUser = $request["user"];
             $proyect = Proyect::getById($proyectId);
@@ -551,19 +538,20 @@ class ProyectController extends Controller
             $tags = Task::getTags($proyectId);
 
             return responseUtils::successful($tags);
-
         } catch (Exception $err) {
             return responseUtils::serverError("Error getting all tags of project", $err);
         }
     }
 
-    public function loadMissings(Request $request, &$proyects) {            //Load missing parameters
+    public function loadMissings(Request $request, &$proyects)
+    {            //Load missing parameters
         foreach ($proyects as $proyect) {
             $this->loadMissing($request, $proyect);
         }
     }
 
-    public function loadMissing(Request $request, &$proyect) {            //Load missing parameters
+    public function loadMissing(Request $request, &$proyect)
+    {            //Load missing parameters
         if (Utils::parseBool($request->query("members"))) {
             $proyect->loadMembers();
         }

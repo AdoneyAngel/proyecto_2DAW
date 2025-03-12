@@ -23,7 +23,7 @@ class AddProyectMemberRequest extends FormRequest
     {
         return [
             "userId" => ["required"],
-            "effectiveTime" => ["required"]
+            "effectiveTime" => ["sometimes", "required"]
         ];
     }
 }

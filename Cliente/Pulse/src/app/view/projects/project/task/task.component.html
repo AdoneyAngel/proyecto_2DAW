@@ -7,7 +7,7 @@
   <div id="userList">
     @for (user of task.users; track $index) {
       <div id="user" title="{{user.username}} - {{user.email}}" class="">
-        <app-profile-image [username]="user.username" [image]="user.photoUrl" styles="
+        <app-profile-image [show]="true" [userId]="user.id" [username]="user.username" [image]="user.photoUrl" styles="
           border-color: {{user.taskStatus==userDoneEnum?'var(--green-color)':(user.taskStatus==userProgressEnum?'var(--primary-color)':'todo')}};
           width: 20px;
           height: 20px;

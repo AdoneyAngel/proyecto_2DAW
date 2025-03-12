@@ -1,11 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { getUser } from '../../../API/api';
 import { AppComponent } from '../../app.component';
+import { DashboardComponent } from '../../view/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-profile-image',
   standalone: true,
-  imports: [],
+  imports: [ProfileImageComponent],
   templateUrl: './profile-image.component.html',
   styleUrl: './profile-image.component.css'
 })
@@ -15,12 +16,21 @@ export class ProfileImageComponent {
   @Input() username:string = ""
   @Input() show:boolean = false
   @Input() userId:string|number = ""
-  showProfileInfo:boolean = false
   color:string = "transparent"
   isLoading:boolean = false
   profile:any|null = null
+  focused:boolean = false
+  containerPos:any = {
+    x:0,
+    y:0
+  }
+  @ViewChild("profileImageContainer") profileImageContainer!: ElementRef;
 
-  constructor (protected app:AppComponent) {}
+  constructor (protected app:AppComponent, private dashboard:DashboardComponent) {}
+
+  ngOnInit() {
+    this.color = this.randomColor()
+  }
 
   randomColor():string {
     const colors = ["profile-purple", "profile-red", "profile-blue", "profile-green"]
@@ -35,17 +45,6 @@ export class ProfileImageComponent {
     return styles
   }
 
-  ngOnInit() {
-    this.color = this.randomColor()
-  }
-
-  toggleShowProfileInfo(event:any) {
-    event.stopPropagation()
-
-    this.showProfileInfo = !this.showProfileInfo
-
-    if (this.showProfileInfo) this.loadProfile()
-  }
 
   async loadProfile() {
     if (!this.userId) return null
@@ -58,6 +57,8 @@ export class ProfileImageComponent {
       if (res.success) {
         this.profile = res.data
 
+        if (!this.image) this.loadProfilePhoto()
+
       } else {
         this.app.notificationError(res.error)
       }
@@ -65,5 +66,37 @@ export class ProfileImageComponent {
     .finally(() => this.isLoading = false)
 
     return true
+  }
+
+  onProfileFocus () {
+    this.focused = true
+
+    const dimensions = this.profileImageContainer.nativeElement.getClientRects()[0]
+
+    this.containerPos = {
+      x: (dimensions.x + dimensions.width/2),
+      y: dimensions.y
+    }
+
+    if (!this.profile) this.loadProfile()
+  }
+  onProfileBlur () {
+    this.focused = false
+  }
+
+  onProfileClick(event:any) {
+    event.stopPropagation();
+  }
+
+  loadProfilePhoto() {
+
+    this.dashboard.findUserPhoto(this.userId)
+    .then((res:any) => {
+      if (res.success) {
+        this.image = res.data
+      }
+    })
+
+    return
   }
 }

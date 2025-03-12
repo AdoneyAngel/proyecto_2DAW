@@ -111,8 +111,9 @@ export class ProjectComponent {
     const memberList:any = document.getElementById("memberList")
 
     const dimensions:any = projectBody?.getClientRects()[0]
+    const listDimensions:any = memberList.getClientRects()[0]
 
-    memberList.style.left = (dimensions.x-7.5+dimensions?.width/2) + "px"
+    memberList.style.left = ((dimensions.x-7.5+dimensions?.width/2) - (memberList.width/2)) + "px"
     memberList.style.width = dimensions.width-100 + "px"
   }
 

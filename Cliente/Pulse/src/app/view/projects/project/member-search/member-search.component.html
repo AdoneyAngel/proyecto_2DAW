@@ -20,7 +20,14 @@
 
         <div id="userList" class="userList">
           @for (user of filteredUsers; track $index) {
-            <div title="{{user.username}} - {{user.email}}" id="user"><app-profile-image [username]="user.username"/><p>{{user.username}} <span id="email"> - {{user.email}}</span></p></div>
+            <div *ngIf="!isJoined(user.id)" title="{{user.username}} - {{user.email}}" id="user">
+              <app-profile-image [username]="user.username"/>
+              <p>{{user.username}} <span id="email"> - {{user.email}}</span></p>
+
+              <div id="userOptions">
+                <button class="green" (click)="sendInvitation(user.id)">Invite</button>
+              </div>
+            </div>
           }
         </div>
       </section>
@@ -35,7 +42,15 @@
 
          <div id="userList" class="memberList">
           @for (user of (!searchMember?project?.members : filteredMembers); track $index) {
-            <div title="{{user.username}} - {{user.email}}" id="user"><app-profile-image [username]="user.username"/><p>{{user.username}} <span id="email"> - {{user.email}}</span></p></div>
+            <div title="{{user.username}} - {{user.email}}" id="user">
+              <app-profile-image [image]="user.photoUrl" [username]="user.username"/>
+              <p>{{user.username}} <span id="email"> - {{user.email}}</span></p>
+
+              <div id="userOptions">
+                <button>Profile</button>
+                <button class="red">Kick</button>
+              </div>
+            </div>
           }
          </div>
       </section>

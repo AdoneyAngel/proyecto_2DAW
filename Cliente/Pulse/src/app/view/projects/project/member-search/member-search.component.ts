@@ -1,15 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { PopupBackgroundComponent } from '../../../../components/popup-background/popup-background.component';
 import { LoadingComponent } from '../../../../components/loading/loading.component';
-import { searchUser } from '../../../../../API/api';
+import { addUserToProyect, searchUser } from '../../../../../API/api';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from '../../../../app.component';
 import { ProfileImageComponent } from "../../../../components/profile-image/profile-image.component";
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-member-search',
   standalone: true,
-  imports: [PopupBackgroundComponent, LoadingComponent, FormsModule, ProfileImageComponent, ProfileImageComponent],
+  imports: [PopupBackgroundComponent, LoadingComponent, FormsModule, ProfileImageComponent, ProfileImageComponent, NgIf],
   templateUrl: './member-search.component.html',
   styleUrl: './member-search.component.css'
 })
@@ -81,5 +82,31 @@ export class MemberSearchComponent {
 
       this.filteredMembers = this.project.members.filter((member:any) => member.username.includes(value) || member.email.includes(value))
     }
+  }
+
+  async sendInvitation(userId:string|number):Promise<any> {
+    if (!(userId+"").length) return null
+
+    addUserToProyect(this.project.id, userId)
+    .then(res => {
+      if (res.success) {
+        this.app.notificationSuccess("Invitación enviada")
+
+      } else {
+        this.app.notificationError(res.error)
+      }
+    })
+  }
+
+  isJoined(userId:string|number):boolean {
+    let joined = false
+
+    this.project?.members?.forEach((member:any) => {
+      if (member.id == userId) {
+        joined = true
+      }
+    })
+
+    return joined
   }
 }

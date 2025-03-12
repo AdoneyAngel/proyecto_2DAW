@@ -405,3 +405,7 @@ export async function searchUser(userInfo:string) {
 export async function getUser(userId:string|number) {
   return await get(`users/${userId}`)
 }
+
+export async function addUserToProyect(projectId:string|number, userId:string|number) {
+  return await post(`proyects/${projectId}/members`, {userId})
+}

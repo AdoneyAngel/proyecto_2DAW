@@ -11,6 +11,7 @@
   max-width: 500px;
   max-height: 90%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #bBack {
@@ -62,6 +63,8 @@
   cursor: normal;
   align-items: center;
   text-transform: capitalize;
+  position: relative;
+  overflow: hidden;
 }
 #user p {
   margin-left: 10px;
@@ -86,4 +89,36 @@
   margin-left: auto;
   display: flex;
   justify-content: right;
+}
+
+#userList.memberList #user {
+  border: 2px solid var(--tertiary-color);
+}
+
+#userOptions {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0%, -50%);
+  background: linear-gradient(90deg, transparent, black 90%);
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 10px;
+  padding-left: 15px;
+}
+
+#userOptions button {
+  padding: 5px;
+  margin: 0 2.5px;
+  border: 2px solid var(--tertiary-color);
+  box-shadow: 0px 0px 5px -2.5px black;
+}
+
+#userOptions button.green {
+  border-color: var(--green-color);
+}
+#userOptions button.red {
+  border-color: var(--red-color);
 }

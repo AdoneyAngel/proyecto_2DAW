@@ -50,7 +50,7 @@
       <label>Users <input (keyup)="filterUsers()" type="text" placeholder="Search user" id="inputSearchUser" [(ngModel)]="searchUser"></label>
       <div id="userList">
         @for (user of (searchUser.length?filteredUsers:members); track $index) {
-          <div (click)="selectUser(user.id)" class="{{user.selected?'selected':'unselected'}}" id="user">
+          <div title="{{user.username}} - {{user.email}}" (click)="selectUser(user.id)" class="{{user.selected?'selected':'unselected'}}" id="user">
             <div id="image">
               <app-profile-image [username]="user.username" [image]="user.photoUrl" />
             </div>
