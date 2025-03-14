@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { getProjectMembers, getTask, updateTask } from '../../../API/api';
+import { changeUserStatus, getProjectMembers, getTask, updateTask } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { NgIf } from '@angular/common';
 import { ProfileImageComponent } from '../../components/profile-image/profile-image.component';
 import { ContentBoxDelimiterComponent } from '../../components/content-box-delimiter/content-box-delimiter.component';
 import { ProjectComponent } from '../projects/project/project.component';
+import UserTaskStatusEnum from '../../enums/UserTaskStatusEnum';
 
 @Component({
   selector: 'app-task',
@@ -30,8 +31,18 @@ export class TaskComponent {
   editing:boolean = false
   draggingUserId:number|string = 0
   isChanged:boolean = false
+  newStatus:UserTaskStatusEnum|null = null
+  userTaskStatus:any = {
+    Todo: null,
+    Progress: null,
+    Done: null
+  }
 
-  constructor (private activatedRoute:ActivatedRoute, protected app:AppComponent, private dashboard:DashboardComponent, private router:Router, private projectComponent:ProjectComponent){}
+  constructor (private activatedRoute:ActivatedRoute, protected app:AppComponent, private dashboard:DashboardComponent, private router:Router, private projectComponent:ProjectComponent){
+    this.userTaskStatus.Todo = UserTaskStatusEnum.Todo
+    this.userTaskStatus.Progress = UserTaskStatusEnum.Progress
+    this.userTaskStatus.Done = UserTaskStatusEnum.Done
+  }
 
   setTitle(event:any) {
     this.newTitle = event.target.value
@@ -217,7 +228,7 @@ export class TaskComponent {
 
   memberIsJoined(memberId:number|string):boolean {
     let joined = false
-    this.task.users.forEach((user:any) => {
+    this.task?.users?.forEach((user:any) => {
       if (user.id == memberId) {
         joined = true
       }
@@ -283,12 +294,60 @@ export class TaskComponent {
       this.isChanged = true
     }
 
-    this.newUsers.forEach((user:any) => {
+    this.newUsers?.forEach((user:any) => {
       if (user.added != user.original) {
         this.isChanged = true
       }
     })
   }
 
+  getActualMember():any {
+    const realUser = this.app.getUser()
+
+    let member = null
+
+    this.task?.users.forEach((actualUser:any) => {
+      if (actualUser.id == realUser.id) {
+        member = actualUser
+      }
+    })
+
+    return member
+  }
+
+  setNewStatus(newStatus:UserTaskStatusEnum) {
+    this.newStatus = newStatus
+  }
+  unSetNewStatus() {
+    this.newStatus = null
+  }
+
+  changeStatus() {
+    if (this.newStatus) {
+      changeUserStatus(this.task.id, this.app.getUser().id, this.newStatus)
+      .then(res => {
+
+        if (res.success) {
+          this.app.notificationSuccess("Status updated")
+
+          //Update user status in local
+          this.task.users.forEach((actualUser:any) => {
+            if (actualUser.id == this.app.getUser().id) {
+              actualUser.taskStatus = this.newStatus
+
+              this.unSetNewStatus()
+            }
+          })
+
+        } else {
+          this.app.notificationError(res.error)
+        }
+
+      })
+
+
+    }
+
+  }
 
 }

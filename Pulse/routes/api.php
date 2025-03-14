@@ -47,6 +47,7 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
     Route::get("/tasks/{id}/users/{userId}/status", [TaskController::class, "getUserStatus"]);
     Route::post("/tasks/{id}/comments", [TaskController::class, "addComment"]);
     Route::get("/tasks/{id}/comments", [TaskController::class, "getComments"]);
+    Route::put("/tasks/{id}/users/{userId}", [TaskController::class, "changeUserTaskStatus"]);
 
     //----Issues
     Route::get("/issues", [TaskController::class, "issueIndex"]);

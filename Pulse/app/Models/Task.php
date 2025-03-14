@@ -304,6 +304,15 @@ class Task extends Model
 
     }
 
+    public function setUserStatus(User $user, TaskUserStatusEnum $status) {
+        if (!$this->id) return null;
+
+        $updatedUserDb = DB::select("CALL proyects_tasks_users_update(?,?,?)", [$this->id, $user->getId(), $status->value]);
+
+        return true;
+
+    }
+
     public function saveChanges() {
         if(!$this->id) return null;
         if(!$this->title || !strlen($this->title)) return null;

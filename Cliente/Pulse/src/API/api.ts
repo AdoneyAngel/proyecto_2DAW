@@ -1,5 +1,6 @@
 import axios from "axios"
 import { apiUrl, prefix } from "./config"
+import UserTaskStatusEnum from "../app/enums/UserTaskStatusEnum"
 
 async function get(url:string, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}, data:any = {}) {
   let requestPath = `${apiUrl}/${prefix}/${url}`
@@ -408,4 +409,8 @@ export async function getUser(userId:string|number) {
 
 export async function addUserToProyect(projectId:string|number, userId:string|number) {
   return await post(`proyects/${projectId}/members`, {userId})
+}
+
+export async function changeUserStatus(taskId:number|string, userId:number|string, newStatus:UserTaskStatusEnum) {
+  return await put(`tasks/${taskId}/users/${userId}`, {status:newStatus})
 }

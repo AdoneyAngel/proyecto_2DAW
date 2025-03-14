@@ -3,6 +3,31 @@
     <input [(ngModel)]="newTitle" class="{{editing?'titleEditing':''}}" id="title" value="{{task.title}}" type="text" placeholder="{{task.title}}" disabled="{{!editing}}">
   </div>
 
+  <div id="statusSection" *ngIf="memberIsJoined(app.getUser().id)">
+    <h1 id="titleStatus">Your Status</h1>
+
+    <div id="statusList">
+
+      <div tabindex="-1" (focus)="getActualMember().taskStatus!=userTaskStatus.Todo?setNewStatus(userTaskStatus.Todo):unSetNewStatus()" class="todoStatus {{getActualMember()?.taskStatus == userTaskStatus.Todo ? 'select':''}}" id="statusItem">
+        <img src="assets/images/web_white.png">
+        <p>To Do</p>
+      </div>
+
+      <div tabindex="-1" (focus)="getActualMember().taskStatus!=userTaskStatus.Progress?setNewStatus(userTaskStatus.Progress):unSetNewStatus()" class="progressStatus {{getActualMember()?.taskStatus == userTaskStatus.Progress ? 'select':''}}" id="statusItem">
+        <img src="assets/images/settings_white.png">
+        <p>In Progress</p>
+      </div>
+
+      <div tabindex="-1" (focus)="getActualMember().taskStatus!=userTaskStatus.Done?setNewStatus(userTaskStatus.Done):unSetNewStatus()" class="doneStatus {{getActualMember()?.taskStatus == userTaskStatus.Done ? 'select':''}}" id="statusItem">
+        <img src="assets/images/done_white.png">
+        <p>Done</p>
+      </div>
+
+    </div>
+
+    <button (click)="changeStatus()" class="{{newStatus?'visible':''}}" id="bSetStatus">Set status</button>
+  </div>
+
   <button class="{{!editing?'bEditin':'bCancel'}}" (click)="setEditing()" *ngIf="isOwner" id="bEdit">{{editing?'Cancel':'Edit'}}</button>
 
   <app-main-content-box display="list">

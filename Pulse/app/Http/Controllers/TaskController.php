@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Issue\StoreIssueRequest;
 use App\Http\Requests\Task\AddCommentRequest;
 use App\Http\Requests\Task\AddTaskUserRequest;
+use App\Http\Requests\Task\ChangeUserStatusRequest;
 use App\Http\Requests\Task\StoreTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\Task\TaskCollection;
@@ -21,6 +22,7 @@ use App\Models\User;
 use App\Models\Utils;
 use App\TaskStatusEnum;
 use App\TaskTypeEnum;
+use App\TaskUserStatusEnum;
 use Exception;
 use Illuminate\Http\Request;
 use SebastianBergmann\CodeCoverage\Report\Xml\Project;
@@ -222,7 +224,7 @@ class TaskController extends Controller
                 return responseUtils::notFound("Task not found");
             }
 
-            //The use is owner of the proyect
+            //The request user is owner of the proyect
             $proyect = Proyect::getById($task->getProyectId());
 
             if ($proyect->getOwnerId() != $user->getId()) {
@@ -331,6 +333,52 @@ class TaskController extends Controller
     public function issueUpdate(UpdateTaskRequest $request, $id) {
         $this->taskTypeClass = Issue::class;
         return $this->update($request, $id);
+    }
+
+    /**
+     * Update the status of the user from the task.
+     */
+    public function changeUserTaskStatus(ChangeUserStatusRequest $request, $taskId, $userId) {
+        try {
+            $reqUser = $request["user"];
+            $task = Task::getById($taskId);
+            $user = User::getById($userId);
+
+            //Task exist
+            if (!$task) {
+                return responseUtils::notFound("Task not found");
+            }
+
+            //User exist
+            if (!$user) {
+                return responseUtils::notFound("User not found");
+            }
+
+            //Request user is owner of the proyect or member of the task
+            $task->loadProyect();
+            if (!$task->isJoined($reqUser) && $task->getProyect()->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You can't modify this task");
+            }
+
+            //The status is valid
+            if (!TaskUserStatusEnum::from($request->status)) {
+                return responseUtils::invalidParams("Invalid status");
+            }
+
+            $updatedStatus = $task->setUserStatus($user, TaskUserStatusEnum::from($request->status));
+
+            if ($updatedStatus) {
+                return responseUtils::successful(true);
+
+            } else {
+                return responseUtils::serverError("Can't update status of user from task", null, "Can't update the status");
+            }
+
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error changing the status of the user from task", $err);
+        }
+
     }
 
     /**
