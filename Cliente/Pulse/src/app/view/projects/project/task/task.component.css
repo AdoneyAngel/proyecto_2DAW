@@ -7,6 +7,9 @@
 #item.rack {
   opacity: var(--md-opacity);
 }
+#item.review {
+  border-color: var(--blue-color);
+}
 
 #info {
   display: flex;

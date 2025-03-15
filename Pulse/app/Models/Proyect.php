@@ -240,6 +240,14 @@ class Proyect extends Model
         return null;
     }
 
+    public function removeMember(ProyectMember $member) {
+        if (!$this->id) return null;
+
+        $deletedUserDb = DB::statement("CALL proyects_members_delete(?,?)", [$this->id, $member->getId()]);
+
+        return true;
+    }
+
     public function getMemberById($id) {
         if (!$this->id) return null;
 

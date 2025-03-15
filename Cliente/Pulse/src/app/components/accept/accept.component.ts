@@ -11,6 +11,6 @@ import { PopupBackgroundComponent } from '../popup-background/popup-background.c
 export class AcceptComponent {
   @Input() closeCallback: any = ()=>{}
   @Input() callback: any = ()=>{}
-  @Input() title: string = "Are you sure to delete it?"
+  @Input() title: string = ""
 
 }

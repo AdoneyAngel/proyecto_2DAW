@@ -286,7 +286,7 @@ class Task extends Model
     public function getStatus() {
         if (!$this->statusId) return null;
 
-        $status = new TaskStatus(TaskStatusEnum::cases()[$this->statusId]);
+        $status = new TaskStatus(TaskStatusEnum::cases()[$this->statusId]->value);
 
         return $status;
     }

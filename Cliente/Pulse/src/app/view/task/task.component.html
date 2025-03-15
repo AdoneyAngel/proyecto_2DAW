@@ -25,7 +25,7 @@
 
     </div>
 
-    <button (click)="changeStatus()" class="{{newStatus?'visible':''}}" id="bSetStatus">Set status</button>
+    <button (click)="app.showAccept('Are you sure to change your status', changeStatus.bind(this))" class="{{newStatus?'visible':''}}" id="bSetStatus">Set status</button>
   </div>
 
   <button class="{{!editing?'bEditin':'bCancel'}}" (click)="setEditing()" *ngIf="isOwner" id="bEdit">{{editing?'Cancel':'Edit'}}</button>

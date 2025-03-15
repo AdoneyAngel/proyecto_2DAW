@@ -47,8 +47,8 @@
               <p>{{user.username}} <span id="email"> - {{user.email}}</span></p>
 
               <div id="userOptions">
-                <button>Profile</button>
-                <button class="red">Kick</button>
+                <button (click)="close()" routerLink="/dashboard/projects/{{project.id}}/members/{{user.id}}">Profile</button>
+                <button *ngIf="project.ownerId == app.getUser().id" (click)="askToRemoveUser(user.id)" class="red">Kick</button>
               </div>
             </div>
           }

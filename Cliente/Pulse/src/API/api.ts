@@ -414,3 +414,11 @@ export async function addUserToProyect(projectId:string|number, userId:string|nu
 export async function changeUserStatus(taskId:number|string, userId:number|string, newStatus:UserTaskStatusEnum) {
   return await put(`tasks/${taskId}/users/${userId}`, {status:newStatus})
 }
+
+export async function removeMemberFromProject(projectId:number|string, userId:number|string) {
+  return await remove(`proyects/${projectId}/members/${userId}`)
+}
+
+export async function getMember(projectId:number|string, userId:number|string) {
+  return await get(`proyects/${projectId}/members/${userId}`)
+}

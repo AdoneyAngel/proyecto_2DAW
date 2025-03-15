@@ -18,6 +18,7 @@ use App\Models\Proyect;
 use App\Models\responseUtils;
 use App\Models\Task;
 use App\Models\TaskComment;
+use App\Models\TaskStatus;
 use App\Models\User;
 use App\Models\Utils;
 use App\TaskStatusEnum;
@@ -365,9 +366,48 @@ class TaskController extends Controller
                 return responseUtils::invalidParams("Invalid status");
             }
 
+            //If the task was in "to do" status and the user will change his status to "progress"/"done", change the task status to "progress"/"done"
+            $task->loadUsers();
+            //If the task was in Todo and the user change to progress, change the status of task to Progress
+            if ($task->getStatus() != TaskStatusEnum::Progress && $request->status == TaskUserStatusEnum::Progress->value) {
+                $task->setStatusId(TaskStatusEnum::Progress->value);
+
+            } else if ($request->status == TaskUserStatusEnum::Done->value) {
+                //If the user change to Done and the rest of users was on Done status, change the task to Done
+                $allUserWithDoneStatus = true;
+
+                foreach ($task->users as $actualUser) {
+                    if ($actualUser->taskStatus != TaskUserStatusEnum::Done->value && $actualUser->getId() != $user->getId()) {
+                        $allUserWithDoneStatus = false;
+                    }
+                }
+
+                if ($allUserWithDoneStatus) {
+                    $task->setStatusId(TaskStatusEnum::Review->value);
+                }
+
+            } else if ($request->status == TaskUserStatusEnum::Todo->value) {
+                //If the user change to Todo and the rest of users was on Todo status, change the task to Todo
+                $allUserWithTodoStatus = true;
+
+                foreach ($task->users as $actualUser) {
+                    if ($actualUser->taskStatus != TaskUserStatusEnum::Todo->value && $actualUser->getId() != $user->getId()) {
+                        $allUserWithTodoStatus = false;
+                    }
+                }
+
+                if ($allUserWithTodoStatus) {
+                    $task->setStatusId(TaskSTatusEnum::Todo->value);
+
+                } else {
+                    $task->setStatusId(TaskStatusEnum::Progress->value);
+                }
+            }
+
             $updatedStatus = $task->setUserStatus($user, TaskUserStatusEnum::from($request->status));
 
             if ($updatedStatus) {
+                $task->saveChanges();
                 return responseUtils::successful(true);
 
             } else {

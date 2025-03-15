@@ -29,6 +29,7 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
     Route::post("/proyects/{id}/members", [ProyectController::class, "addMember"]);
     Route::get("/proyects/{id}/members/{memberId}", [ProyectController::class, "showMember"]);
     Route::put("/proyects/{id}/members/{memberId}", [ProyectController::class, "updateMember"]);
+    Route::delete("/proyects/{id}/members/{memberId}", [ProyectController::class, "removeMember"]);
     Route::get("/proyects/{id}/tasks", [ProyectController::class, "getTasks"]);
     Route::get("/proyects/{id}/membersHistory", [ProyectController::class, "getMembersHistory"]);
     Route::get("/proyects/{id}/tasksHistory", [ProyectController::class, "getTasksHistory"]);

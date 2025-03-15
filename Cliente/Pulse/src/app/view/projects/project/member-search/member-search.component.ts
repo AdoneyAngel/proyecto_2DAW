@@ -1,16 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { PopupBackgroundComponent } from '../../../../components/popup-background/popup-background.component';
 import { LoadingComponent } from '../../../../components/loading/loading.component';
-import { addUserToProyect, searchUser } from '../../../../../API/api';
+import { addUserToProyect, removeMemberFromProject, searchUser } from '../../../../../API/api';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from '../../../../app.component';
 import { ProfileImageComponent } from "../../../../components/profile-image/profile-image.component";
 import { NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-member-search',
   standalone: true,
-  imports: [PopupBackgroundComponent, LoadingComponent, FormsModule, ProfileImageComponent, ProfileImageComponent, NgIf],
+  imports: [PopupBackgroundComponent, LoadingComponent, FormsModule, ProfileImageComponent, ProfileImageComponent, NgIf, RouterLink],
   templateUrl: './member-search.component.html',
   styleUrl: './member-search.component.css'
 })
@@ -26,6 +27,7 @@ export class MemberSearchComponent {
   isLoading:boolean = false
   searchTimeout:any = null
   usersString:string = ""
+  memberToRemove:string|number|null = null
 
   constructor (protected app:AppComponent){}
 
@@ -108,5 +110,29 @@ export class MemberSearchComponent {
     })
 
     return joined
+  }
+
+  askToRemoveUser(memberId:string|number) {
+    this.memberToRemove = memberId
+    this.app.showAccept("Do you want to remove the user from the project?", this.removeMember.bind(this))
+  }
+
+  async removeMember():Promise<any> {
+    if (!this.project) return false
+    if (!this.memberToRemove) return false
+
+    removeMemberFromProject(this.project.id, this.memberToRemove)
+    .then(res => {
+      if (res.success) {
+        this.project.members = this.project.members.filter((actualMember:any) => actualMember.id != this.memberToRemove)
+        this.app.notificationSuccess("Member removed")
+
+      } else {
+        this.app.notificationError(res.error)
+      }
+    })
+    .finally(() => {
+      this.app.hideAccept()
+    })
   }
 }

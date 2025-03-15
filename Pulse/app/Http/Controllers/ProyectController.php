@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Proyect\AddProyectMemberRequest;
+use App\Http\Requests\Proyect\RemoveMemberRequest;
 use App\Http\Requests\Proyect\StoreProyectRequest;
 use App\Http\Requests\Proyect\UpdateProyectRequest;
 use App\Http\Resources\MemberHistory\MemberHistoryCollection;
@@ -178,6 +179,54 @@ class ProyectController extends Controller
             }
         } catch (Exception $err) {
             return responseUtils::serverError("Error adding member", $err);
+        }
+    }
+
+    /**
+     * Remove member from the proyect.
+     */
+    public function removeMember(Request $request, $proyectId, $memberId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+            $user = null;
+
+            // Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //Request user is owner of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId()) {
+                return responseUtils::unAuthorized("You can't remove this user");
+            }
+
+            //User exist
+            $user = User::getById($memberId);
+
+            if (!$user) {
+                return responseUtils::notFound("User not found");
+            }
+
+            //User is member of the proyect
+            if (!$proyect->isMember($user->getId())) {
+                return responseUtils::invalidParams("User is not member of this proyect");
+            }
+
+            $userAsMember = new ProyectMember();
+            $userAsMember->buildFromUser($user);
+
+            $removedUser = $proyect->removeMember($userAsMember);
+
+            if ($removedUser) {
+                return responseUtils::successful(true);
+
+            } else {
+                return responseUtils::serverError("Can't remove the user", null, "Can't remove the user, try again later");
+            }
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error removing member from proyect", $err);
         }
     }
 

@@ -7,6 +7,7 @@ import { ProjectsComponent } from './view/projects/projects.component';
 import { ProjectComponent } from './view/projects/project/project.component';
 import { CreateTaskComponent } from './view/projects/project/create-task/create-task.component';
 import { TaskComponent } from './view/task/task.component';
+import { MemberComponent } from './view/member/member.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -37,9 +38,14 @@ const dashboardRoutes = {
           path: "createTask",
           data: {title: "create task"},
           loadComponent: () => CreateTaskComponent
+        },
+        {
+          path: "members/:memberId",
+          data: {title: "member"},
+          loadComponent: () => MemberComponent
         }
       ]
-      }
+    }
     //     {
     //       path: "taks/:id",
     //       title: "Tasks",

@@ -2,8 +2,12 @@
   <title>{{title}}</title>
 </head>
 
+
+<router-outlet></router-outlet>
+
+
 @if(visibleAccept) {
-  <app-accept [closeCallback]="hideAccept.bind(this)" [callback]="acceptCallback.bind(this)" />
+  <app-accept [title]="acceptTitle" [closeCallback]="hideAccept.bind(this)" [callback]="acceptCallback.bind(this)" />
 }
 
 @if(visibleOptions) {
@@ -11,5 +15,3 @@
 }
 
 <app-notification [notifications]="notificationList" />
-
-<router-outlet></router-outlet>

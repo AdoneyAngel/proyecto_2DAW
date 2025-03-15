@@ -982,7 +982,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 295,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "Proyect"
 										},
@@ -1020,7 +1020,7 @@
 									"parentStyle": true,
 									"left": 336,
 									"top": 288,
-									"width": 293.14697265625,
+									"width": 314.80517578125,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAGVQ38xYPN29rY="
@@ -1058,7 +1058,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 318,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "-id",
 											"horizontalAlignment": 0
@@ -1076,7 +1076,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 333,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "-title",
 											"horizontalAlignment": 0
@@ -1094,7 +1094,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 348,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "-ownerId",
 											"horizontalAlignment": 0
@@ -1112,7 +1112,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 363,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "-date",
 											"horizontalAlignment": 0
@@ -1122,7 +1122,7 @@
 									"parentStyle": true,
 									"left": 336,
 									"top": 313,
-									"width": 293.14697265625,
+									"width": 314.80517578125,
 									"height": 68
 								},
 								{
@@ -1148,7 +1148,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 386,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getId(): int",
 											"horizontalAlignment": 0
@@ -1166,7 +1166,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 401,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getTitle(): string",
 											"horizontalAlignment": 0
@@ -1203,7 +1203,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 416,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getDate(): string",
 											"horizontalAlignment": 0
@@ -1221,7 +1221,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 431,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+setId()",
 											"horizontalAlignment": 0
@@ -1239,7 +1239,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 446,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+setTitle(string title)",
 											"horizontalAlignment": 0
@@ -1257,7 +1257,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 461,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+setOwner(int ownerId)",
 											"horizontalAlignment": 0
@@ -1275,7 +1275,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 476,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+setDate(string date)",
 											"horizontalAlignment": 0
@@ -1293,7 +1293,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 491,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+create(): Proyect",
 											"horizontalAlignment": 0
@@ -1311,7 +1311,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 506,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+delete(): boolean",
 											"horizontalAlignment": 0
@@ -1329,7 +1329,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 521,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getAll(): array",
 											"horizontalAlignment": 0
@@ -1347,7 +1347,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 536,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getById(int id): Proyect",
 											"horizontalAlignment": 0
@@ -1365,7 +1365,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 551,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getByTitle(string title): Proyect",
 											"horizontalAlignment": 0
@@ -1383,7 +1383,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 566,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getByOwner(int ownerId): array",
 											"horizontalAlignment": 0
@@ -1401,7 +1401,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 581,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getTasks(): array",
 											"horizontalAlignment": 0
@@ -1438,7 +1438,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 596,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getTaskById(int id): Task",
 											"horizontalAlignment": 0
@@ -1456,7 +1456,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 611,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getTaskByTitle(string title): Task",
 											"horizontalAlignment": 0
@@ -1474,7 +1474,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 626,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getTaskByTag(string tag): Task",
 											"horizontalAlignment": 0
@@ -1511,7 +1511,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 641,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getIssues(): Issue",
 											"horizontalAlignment": 0
@@ -1529,7 +1529,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 656,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getIssueById(int id): Issue",
 											"horizontalAlignment": 0
@@ -1547,7 +1547,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 671,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getIssueByTitle(string title): Issue",
 											"horizontalAlignment": 0
@@ -1565,7 +1565,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 686,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getIssueByTag(string tag): Issue",
 											"horizontalAlignment": 0
@@ -1602,7 +1602,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 701,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getOwner(): User",
 											"horizontalAlignment": 0
@@ -1620,7 +1620,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 716,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+setOwner(int ownerId): boolean",
 											"horizontalAlignment": 0
@@ -1638,7 +1638,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 731,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getMembers(): array",
 											"horizontalAlignment": 0
@@ -1656,7 +1656,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 746,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+addMember(ProyectMember member): boolean",
 											"horizontalAlignment": 0
@@ -1674,7 +1674,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 761,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getMemberById(int id): User",
 											"horizontalAlignment": 0
@@ -1692,7 +1692,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 776,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getMemberByEmail(string email): User",
 											"horizontalAlignment": 0
@@ -1710,7 +1710,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 791,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+saveChanges(): Proyect",
 											"horizontalAlignment": 0
@@ -1728,7 +1728,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 806,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getTasksHistory(): array",
 											"horizontalAlignment": 0
@@ -1746,7 +1746,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 821,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getMembersHistory(): array",
 											"horizontalAlignment": 0
@@ -1764,7 +1764,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 836,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+getOwnerId(): int",
 											"horizontalAlignment": 0
@@ -1782,7 +1782,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 851,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+isMember(id): boolean",
 											"horizontalAlignment": 0
@@ -1800,7 +1800,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 866,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+selectQuery(array whereValues): array",
 											"horizontalAlignment": 0
@@ -1818,7 +1818,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 881,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+loadMembers()",
 											"horizontalAlignment": 0
@@ -1836,7 +1836,7 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 896,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+loadTasks()",
 											"horizontalAlignment": 0
@@ -1854,9 +1854,27 @@
 											"parentStyle": true,
 											"left": 341,
 											"top": 911,
-											"width": 283.14697265625,
+											"width": 304.80517578125,
 											"height": 13,
 											"text": "+loadOwner()",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGVmajFaz+LVcg=",
+											"_parent": {
+												"$ref": "AAAAAAGVQ38xYPN7zX8="
+											},
+											"model": {
+												"$ref": "AAAAAAGVmajFYD+I2As="
+											},
+											"font": "Arial;13;0",
+											"parentStyle": true,
+											"left": 341,
+											"top": 926,
+											"width": 304.80517578125,
+											"height": 13,
+											"text": "+removeMember(ProyectMember member): boolean",
 											"horizontalAlignment": 0
 										}
 									],
@@ -1864,8 +1882,8 @@
 									"parentStyle": true,
 									"left": 336,
 									"top": 381,
-									"width": 293.14697265625,
-									"height": 548
+									"width": 314.80517578125,
+									"height": 563
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -1907,8 +1925,8 @@
 							"containerChangeable": true,
 							"left": 336,
 							"top": 288,
-							"width": 292.14697265625,
-							"height": 641,
+							"width": 313.80517578125,
+							"height": 656,
 							"nameCompartment": {
 								"$ref": "AAAAAAGVQ38xYPN1mxE="
 							},
@@ -3579,8 +3597,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 687,
-									"top": 946,
+									"left": 698,
+									"top": 961,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -3601,8 +3619,8 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 700,
-									"top": 939,
+									"left": 711,
+									"top": 954,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -3623,8 +3641,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 660,
-									"top": 961,
+									"left": 671,
+									"top": 976,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -3643,7 +3661,7 @@
 								"$ref": "AAAAAAGVQ38xYPN0l0Y="
 							},
 							"lineStyle": 1,
-							"points": "629:878;719:1043",
+							"points": "651:912;719:1039",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGVQ+dQkbu7kM4="
@@ -3677,8 +3695,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 674,
-									"top": 604,
+									"left": 686,
+									"top": 608,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -3699,8 +3717,8 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 675,
-									"top": 619,
+									"left": 687,
+									"top": 623,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -3721,8 +3739,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 673,
-									"top": 575,
+									"left": 683,
+									"top": 579,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -3741,7 +3759,7 @@
 								"$ref": "AAAAAAGVQ4ecsvToBY4="
 							},
 							"lineStyle": 1,
-							"points": "719:594;629:599",
+							"points": "719:597;651:603",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGVQ+dwr7vMLUg="
@@ -9533,6 +9551,34 @@
 								"$ref": "AAAAAAGVQ38xX/NyCeU="
 							},
 							"name": "loadOwner"
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGVmajFYD+I2As=",
+							"_parent": {
+								"$ref": "AAAAAAGVQ38xX/NyCeU="
+							},
+							"name": "removeMember",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGVmajxGD+PxDo=",
+									"_parent": {
+										"$ref": "AAAAAAGVmajFYD+I2As="
+									},
+									"name": "ProyectMember member",
+									"type": ""
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGVmajxGD+QodA=",
+									"_parent": {
+										"$ref": "AAAAAAGVmajFYD+I2As="
+									},
+									"type": "boolean",
+									"direction": "return"
+								}
+							]
 						}
 					]
 				},

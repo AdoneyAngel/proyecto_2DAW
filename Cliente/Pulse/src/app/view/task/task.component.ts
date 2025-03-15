@@ -344,9 +344,11 @@ export class TaskComponent {
         }
 
       })
-
+      .finally (() => this.app.hideAccept())
 
     }
+
+
 
   }
 
