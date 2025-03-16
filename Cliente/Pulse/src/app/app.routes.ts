@@ -8,6 +8,7 @@ import { ProjectComponent } from './view/projects/project/project.component';
 import { CreateTaskComponent } from './view/projects/project/create-task/create-task.component';
 import { TaskComponent } from './view/task/task.component';
 import { MemberComponent } from './view/member/member.component';
+import { NotFoundComponent } from './view/not-found/not-found.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -106,5 +107,10 @@ export const routes: Routes = [
     path: "signup",
     data: {title: "signup"},
     loadComponent: () => SignupComponent
+  },
+  {
+    path: "**",
+    data: {title: "dashboard"},
+    loadComponent: () => NotFoundComponent
   }
 ];

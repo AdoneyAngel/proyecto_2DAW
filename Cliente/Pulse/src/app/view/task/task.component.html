@@ -57,12 +57,15 @@
     <app-content-box-delimiter title="Assigned users" />
 
     <div (dragover)="onDragOver($event)" (drop)="onDropAssignedUsers($event)" class="container" id="users">
+      <p id="et" title="Total Effecitve Time">Total EFT: <span id="nEt">{{totalEt}}</span></p>
+
       @for (user of newUsers; track $index) {
         @if (user.added) {
           <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner}}" title="{{user.username}}-{{user.email}}" class="assigned {{editing?'draggable':''}} {{!user.original?'added':''}}" id="user">
 
             <app-profile-image [image]="user.photoUrl" [username]="user.username" />
             <p><span id="youSpan" *ngIf="app.getUser().id==user.id">You</span>{{user.username}} <span id="email">- {{user.email}}</span></p>
+            <p title="Effective Time" id="et"><span id="nEt">{{user.effectiveTime}}</span> EFT</p>
             <button *ngIf="editing" (click)="removeUser(user.id)" id="bUserAction" class="remove">Remove</button>
 
           </div>
@@ -80,6 +83,7 @@
 
               <app-profile-image [image]="user.photoUrl" [username]="user.username" />
               <p><span id="youSpan" *ngIf="app.getUser().id==user.id">You</span> {{user.username}} <span id="email">- {{user.email}}</span></p>
+              <p title="Effective Time" id="et"><span id="nEt">{{user.effectiveTime}}</span> ET</p>
               <button *ngIf="editing" (click)="addUser(user.id)" id="bUserAction" class="add">Add</button>
 
             </div>

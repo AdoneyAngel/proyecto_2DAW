@@ -32,6 +32,7 @@ export class TaskComponent {
   draggingUserId:number|string = 0
   isChanged:boolean = false
   newStatus:UserTaskStatusEnum|null = null
+  totalEt:number = 0
   userTaskStatus:any = {
     Todo: null,
     Progress: null,
@@ -147,6 +148,8 @@ export class TaskComponent {
     })
 
     this.newUsers = this.newUsers
+
+    this.updateTotalEt()
   }
   removeUser(userId:number|string) {
     this.newUsers.forEach((user:any) => {
@@ -156,6 +159,8 @@ export class TaskComponent {
     })
 
     this.newUsers = this.newUsers
+
+    this.updateTotalEt()
   }
 
   resetNewValues() {
@@ -166,6 +171,8 @@ export class TaskComponent {
     this.newPriority = this.task.priority
 
     this.newUsers = this.newUsers.map((user:any) => {return {...user, original:this.memberIsJoined(user.id), added:this.memberIsJoined(user.id)}})
+
+    this.updateTotalEt()
   }
 
   loadTaskId() {
@@ -218,12 +225,26 @@ export class TaskComponent {
           this.newUsers = [...this.newUsers, {...user, original:this.memberIsJoined(user.id), added:this.memberIsJoined(user.id)}]
         })
 
+        this.updateTotalEt()
+
         this.loadUserPhotos()
 
       } else {
         this.app.notificationError(res.error)
       }
     })
+  }
+
+  updateTotalEt() {
+    let total = 0
+
+    this.newUsers.forEach((actualUser:any) => {
+      if (actualUser.added) {
+        total += actualUser.effectiveTime
+      }
+    })
+
+    this.totalEt = total
   }
 
   memberIsJoined(memberId:number|string):boolean {

@@ -1,0 +1,9 @@
+#delimiter {
+  width: calc(100% + 60px);
+  transform: translateX(-30px);
+  margin: 10px 0;
+  height: 2px;
+  background: var(--grey-color);
+  border-radius: 100px;
+  opacity: .7;
+}

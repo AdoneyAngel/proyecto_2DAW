@@ -1,0 +1,59 @@
+<app-main-content-box display="list" >
+  <div id="memberBox">
+    <div id="header">
+      <app-profile-image styles="
+        width: 60px;
+        height: 60px;
+      " [image]="member?.photoUrl??null" [username]="member ? member.username : ''" />
+      <h1>{{member?.email}}</h1>
+    </div>
+
+    <app-content-box-simple-delimiter />
+
+    <div class="section" id="effectiveTimeSection">
+      <h1>Effective Time (days)</h1>
+      <input [disabled]="!editing" [(ngModel)]="newEffectiveTime" type="number" min="1" placeholder="{{member?.effectiveTime}}" value="{{member?.effectiveTime}}">
+
+      <br>
+      <br>
+
+      <button *ngIf="!editing" (click)="setEditing()" id="bEdit">Edit</button>
+      <button *ngIf="editing" (click)="saveEffectiveTime()" id="bEffectiveTimeSave">Save</button>
+    </div>
+
+    <app-content-box-simple-delimiter />
+
+    <div id="tasksSection" class="section">
+      <h1>Tasks of <app-text-link styles="font-size: 1.5rem" [text]="project?.title??'project'" [link]="project?'/dashboard/projects/'+projectId:''" /></h1>
+
+      <div id="taskList">
+        @for (task of tasks; track $index) {
+
+          @if (task.userStatus == userTaskStatus.Todo) {
+            <div routerLink="/dashboard/projects/{{projectId}}/tasks/{{task.id}}" class="todo" id="taskItem">
+              <img src="assets/images/web_white.png" alt="">
+
+              <p>{{task.title}}</p>
+            </div>
+
+          } @else if (task.userStatus == userTaskStatus.Progress) {
+            <div routerLink="/dashboard/projects/{{projectId}}/tasks/{{task.id}}" class="progress" id="taskItem">
+              <img src="assets/images/settings_white.png" alt="">
+
+              <p>{{task.title}}</p>
+            </div>
+
+          } @else if (task.userStatus == userTaskStatus.Done) {
+            <div routerLink="/dashboard/projects/{{projectId}}/tasks/{{task.id}}" class="done" id="taskItem">
+              <img src="assets/images/done_white.png" alt="">
+
+              <p>{{task.title}}</p>
+            </div>
+          }
+
+        }
+      </div>
+    </div>
+
+  </div>
+</app-main-content-box>

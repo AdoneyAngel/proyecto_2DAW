@@ -317,7 +317,7 @@ export async function getTaskOfProject(projectId:string|number, project:boolean 
   }])
 }
 
-export async function getProject(projectId:number|string, members:boolean = false, owner:boolean = false) {
+export async function getProject(projectId:number|string, members:boolean = false, owner:boolean = false, tasks:boolean = false) {
   return await get(`proyects/${projectId}`, [
     {
       name: "members",
@@ -326,6 +326,10 @@ export async function getProject(projectId:number|string, members:boolean = fals
     {
       name: "owner",
       value: owner
+    },
+    {
+      name: "tasks",
+      value: tasks
     }
   ])
 }
@@ -421,4 +425,8 @@ export async function removeMemberFromProject(projectId:number|string, userId:nu
 
 export async function getMember(projectId:number|string, userId:number|string) {
   return await get(`proyects/${projectId}/members/${userId}`)
+}
+
+export async function updateMember(projectId:number|string, memberId:number|string, data:any) {
+  return put(`proyects/${projectId}/members/${memberId}`, data)
 }
