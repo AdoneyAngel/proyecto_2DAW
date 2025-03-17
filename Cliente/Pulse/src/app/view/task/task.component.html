@@ -54,6 +54,8 @@
       </div>
     </div>
 
+    <button *ngIf="isOwner" (click)="askDeleteTask()" id="bDeleteTask">Delete Task</button>
+
     <app-content-box-delimiter title="Assigned users" />
 
     <div (dragover)="onDragOver($event)" (drop)="onDropAssignedUsers($event)" class="container" id="users">

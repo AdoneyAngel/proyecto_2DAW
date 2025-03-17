@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { changeUserStatus, getProjectMembers, getTask, updateTask } from '../../../API/api';
+import { changeUserStatus, deleteTask, getProjectMembers, getTask, updateTask } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
@@ -369,8 +369,25 @@ export class TaskComponent {
 
     }
 
+  }
 
+  askDeleteTask() {
+    this.app.showAccept("Are you sure you want to delete the task?", this.deleteTask.bind(this))
+  }
 
+  async deleteTask():Promise<any> {
+    if (!this.taskId) return null
+
+    deleteTask(this.taskId)
+    .then(res => {
+      if (res.success) {
+        this.app.notificationSuccess("Task deleted")
+        window.location.href = "/dashboard/projects/"+this.projectComponent.getProjectId()
+
+      } else {
+        this.app.notificationError(res.error??'Something gone wrong, try again later')
+      }
+    })
   }
 
 }

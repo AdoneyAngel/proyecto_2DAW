@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { getProject, getProjectTasks, updateProjectTitle } from '../../../../API/api';
+import { getProject, getTaskOfProject, updateProjectTitle } from '../../../../API/api';
 import { AppComponent } from '../../../app.component';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { Title } from '@angular/platform-browser';
@@ -71,7 +71,6 @@ export class ProjectComponent {
 
   onRouteChanges() {
     this.title = this.app.getTitle()
-    this.dashboard.setRouteCustomTitle("project", this.project.title)
 
     if (this.title != "project") {
       this.isOnMain = false
@@ -111,7 +110,6 @@ export class ProjectComponent {
     const memberList:any = document.getElementById("memberList")
 
     const dimensions:any = projectBody?.getClientRects()[0]
-    const listDimensions:any = memberList.getClientRects()[0]
 
     memberList.style.left = ((dimensions.x-7.5+dimensions?.width/2) - (memberList.width/2)) + "px"
     memberList.style.width = dimensions.width-100 + "px"
@@ -124,7 +122,6 @@ export class ProjectComponent {
       this.dashboard.setTitle(".")
       this.newProjectTitle = res.data.title
       this.project = res.data
-      this.dashboard.setRouteCustomTitle("project", res.data.title)
 
       const user = this.app.getUser()
 
@@ -146,7 +143,7 @@ export class ProjectComponent {
   }
 
   async loadTasks() {
-    getProjectTasks(this.project.id, true)
+    getTaskOfProject(this.project.id, false, true)
     .then(res => {
       if (res.success) {
         res.data.forEach((task:any) => {

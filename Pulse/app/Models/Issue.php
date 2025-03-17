@@ -43,7 +43,7 @@ class Issue extends Task
     public function loadNotifier() {
         if (!$this->notifierId) return null;
 
-        $notifier = User::getById($this->id);
+        $notifier = User::getById($this->notifierId);
 
         $this->notifier = $notifier;
 
@@ -90,6 +90,12 @@ class Issue extends Task
         } else {
             return null;
         }
+    }
+
+    public static function getByProyectId($proyectId) {
+        $issues = static::selectQuery(["proyect_id" => $proyectId]);
+
+        return $issues;
     }
 
     public static function selectQuery(array $whereValues = null) {

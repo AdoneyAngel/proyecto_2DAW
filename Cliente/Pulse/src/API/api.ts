@@ -255,7 +255,7 @@ export async function rejectInvitation(proyectId:number|string) {
   return await put(`rejectRequest/${proyectId}`)
 }
 
-export async function getIncludedProjects(members:boolean = false, owner:boolean = false) {
+export async function getIncludedProjects(members:boolean = false, owner:boolean = false, tasks:boolean = false, issues:boolean = false) {
   return await get("users/0/includedProyects", [
     {
       name: "members",
@@ -264,6 +264,14 @@ export async function getIncludedProjects(members:boolean = false, owner:boolean
     {
       name: "owner",
       value: owner
+    },
+    {
+      name: "tasks",
+      value: tasks
+    },
+    {
+      name: "issues",
+      value: issues
     }
   ])
 }
@@ -293,7 +301,7 @@ export async function getRackOfProyect(proyectId:number|string) {
   }])
 }
 
-export async function getProjects(members:boolean = false, owner:boolean = false) {
+export async function getProjects(members:boolean = false, owner:boolean = false, tasks:boolean = false, issues:boolean = false) {
   return await get(`users/0/proyects`, [
     {
       name: "members",
@@ -302,6 +310,14 @@ export async function getProjects(members:boolean = false, owner:boolean = false
     {
       name: "owner",
       value: owner
+    },
+    {
+      name: "tasks",
+      value: tasks
+    },
+    {
+      name: "issues",
+      value: issues
     }
   ])
 }
@@ -429,4 +445,30 @@ export async function getMember(projectId:number|string, userId:number|string) {
 
 export async function updateMember(projectId:number|string, memberId:number|string, data:any) {
   return put(`proyects/${projectId}/members/${memberId}`, data)
+}
+
+export async function getIssuesOfProject(projectId:string|number, project:boolean = false, users:boolean = false) {
+  return await get(`proyects/${projectId}/issues`, [
+    {
+      name: "proyect",
+      value: project
+    },
+    {
+      name: "users",
+      value: users
+    }
+  ])
+}
+
+export async function deleteTask(taskId:number|string) {
+  return await remove(`tasks/${taskId}`)
+}
+
+export async function getIssues(notifier:boolean = false) {
+  return await get('issues', [
+    {
+      name: "notifier",
+      value: notifier
+    }
+  ])
 }

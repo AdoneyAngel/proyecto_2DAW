@@ -242,3 +242,9 @@ input:disabled, textarea:disabled {
 #bSetStatus.visible {
   opacity: 1;
 }
+
+#bDeleteTask {
+  background: var(--red-color);
+  opacity: .8;
+  margin-bottom: 10px;
+}

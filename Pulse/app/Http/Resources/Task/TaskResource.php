@@ -4,6 +4,8 @@ namespace App\Http\Resources\Task;
 
 use App\Http\Resources\Proyect\ProyectResource;
 use App\Http\Resources\User\UserCollection;
+use App\Http\Resources\User\UserResource;
+use App\TaskTypeEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -31,6 +33,14 @@ class TaskResource extends JsonResource
 
         if ($this->users) {
             $resource["users"] = new UserCollection($this->users);
+        }
+
+        if ($this->getType() == TaskTypeEnum::Issue && $this->getNotifierId()) {
+            $resource["notifierId"] = $this->getNotifierId();
+        }
+
+        if ($this->getType() == TaskTypeEnum::Issue && $this->getNotifier()) {
+            $resource["notifier"] = new UserResource($this->getNotifier());
         }
 
         if ($this->proyect) {

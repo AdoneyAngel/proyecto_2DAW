@@ -874,5 +874,8 @@ class TaskController extends Controller
         if (Utils::parseBool($request->query("proyect"))) {
             $task->loadProyect();
         }
+        if (Utils::parseBool($request->query("notifier")) && $task->getType() == TaskTypeEnum::Issue) {
+            $task->loadNotifier();
+        }
     }
 }

@@ -24,7 +24,8 @@ class ProyectResource extends JsonResource
             "date" => $this->getDate(),
             "members" => $this->members ? new ProyectMemberCollection($this->members) : [],
             "tasks" => $this->tasks ? new TaskCollection($this->tasks) : [],
-            "owner" => $this->owner ? new UserResource($this->owner) : null
+            "owner" => $this->owner ? new UserResource($this->owner) : null,
+            "issues" => $this->issues ? new TaskCollection($this->issues) : []
         ];
     }
 }

@@ -9,12 +9,18 @@ import { CreateTaskComponent } from './view/projects/project/create-task/create-
 import { TaskComponent } from './view/task/task.component';
 import { MemberComponent } from './view/member/member.component';
 import { NotFoundComponent } from './view/not-found/not-found.component';
+import { IssuesComponent } from './view/issues/issues.component';
 
 const dashboardRoutes = {
   path: "dashboard",
   data: {title: "dashboard"},
   loadComponent: () => DashboardComponent,
   children: [
+    {
+      path: "issues",
+      data: {title: "issues"},
+      loadComponent: () => IssuesComponent
+    },
     {
       path: "rack",
       data: {title: "rack"},

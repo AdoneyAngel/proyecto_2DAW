@@ -165,6 +165,11 @@ class Proyect extends Model
     }
 
     public function getIssues() {
+        if (!$this->id) return null;
+
+        $issues = Issue::getByProyectId($this->id);
+
+        return $issues;
     }
 
     public function getIssueById($id) {
@@ -195,6 +200,14 @@ class Proyect extends Model
         $owner = $this->getOwner();
 
         $this->owner = $owner;
+    }
+
+    public function loadIssues() {
+        if (!$this->id) return null;
+
+        $issues = Issue::getByProyectId($this->id);
+
+        $this->issues = $issues;
     }
 
     public function getMembers() {

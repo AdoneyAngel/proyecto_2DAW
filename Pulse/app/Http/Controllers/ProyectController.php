@@ -287,6 +287,31 @@ class ProyectController extends Controller
         }
     }
 
+    public function getIssues(Request $request, $proyectId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+
+            //Proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Proyect not found");
+            }
+
+            //Request user is owner/member of proyect
+            if ($proyect->getOwnerId() != $reqUser->getId() && !$proyect->isMember($reqUser->getId())) {
+                return responseUtils::unAuthorized("You can't access to this proyect");
+            }
+
+            $issues = $proyect->getIssues();
+
+            return responseUtils::successful(new TaskCollection($issues));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting proyect issues", $err);
+        }
+
+    }
+
     /**
      * Get tasks history of the proyect.
      */
@@ -609,6 +634,9 @@ class ProyectController extends Controller
         }
         if (Utils::parseBool($request->query("owner"))) {
             $proyect->loadOwner();
+        }
+        if (Utils::parseBool($request->query("issues"))) {
+            $proyect->loadIssues();
         }
     }
 }
