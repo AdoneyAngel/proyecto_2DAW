@@ -60,6 +60,10 @@ h1 {
   font-size: 1.5rem;
 }
 
+img, .img {
+  user-select: none;
+}
+
 label {
   color: rgba(255, 255, 255, 0.589);
   padding: 0 10px;

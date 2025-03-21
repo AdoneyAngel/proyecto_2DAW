@@ -1,1 +1,35 @@
-<p>issues works!</p>
+@for (project of projects; track $index) {
+  @if (project.issues?.length) {
+
+    <app-main-content-box display="list" title="{{project.title}}">
+
+      @for (issue of project.issues; track $index) {
+
+        <div routerLink="/dashboard/projects/{{project.id}}/issues/{{issue.id}}" class="{{issue.statusId==taskStatus.Progress?'progress':(issue.statusId==taskStatus.Done?'done':(issue.statusId==taskStatus.Review?'review':'todo'))}}" id="item">
+          <div id="info">
+            <h1>{{issue.title}}</h1>
+            <p id="date">{{issue.date}}</p>
+          </div>
+
+          <p id="description">{{issue.description}}</p>
+
+          <div id="userList">
+            @for (user of issue.users; track $index) {
+              <div id="userItem">
+                <app-profile-image [image]="user.photoUrl??''" [userId]="user.id" [show]="true" [username]="user.username" styles="
+                  border-color: {{user.taskStatus==userTaskStatus.Progress?'var(--primary-color)':(user.taskStatus==userTaskStatus.Done?'var(--green-color)':'var(--light-color)')}};
+                  box-shadow: 0px 0px 5px 1px {{user.taskStatus==userTaskStatus.Progress?'var(--primary-color)':(user.taskStatus==userTaskStatus.Done?'var(--green-color)':'var(--light-color)')}};
+                "/>
+              </div>
+            }
+          </div>
+
+          <img src="assets/images/issue_red.png" id="bug">
+        </div>
+
+      }
+
+    </app-main-content-box>
+
+  }
+}

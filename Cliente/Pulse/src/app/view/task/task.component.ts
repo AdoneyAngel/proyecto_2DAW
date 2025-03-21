@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { changeUserStatus, deleteTask, getProjectMembers, getTask, updateTask } from '../../../API/api';
+import { changeUserStatus, deleteTask, getIssue, getProjectMembers, getTask, updateIssue, updateTask } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
@@ -186,7 +186,16 @@ export class TaskComponent {
   }
 
   loadTask() {
-    getTask(this.taskId, true, true)
+    const fn = (id:number|string, project:boolean, users:boolean) => {
+      if (this.app.getTitle() == "issue") {
+        return getIssue(id, project, users)
+
+      } else {
+        return getTask(id, project, users)
+      }
+    }
+
+    fn(this.taskId, true, true)
     .then(res => {
       if (res.success) {
         this.task = res.data
@@ -270,11 +279,27 @@ export class TaskComponent {
     if (this.validateForm()) {
       const usersId = this.newUsers.filter((user:any) => user.added).map((user:any) => user.id)
 
-      const res = await updateTask(this.taskId, this.newTitle, this.newDescription, Number(this.newTime), Number(this.newPriority), this.newTag, usersId)
+      const fn = async (id:number|string, title:string, description:string = "", time:number, priority:number, tag:string, users:any = null) => {
+        if (this.app.getTitle() == "issue") {
+          return updateIssue(id, title, description, time, priority, tag, users)
+
+        } else {
+          return updateTask(id, title, description, time, priority, tag, users)
+        }
+      }
+
+      const res = await fn(this.taskId, this.newTitle, this.newDescription, Number(this.newTime), Number(this.newPriority), this.newTag, usersId)
 
       if (res.success) {
         this.app.notificationSuccess("Task updated")
-        window.location.href = "/dashboard/projects/"+this.task.proyectId
+
+        if (this.app.getTitle() == "issue") {
+          window.location.href = "/dashboard/issues"
+
+        } else {
+          window.location.href = "/dashboard/projects/"+this.task.proyectId
+        }
+
 
       } else {
         this.app.notificationError(res.error)

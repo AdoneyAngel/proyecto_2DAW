@@ -42,6 +42,11 @@ const dashboardRoutes = {
           loadComponent: () => TaskComponent
         },
         {
+          path: "issues/:id",
+          data: {title: "issue"},
+          loadComponent: () => TaskComponent
+        },
+        {
           path: "createTask",
           data: {title: "create task"},
           loadComponent: () => CreateTaskComponent

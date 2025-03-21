@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <button *ngIf="isOwner" (click)="askDeleteTask()" id="bDeleteTask">Delete Task</button>
+    <button *ngIf="isOwner" (click)="askDeleteTask()" id="bDeleteTask">{{app.getTitle() == "issue"?"Delete Issue":"Delete Task"}}</button>
 
     <app-content-box-delimiter title="Assigned users" />
 

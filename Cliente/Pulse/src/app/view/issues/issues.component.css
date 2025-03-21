@@ -1,0 +1,53 @@
+#item {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+}
+#item h1 {
+  font-weight: bold;
+}
+#info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+#item #date {
+  opacity: var(--md-opacity);
+  font-size: .9rem;
+}
+#item #description {
+  opacity: var(--md-opacity);
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+#userList {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#userItem:first-child {
+  margin-left: 0;
+}
+#userItem {
+  margin: 0 5px;
+}
+#bug {
+  width: 35px;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  opacity: var(--md-opacity);
+  user-select: none;
+}
+
+#item.progress {
+  border-color: var(--primary-color);
+}
+#item.done {
+  border-color: var(--green-color);
+}
+#item.review {
+  border-color: var(--blue-color);
+}

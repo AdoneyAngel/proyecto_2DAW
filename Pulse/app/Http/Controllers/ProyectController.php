@@ -630,13 +630,25 @@ class ProyectController extends Controller
             $proyect->loadMembers();
         }
         if (Utils::parseBool($request->query("tasks"))) {
+            $taskController = new TaskController();
             $proyect->loadTasks();
+
+            $loadedProyectTasks = $proyect->tasks;
+            $taskController->loadMissings($request, $loadedProyectTasks);
+
+            $proyect->tasks = $loadedProyectTasks;
         }
         if (Utils::parseBool($request->query("owner"))) {
             $proyect->loadOwner();
         }
         if (Utils::parseBool($request->query("issues"))) {
+            $taskController = new TaskController();
             $proyect->loadIssues();
+
+            $loadedProyectTasks = $proyect->issues;
+            $taskController->loadMissings($request, $loadedProyectTasks);
+
+            $proyect->tasks = $loadedProyectTasks;
         }
     }
 }

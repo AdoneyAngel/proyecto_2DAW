@@ -255,7 +255,7 @@ export async function rejectInvitation(proyectId:number|string) {
   return await put(`rejectRequest/${proyectId}`)
 }
 
-export async function getIncludedProjects(members:boolean = false, owner:boolean = false, tasks:boolean = false, issues:boolean = false) {
+export async function getIncludedProjects(members:boolean = false, owner:boolean = false, tasks:boolean = false, issues:boolean = false, tasksUsers:boolean = false) {
   return await get("users/0/includedProyects", [
     {
       name: "members",
@@ -272,6 +272,10 @@ export async function getIncludedProjects(members:boolean = false, owner:boolean
     {
       name: "issues",
       value: issues
+    },
+    {
+      name: "users",
+      value: tasksUsers
     }
   ])
 }
@@ -301,7 +305,7 @@ export async function getRackOfProyect(proyectId:number|string) {
   }])
 }
 
-export async function getProjects(members:boolean = false, owner:boolean = false, tasks:boolean = false, issues:boolean = false) {
+export async function getProjects(members:boolean = false, owner:boolean = false, tasks:boolean = false, issues:boolean = false, taskUsers:boolean = false) {
   return await get(`users/0/proyects`, [
     {
       name: "members",
@@ -318,6 +322,10 @@ export async function getProjects(members:boolean = false, owner:boolean = false
     {
       name: "issues",
       value: issues
+    },
+    {
+      name: "users",
+      value: taskUsers
     }
   ])
 }
@@ -471,4 +479,28 @@ export async function getIssues(notifier:boolean = false) {
       value: notifier
     }
   ])
+}
+
+export async function getIssue(issueId:number|string, project:boolean = false, users:boolean = false) {
+  return await get(`issues/${issueId}`, [
+    {
+      name: "proyect",
+      value: project
+    },
+    {
+      name: "users",
+      value: users
+    }
+  ])
+}
+
+export async function updateIssue(issueId:number|string, title:string, description:string = "", time:number, priority:number, tag:string, users:any = null) {
+  return await put(`issues/${issueId}`, {
+    title,
+    description,
+    time,
+    priority,
+    tag,
+    users
+  })
 }
