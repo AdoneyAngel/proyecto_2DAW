@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { changeUserStatus, deleteTask, getIssue, getProjectMembers, getTask, updateIssue, updateTask } from '../../../API/api';
+import { changeUserStatus, deleteIssue, deleteTask, getIssue, getProjectMembers, getTask, updateIssue, updateTask } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
@@ -403,7 +403,16 @@ export class TaskComponent {
   async deleteTask():Promise<any> {
     if (!this.taskId) return null
 
-    deleteTask(this.taskId)
+    const fn = (id:number|string) => {
+      if (this.app.getTitle() == "issue") {
+        return deleteIssue(id)
+
+      } else {
+        return deleteTask(id)
+      }
+    }
+
+    fn(this.taskId)
     .then(res => {
       if (res.success) {
         this.app.notificationSuccess("Task deleted")

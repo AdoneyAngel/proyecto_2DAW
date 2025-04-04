@@ -18,6 +18,7 @@ export class CreateTaskComponent {
   project:any = {}
   tags:any = []
   memberPhotos:any = []
+  isProjectOwner:boolean = false
 
   constructor (private activedRouter:ActivatedRoute, protected app:AppComponent, protected dashboard:DashboardComponent, private router:Router, private projectComponent:ProjectComponent){}
 
@@ -108,6 +109,8 @@ export class CreateTaskComponent {
 
         this.loadTags()
         this.loadMemberPhotos()
+
+        this.isProjectOwner = this.project.ownerId == this.app.getUser().id
 
       } else {
         this.app.notificationError(res.error)

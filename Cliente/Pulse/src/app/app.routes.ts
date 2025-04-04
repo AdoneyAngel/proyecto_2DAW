@@ -10,6 +10,8 @@ import { TaskComponent } from './view/task/task.component';
 import { MemberComponent } from './view/member/member.component';
 import { NotFoundComponent } from './view/not-found/not-found.component';
 import { IssuesComponent } from './view/issues/issues.component';
+import { CreateIssueComponent } from './view/issues/create-issue/create-issue.component';
+import { ProfileComponent } from './view/profile/profile.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -20,6 +22,16 @@ const dashboardRoutes = {
       path: "issues",
       data: {title: "issues"},
       loadComponent: () => IssuesComponent
+    },
+    {
+      path: "issues/createIssue",
+      data: {title: "create issue"},
+      loadComponent: () => CreateIssueComponent
+    },
+    {
+      path: "profile",
+      data: {title: "profile"},
+      loadComponent: () => ProfileComponent
     },
     {
       path: "rack",

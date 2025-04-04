@@ -16,6 +16,7 @@ export class ProfileImageComponent {
   @Input() username:string = ""
   @Input() show:boolean = false
   @Input() userId:string|number = ""
+  @Input() onclick:Function|null = null
   color:string = "transparent"
   isLoading:boolean = false
   profile:any|null = null

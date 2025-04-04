@@ -15,6 +15,10 @@ import { ProjectsComponent } from '../../components/dashboard/proyects/projects.
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+  profile:any = {
+    photo: "",
+    username: ""
+  }
   isOnDashboard: boolean = true
   routes: any = []
   invitations: any[] = []
@@ -28,7 +32,15 @@ export class DashboardComponent {
   async ngOnInit() {
     this.onRouteChanges()
 
+    this.appComponent.onLoadUser(this.loadProfile.bind(this))
     this.appComponent.onRouteChanges("dashboard", this.onRouteChanges.bind(this))
+  }
+
+  loadProfile() {
+    this.profile.username = this.appComponent.getUser().username
+
+    this.findUserPhoto(this.appComponent.getUser().id)
+    .then(res => this.profile.photo = res.photo)
   }
 
   getCache(name:string) {

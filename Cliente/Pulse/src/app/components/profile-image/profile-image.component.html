@@ -1,4 +1,4 @@
-<div #profileImageContainer id="profileImageContainer" tabindex="-1" (click)="onProfileClick($event)" (blur)="onProfileBlur()" (focus)="onProfileFocus()">
+<div #profileImageContainer id="profileImageContainer" tabindex="-1" (click)="show?onProfileClick($event) : onclick?onclick():''" (blur)="onProfileBlur()" (focus)="onProfileFocus()">
   <div class="{{show?'deployable': ''}}" [style]="styles" id="profileImage">
     @if (image) {
       <img [src]="image" alt="">

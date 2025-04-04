@@ -22,6 +22,12 @@
       }
     </section>
 
+    <section id="profile">
+        <app-profile-image [onclick]="goToProfile.bind(this)" [image]="photo??''" [username]="username" styles="
+          border-radius: 1000px;
+        "/>
+    </section>
+
   </div>
 
 </header>

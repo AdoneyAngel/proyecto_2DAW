@@ -27,7 +27,8 @@ class StoreIssueRequest extends FormRequest
             "proyectId" => ["required"],
             "tag" => ["required"],
             "priority" => ["required"],
-            "time" => ["required"]
+            "time" => ["required"],
+            "users" => ["sometimes", "required", "array"]
         ];
     }
 }

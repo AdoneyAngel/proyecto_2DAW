@@ -2,11 +2,13 @@ import { Component, Input } from '@angular/core';
 import { MainContentBoxComponent } from '../../main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
 import { ProfileImageComponent } from '../../profile-image/profile-image.component';
+import { NgIf } from '@angular/common';
+import { AppComponent } from '../../../app.component';
 
 @Component({
   selector: 'app-create-task-form',
   standalone: true,
-  imports: [MainContentBoxComponent, FormsModule, ProfileImageComponent],
+  imports: [MainContentBoxComponent, FormsModule, ProfileImageComponent, NgIf],
   templateUrl: './create-task-form.component.html',
   styleUrl: './create-task-form.component.css'
 })
@@ -23,6 +25,9 @@ export class CreateTaskFormComponent {
   @Input() tags:any = []
   @Input() members:any = []
   @Input() memberPhotos:any = []
+  @Input() isOwner:boolean = false
+
+  constructor (protected app:AppComponent) {}
 
   selectUser(userId:number|string) {
     const userIndexFound = this.users.findIndex((user:number|string) => user==userId)

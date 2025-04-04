@@ -1,0 +1,72 @@
+#main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#profile {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+#profile #info {
+  margin-left: 20px;
+}
+#username {
+  text-transform: capitalize;
+  font-size: 2rem;
+  background: transparent;
+  color: white;
+  border: none;
+  display: block;
+  margin-bottom: 5px;
+  cursor: text;
+}
+#email {
+  font-size: .9rem;
+  opacity: .7;
+  font-weight: bold;
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: text;
+}
+
+#username:enabled, #email:enabled {
+  border: 2px solid var(--tertiary-color);
+}
+
+#emailIcon {
+  margin-left: 10px;
+  opacity: .7;
+}
+
+#bEdit {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  padding: var(--xlg-padding) 10px;
+  border-radius: var(--md-border-radius);
+}
+#bEdit.editing {
+  border-color: var(--red-color);
+}
+#bSave {
+  margin-left: 5px;
+  background: transparent;
+  border: 2px solid var(--green-color);
+  padding: var(--xlg-padding) 10px;
+  border-radius: var(--md-border-radius);
+}
+
+#profilePhoto {
+  cursor: pointer;
+  transform: .2s;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+#profilePhoto:hover {
+  filter: brightness(.9);
+}

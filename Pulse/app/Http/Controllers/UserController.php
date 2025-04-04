@@ -156,30 +156,39 @@ class UserController extends Controller
     {
         try {
             $user = $request["user"];
+            $changes = false;
 
             if (!$request->username && !$request->email && !$request->password && !$request->photo) {
                 return responseUtils::successful(new UserResource($user));
             }
 
-            if ($request->username)
+            if ($request->username && $user->getUserName() != $request->username) {
                 $user->setUserName($request->username);
-            if ($request->password)
+                $changes = true;
+            }
+
+
+            if ($request->password) {
                 $user->setPassword($request->password);
-            if ($request->photo)
-                $user->setPhoto($request->photo);
+                $changes = true;
+            }
 
             //Email dont exist
-            if ($request->email) {
+            if ($request->email && $user->getEmail() != $request->email) {
                 $userWithEmail = User::getByEmail($request->email);
 
                 if (!$userWithEmail) {
                     $user->setEmail($request->email);
+                    $changes = true;
+
                 } else {
                     return responseUtils::conflict("The email is already in use");
                 }
             }
 
-            $user->saveChanges();
+            if ($changes) {//If there are not changes, dont save
+                $user->saveChanges();
+            }
 
             return responseUtils::successful(new UserResource($user));
         } catch (Exception $err) {

@@ -504,3 +504,30 @@ export async function updateIssue(issueId:number|string, title:string, descripti
     users
   })
 }
+
+export async function createIssue(projectId:number|string, title:string, description:string = "", time:number, priority:number, tag:string, users:any = []) {
+  return await post(`issues`, {
+    proyectId: projectId,
+    title,
+    description,
+    time,
+    priority,
+    tag,
+    users
+  })
+}
+
+export async function deleteIssue(issueId:number|string) {
+  return await remove(`issues/${issueId}`)
+}
+
+export async function updateUser(username:string|null, email:string|null) {
+  return await put(`users/0`, {
+    username,
+    email
+  })
+}
+
+export async function uploadProfilePhoto(formData:FormData) {
+  return await post("users/0/photo", formData)
+}

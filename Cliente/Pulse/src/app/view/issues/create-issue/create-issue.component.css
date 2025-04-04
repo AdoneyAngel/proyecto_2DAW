@@ -1,0 +1,25 @@
+
+.selectItem p {
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+.selectItem img {
+  width: 25px;
+  margin-right: 10px;
+  opacity: .7;
+}
+.selectItem {
+  border: 2px solid var(--primary-color);
+  transition: .2s;
+  background: var(--secondary-color);
+  padding: var(--md-padding);
+  margin: 10px 0;
+  border-radius: var(--md-border-radius);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+}
+.selectItem:hover {
+  filter: brightness(.9);
+}

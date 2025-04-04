@@ -127,6 +127,12 @@ export class ProjectComponent {
 
       this.isOwner = user.id == this.project.owner.id
 
+      //Load owner profile image
+      this.dashboard.findUserPhoto(this.project.owner.id)
+      .then(data => {
+        this.project.owner.photoUrl = data.photo
+      })
+
       this.loadMemberPhotos()
       this.loadTasks()
 

@@ -46,7 +46,7 @@
 
     </div>
 
-    <div class="inputSection" class="usersSection">
+    <div *ngIf="isOwner" class="inputSection" class="usersSection">
       <label>Users <input (keyup)="filterUsers()" type="text" placeholder="Search user" id="inputSearchUser" [(ngModel)]="searchUser"></label>
       <div id="userList">
         @for (user of (searchUser.length?filteredUsers:members); track $index) {
@@ -61,6 +61,6 @@
     </div>
   </div>
 
-  <button (click)="submit(title, description, tag, time, priority, users)" id="bSubmit">Create Task</button>
+  <button (click)="submit(title, description, tag, time, priority, users)" id="bSubmit">Create</button>
 
 </app-main-content-box>

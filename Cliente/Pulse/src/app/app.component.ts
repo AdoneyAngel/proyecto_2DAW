@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, NavigationStart, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
-import { distinctUntilChanged, filter, shareReplay, take } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { isLogged } from "../API/api"
 import { NotificationComponent } from './components/notification/notification.component';
 import { AcceptComponent } from './components/accept/accept.component';
@@ -18,6 +18,7 @@ export class AppComponent {
   title = 'Pulse';
   user:any = {}
   routeSuscripcions:any = []
+  onLoadProfileFunc:any = []
 
   //Notifications
   notificationList = [
@@ -42,6 +43,10 @@ export class AppComponent {
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private route: ActivatedRoute) {}
 
+  async onLoadUser(fn:Function) {
+    this.onLoadProfileFunc.push(fn)
+  }
+
   ngOnInit() {
     this.notificationList = []
 
@@ -65,6 +70,8 @@ export class AppComponent {
 
           } else {
             this.user = logged.data
+
+            this.onLoadProfileFunc.forEach((actualFunc:Function) => actualFunc())
           }
         })
       });

@@ -141,6 +141,7 @@ class TaskController extends Controller
             //Validate if the user is owner of the proyect
             $user = $request["user"];
             $proyect = Proyect::getById($request->proyectId);
+            $users = [];
 
             //Request user is owner/member of the proyect
             if ($proyect->getOwnerId() != $user->getId() && !$proyect->isMember($user->getId())) {
@@ -163,7 +164,30 @@ class TaskController extends Controller
 
             $createdIssue = $newIssue->create();
 
+            //Can create and add users in the same request
+            if ($request->users && count($request->users) && $user->getId() == $proyect->getOwnerId()) {
+                //Users exist and is member of the proyect
+                foreach ($request->users as $actualUser) {
+                    $userFound = User::getById($actualUser);
+
+                    if (!$userFound) {
+                        return responseUtils::notFound("One of the users was not found");
+                    }
+
+                    if (!$proyect->isMember($actualUser)) {
+                        return responseUtils::invalidParams("One of the users is not member of the project");
+                    }
+
+                    $users[] = $userFound;
+                }
+            }
+
             if ($createdIssue) {
+                if (count($users) && $user->getId() == $proyect->getOwnerId()) {
+                    foreach ($users as $actualUser) {
+                        $createdIssue->addUser($actualUser);
+                    }
+                }
                 return responseUtils::created(new TaskResource($newIssue));
 
             } else {
@@ -854,8 +878,30 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      */
     public function issueDestroy(Request $request, $id) {
-        $this->taskTypeClass = Issue::class;
-        return $this->destroy($request, $id);
+        try {
+            $reqUser = $request["user"];
+            $issue = Issue::getById($id);
+            $proyect = null;
+
+            //Task exist
+            if (!$issue) {
+                return responseUtils::notFound("Issue not found");
+            }
+
+            //Request user is the owner of the proyect/issue
+            $proyect = Proyect::getById($issue->getProyectId());
+
+            if ($proyect->getOwnerId() != $reqUser->getId() || $reqUser->getId() != $proyect->getOwnerId()) {
+                return responseUtils::unAuthorized("You can't delete this issue");
+            }
+
+            $issue->delete();
+
+            return responseUtils::successful();
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error deleting task, TaskController", $err);
+        }
     }
 
     public function loadMissings(Request $request, &$tasks)

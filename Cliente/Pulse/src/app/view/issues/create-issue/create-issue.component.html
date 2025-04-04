@@ -1,0 +1,19 @@
+<app-main-content-box title="" display="line">
+
+  <button id="btnBack">Back</button>
+
+  @if (!project) {
+    <div id="projectList">
+      @for (project of projects; track $index) {
+        <div (click)="selectProject(project.id)" class="selectItem" id="projectItem">
+          <img src="assets/images/project_white.png">
+          <p>{{project.title}}</p>
+        </div>
+      }
+    </div>
+
+  } @else {
+    <app-create-task-form [members]="project.members" [tags]="projectTags" [submit]="submit.bind(this)" [isOwner]="isProjectOwner" />
+  }
+
+</app-main-content-box>
