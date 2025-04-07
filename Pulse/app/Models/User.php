@@ -104,7 +104,7 @@ class User extends Model
         //Search the user with the email
         $userWithMail = $this->getByEmail($this->email);
 
-        if (!count($userWithMail)) {
+        if (!$userWithMail) {
             return false;
 
         }
@@ -223,10 +223,38 @@ class User extends Model
         return null;
     }
 
-    public static function getByEmail(string $email): array {
-        $users = self::selectQuery(["email" => $email]);
+    public static function getByEmail(string $email) {
+        $userDb = self::selectQuery(["email" => $email]);
 
-        return $users;
+        if (count($userDb)) {
+            return new User(
+                $userDb[0]->id,
+                $userDb[0]->username,
+                $userDb[0]->email,
+                null,
+                $userDb[0]->photo,
+                $userDb[0]->registred);
+
+        } else {
+            return null;
+        }
+    }
+
+    public static function getByGoogleId(string $googleId) {
+        $userDb = self::selectQuery(["googleId" => $googleId]);
+
+        if (count($userDb)) {
+            return new User(
+                $userDb[0]->id,
+                $userDb[0]->username,
+                $userDb[0]->email,
+                null,
+                $userDb[0]->photo,
+                $userDb[0]->registred);
+
+        } else {
+            return null;
+        }
     }
 
     public function getProyects() {
@@ -337,6 +365,36 @@ class User extends Model
         }
 
         return $users;
+    }
+
+    public function loadGoogleId() {
+        if (!$this->id) return null;
+
+        $googleIdDb = DB::select("SELECT googleId FROM users WHERE id = ?", [$this->id]);
+
+        if ($googleIdDb[0]->googleId) {
+            $this->googleId = $googleIdDb[0]->googleId;
+            return $this->googleId;
+
+        } else {
+            return null;
+        }
+    }
+
+    public function addGoogleAccount($googleId) {
+        if (!$this->id) return null;
+
+        $dbAddAccount = DB::statement("CALL add_google_account(?,?)", [$this->id, $googleId]);
+
+        return true;
+    }
+
+    public function removeGoogleAccount() {
+        if (!$this->id) return null;
+
+        $deletedDb = DB::statement("CALL remove_google_account(?)", [$this->id]);
+
+        return true;
     }
 
     private function genToken() {

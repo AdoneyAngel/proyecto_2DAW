@@ -47,6 +47,15 @@ return [
             'report' => false,
         ],
 
+        'googleAuth' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/googleAuth'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         'photos' => [
             'driver' => 'local',
             'root' => storage_path('app/photos'),

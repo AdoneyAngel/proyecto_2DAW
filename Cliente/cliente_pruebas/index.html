@@ -3,9 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="291569747823-ro6hcogju6tadvfuoep11dt1pk4vgop1.apps.googleusercontent.com">
     <title>Document</title>
 </head>
 <body>
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <div id="g_id_onload"
+        data-client_id="291569747823-ro6hcogju6tadvfuoep11dt1pk4vgop1.apps.googleusercontent.com"
+        data-context="signin"
+        data-ux_mode="popup"
+        data-callback="onGoogleLogin"
+        data-itp_support="true">
+    </div>
+
+    <div class="g_id_signin"
+        data-type="standard"
+        data-shape="rectangular"
+        data-theme="filled_black"
+        data-text="signin_with"
+        data-size="large"
+        data-logo_alignment="left">
+    </div>
+
+    
     <h1>Login</h1>
     <form id="loginForm">
         <input id="loginEmail" type="email" placeholder="email">
@@ -21,6 +41,10 @@
     <img src="" id="photo" alt="">
 
     <script>
+        function onGoogleLogin() {
+
+        }
+
         const url = 'http://127.0.0.1:8000/api'
 
         const loginForm = document.getElementById("loginForm")

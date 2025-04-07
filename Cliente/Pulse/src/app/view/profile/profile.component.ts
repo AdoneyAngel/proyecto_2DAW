@@ -1,11 +1,14 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { getUser, updateUser, uploadProfilePhoto } from '../../../API/api';
+import { addGoogleAccount, checkGoogleAccount, getUser, removeGoogleAccount, updateUser, uploadProfilePhoto } from '../../../API/api';
 import { AppComponent } from '../../app.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { ProfileImageComponent } from '../../components/profile-image/profile-image.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { environment } from '../../../environments/environment';
+
+declare const google: any;
 
 @Component({
   selector: 'app-profile',
@@ -20,15 +23,113 @@ export class ProfileComponent {
   editing:boolean = false
   newUsername:string = ""
   newEmail:string = ""
+  environment:any = {}
+  haveGoogleAccount:boolean = false
+  googleAccountChecked:boolean = false
 
-  constructor(private app:AppComponent, private dashboard:DashboardComponent) {}
+  constructor(private app:AppComponent, private dashboard:DashboardComponent) {
+    this.environment = environment
+  }
 
   ngOnInit() {
+    this.checkGoogleAccount()
     this.loadProfile()
+
+    this.loadGoogleScript().then(() => {
+      google.accounts.id.initialize({
+        client_id: environment.GOOGLE_CLIENT_ID,
+        callback: this.onGoogleLogin.bind(this),
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById('googleButton'),
+        {
+          'theme': '',
+          'scope': 'profile email',
+          'width': 240,
+          'height': 50,
+          'longtitle': true
+        });
+    });
   }
 
   askFormProfileImage() {
     console.log(this.imageFileDom.nativeElement.click())
+  }
+
+  async onGoogleLogin(response: any) {
+    const token = response.credential
+    this.googleAccountChecked = false
+
+    addGoogleAccount(token)
+    .then(res => {
+      if (res.success) {
+        this.app.notificationSuccess("Account synchronized")
+
+        this.checkGoogleAccount()
+
+      } else {
+        this.app.notificationError(res.error)
+      }
+    })
+  }
+
+  loadGoogleScript(): Promise<void> {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      document.body.appendChild(script);
+    });
+  }
+
+  async checkGoogleAccount() {
+    this.googleAccountChecked = false
+
+    try {
+      const res = await checkGoogleAccount()
+
+      if (res.success) {
+        this.haveGoogleAccount = res.data
+
+        this.googleAccountChecked = true
+
+      } else {
+        this.app.notificationError(res.error)
+      }
+
+    } catch (err) {
+      this.app.notificationError("Something gone wrong checking Google Account")
+
+    }
+  }
+
+  askRemoveGoogleAccount() {
+    this.app.showAccept("Are you sure you want to unsync your Google Account?", this.removeGoogleAccount.bind(this))
+  }
+
+  async removeGoogleAccount() {
+    this.app.hideAccept()
+
+    try {
+      removeGoogleAccount()
+      .then(res => {
+        if (res.success) {
+          this.app.notificationSuccess("Google Account removed")
+
+          this.checkGoogleAccount()
+
+        } else {
+          this.app.notificationError(res.error)
+        }
+      })
+
+    } catch (err) {
+      this.app.notificationError("Something gone wrong")
+
+    }
   }
 
   async uploadImage(event:any) {

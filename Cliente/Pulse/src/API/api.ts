@@ -531,3 +531,17 @@ export async function updateUser(username:string|null, email:string|null) {
 export async function uploadProfilePhoto(formData:FormData) {
   return await post("users/0/photo", formData)
 }
+
+export async function addGoogleAccount(token:string) {
+  return await post("googleAccount", {
+    token
+  })
+}
+
+export async function checkGoogleAccount() {
+  return await get("googleAccount")
+}
+
+export async function removeGoogleAccount() {
+  return await remove("googleAccount")
+}

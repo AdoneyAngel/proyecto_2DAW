@@ -1,7 +1,8 @@
 <app-main-content-box>
+
   <div id="profileMain">
 
-    <div id="main">
+    <div id="main" #main>
       <section id="profile">
 
         <div id="profilePhoto">
@@ -16,7 +17,6 @@
 
         </div>
 
-
         <div id="info">
 
           <input [(ngModel)]="newUsername" type="text" id="username" value="{{editing ? newUsername:profile.username}}" [disabled]="!editing" />
@@ -26,7 +26,8 @@
       </section>
 
       <section id="account">
-        <button id="bGoogleSync">Loggin with Google</button>
+        <div style="display: {{!haveGoogleAccount && googleAccountChecked?'block':'none'}}" id="googleButton"></div>
+        <button (click)="askRemoveGoogleAccount()" style="display: {{haveGoogleAccount && googleAccountChecked?'block':'none'}}" id="removeGoogleButton">Remove Google Account</button>
       </section>
     </div>
 

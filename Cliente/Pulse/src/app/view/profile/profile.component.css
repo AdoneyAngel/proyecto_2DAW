@@ -70,3 +70,10 @@
 #profilePhoto:hover {
   filter: brightness(.9);
 }
+
+#removeGoogleButton {
+  border: 2px solid var(--red-color);
+  padding: var(--lg-padding) var(--md-padding);
+  border-radius: var(--md-border-radius);
+  cursor: pointer;
+}

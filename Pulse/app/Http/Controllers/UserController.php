@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\LoginUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\SyncGoogleAccountRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\Proyect\ProyectCollection;
 use App\Http\Resources\ProyectMember\ProyectMemberCollection;
@@ -18,6 +19,8 @@ use App\Models\Utils;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Google\Client;
+use Google\Auth\OAuth2;
 
 use function PHPSTORM_META\type;
 
@@ -96,6 +99,22 @@ class UserController extends Controller
     {
         try {
             $userLogin = new User();
+
+            //Check if the email exist and have Google Account
+            $userWithEmail = User::getByEmail($request->email);
+
+            if (!$userWithEmail) {
+                return responseUtils::notFound("User account not found");
+            }
+
+            //Check Google Account, if the user have, he must use it
+            $userWithEmail->loadGoogleId();
+
+            if ($userWithEmail->googleId) {
+                return responseUtils::invalidParams("The user must login with Google Account");
+            }
+
+            //Continue with normal login
             $userLogin->setEmail($request->email);
             $userLogin->setPassword($request->password);
 
@@ -114,6 +133,17 @@ class UserController extends Controller
     }
 
     /**
+     * Check if the user email is valid and exist for the login.
+     */
+    public function loginCheckEmail(Request $request) {
+        try {
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error checking if the email is valid and exist", $err);
+        }
+    }
+
+    /**
      * Register a new user.
      */
     public function signup(StoreUserRequest $request)
@@ -122,7 +152,7 @@ class UserController extends Controller
             //Validate if email exist
             $userWithEmail = User::getByEmail($request->email);
 
-            if (count($userWithEmail)) {
+            if ($userWithEmail) {
                 return responseUtils::conflict("The email is already in use");
             }
 
@@ -333,6 +363,97 @@ class UserController extends Controller
             return responseUtils::serverError("Error getting pending join request of the user, UserController", $err);
         }
     }
+
+    /**
+     * Remove the google account from the current user
+     */
+    public function removeGoogleAccount(Request $request) {
+        try {
+            $reqUser = $request["user"];
+
+            $reqUser->removeGoogleAccount();
+
+            return responseUtils::successful(true);
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error removing google account", $err);
+        }
+    }
+
+    /**
+     * Validate and Sync google account to the current user
+     */
+    public function syncGoogleAccount(SyncGoogleAccountRequest $request) {
+        try {
+            $reqUser = $request["user"];
+            $token = $request->token;
+
+            //Validate if the have a google account
+            $haveGoogleId = $reqUser->loadGoogleId();
+
+            if ($haveGoogleId) {
+                return responseUtils::conflict("You already have a google account synchronized");
+            }
+
+            //Validate google token
+            $googleClient = new Client();
+            $googleClient->setAuthConfig(Storage::disk("googleAuth")->path("client_secret.json"));
+            $googleClient->setAccessType("offline");
+
+            $googleClient->setClientId(env("GOOGLE_CLIENT_ID"));
+
+            $validToken = $googleClient->verifyIdToken($token);
+
+            if (!$validToken) {
+                return responseUtils::invalidParams("Invalid google account");
+            }
+
+            $googleId = $validToken["sub"];
+
+            //Validate if the google account is already signed with another user
+            $userWithGoogleId = User::getByGoogleId($googleId);
+
+            if ($userWithGoogleId) {
+                return responseUtils::conflict("This google account is already signed with another user");
+            }
+
+            //Add google account
+
+            $addedAccount = $reqUser->addGoogleAccount($googleId);
+
+            if ($addedAccount) {
+                return responseUtils::successful(["email" => $googleId]);
+
+            } else {
+                return responseUtils::serverError("Something gone wrong");
+            }
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error synchronizing google account", $err, "Error synchronizing google account");
+        }
+    }
+
+    /**
+     * Check if the user have a google account
+     */
+    public function checkGoogleAccount(Request $request) {
+        try {
+            $reqUser = $request["user"];
+
+            $reqUser->loadGoogleId();
+
+            if ($reqUser->googleId) {
+                return responseUtils::successful(true);
+
+            } {
+                return responseUtils::successful(false);
+            }
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error checking if the user have google account", $err);
+        }
+    }
+
 
     public function isLogged(Request $request) {
         try {

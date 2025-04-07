@@ -25,6 +25,7 @@ export class ProfileImageComponent {
     x:0,
     y:0
   }
+
   @ViewChild("profileImageContainer") profileImageContainer!: ElementRef;
 
   constructor (protected app:AppComponent, private dashboard:DashboardComponent) {}

@@ -78,7 +78,6 @@ input:disabled, textarea:disabled {
   display: flex;
   flex-direction: row;
   margin: 10px 20px;
-  cursor: pointer;
   align-items: center;
   background: var(--secondary-color);
   padding: 10px;
@@ -118,6 +117,9 @@ input:disabled, textarea:disabled {
 #nEt {
   font-weight: normal;
 }
+#user.draggable {
+  cursor: grab;
+}
 #user.draggable::before {
   content: "|||";
   display: flex;
@@ -131,6 +133,9 @@ input:disabled, textarea:disabled {
   opacity: .5;
   letter-spacing: -.2px;
   margin-left: -10px;
+}
+#user.draggable:active {
+  cursor: grabbing;
 }
 
 #bUserAction {
