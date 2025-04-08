@@ -24,7 +24,6 @@ class UpdateUserRequest extends FormRequest
         return [
             "username" => ["sometimes", "required"],
             "email" => ["sometimes", "required", "email"],
-            "password" => ["sometimes", "required"]
         ];
     }
 }

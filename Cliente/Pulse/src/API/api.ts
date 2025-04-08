@@ -187,51 +187,11 @@ export async function isLogged() {
 }
 
 export async function login(email: string, password: string) {
-  return await axios.post(`${apiUrl}/login`, {email, password}, {
-    headers: {
-      "Content-Type": "application/jsons",
-    },
-    withCredentials: true
-  })
-  .then(res => {
-    return res.data
-
-  })
-  .catch(err => {
-    if (err.response.data.error) {
-      return err.response.data
-
-    }else {
-      return {
-        success: false,
-        error: "Server error"
-      }
-    }
-  })
+  return await post("login", {email, password})
 }
 
 export async function signup(username:string, email:string, password:string) {
-  return await axios.post(`${apiUrl}/signup`, {username, email, password}, {
-    headers: {
-      "Content-Type": "application/jsons"
-    },
-    withCredentials: true
-  })
-  .then(res => {
-    return res.data
-
-  })
-  .catch(err => {
-    if (err.response.data.error) {
-      return err.response.data
-
-    }else {
-      return {
-        success: false,
-        error: "Server error"
-      }
-    }
-  })
+  return await post("signup", {username, email, password})
 }
 
 export async function getInvitations() {
@@ -544,4 +504,24 @@ export async function checkGoogleAccount() {
 
 export async function removeGoogleAccount() {
   return await remove("googleAccount")
+}
+
+export async function loginEmail(email:string) {
+  return await post("loginEmail", {email})
+}
+
+export async function googleLogin(credential:string) {
+  return await post("googleLogin", {token: credential})
+}
+
+export async function googleSignUp(username:string, email:string, credential:string) {
+  return await post("signup", {username, email, googleToken: credential})
+}
+
+export async function checkUserPassword() {
+  return await get("checkPassword");
+}
+
+export async function addUserPassword(password:string) {
+  return await post("addPassword", {password})
 }

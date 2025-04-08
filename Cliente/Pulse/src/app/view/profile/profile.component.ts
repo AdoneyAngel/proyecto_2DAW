@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { addGoogleAccount, checkGoogleAccount, getUser, removeGoogleAccount, updateUser, uploadProfilePhoto } from '../../../API/api';
+import { addGoogleAccount, checkGoogleAccount, checkUserPassword, getUser, removeGoogleAccount, updateUser, uploadProfilePhoto } from '../../../API/api';
 import { AppComponent } from '../../app.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { ProfileImageComponent } from '../../components/profile-image/profile-image.component';
@@ -7,6 +7,7 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 declare const google: any;
 
@@ -27,7 +28,7 @@ export class ProfileComponent {
   haveGoogleAccount:boolean = false
   googleAccountChecked:boolean = false
 
-  constructor(private app:AppComponent, private dashboard:DashboardComponent) {
+  constructor(private app:AppComponent, private dashboard:DashboardComponent, private router:Router) {
     this.environment = environment
   }
 
@@ -66,12 +67,12 @@ export class ProfileComponent {
       if (res.success) {
         this.app.notificationSuccess("Account synchronized")
 
-        this.checkGoogleAccount()
-
       } else {
         this.app.notificationError(res.error)
       }
+
     })
+    .finally(this.checkGoogleAccount.bind(this))
   }
 
   loadGoogleScript(): Promise<void> {
@@ -114,17 +115,31 @@ export class ProfileComponent {
     this.app.hideAccept()
 
     try {
-      removeGoogleAccount()
-      .then(res => {
-        if (res.success) {
-          this.app.notificationSuccess("Google Account removed")
+      //Check if the user have password
+      const resCheckPassword = await checkUserPassword()
+      let userHavePassword = false
 
-          this.checkGoogleAccount()
+      if (resCheckPassword.success) {
+        userHavePassword = resCheckPassword.data
+      }
 
-        } else {
-          this.app.notificationError(res.error)
-        }
-      })
+      if (userHavePassword) {
+        removeGoogleAccount()
+        .then(res => {
+          if (res.success) {
+            this.app.notificationSuccess("Google Account removed")
+
+            this.checkGoogleAccount()
+
+          } else {
+            this.app.notificationError(res.error)
+          }
+        })
+
+      } else {
+        this.app.notificationError("You have to create a password")
+        this.router.navigate(["/addPassword"])
+      }
 
     } catch (err) {
       this.app.notificationError("Something gone wrong")

@@ -11,13 +11,23 @@
 
       <form (submit)="submit($event)">
 
-        <label>Email</label>
-        <input [(ngModel)]="person.email" name="email" type="email" placeholder="your@email.com">
+        <div id="loginStep" *ngIf="!emailChecked">
+          <label>Email</label>
+          <input [(ngModel)]="person.email" name="email" type="email" placeholder="your@email.com">
+        </div>
 
-        <label>Password</label>
-        <input [(ngModel)]="person.password" name="password" type="password" placeholder="********" [disabled]="isLoading">
+        <div id="loginStep" *ngIf="emailChecked && !googleAccount">
+          <label>Password</label>
+          <input [(ngModel)]="person.password" name="password" type="password" placeholder="********" [disabled]="isLoading">
+        </div>
 
-        <button type="submit" [disabled]="isLoading">Login</button>
+        <div id="loginStep" class="googleLogin" *ngIf="emailChecked && googleAccount">
+          <label>This email is synchronized with a Google Account</label>
+          <br>
+          <div id="googleButton"></div>
+        </div>
+
+        <button type="submit" [disabled]="isLoading" *ngIf="!googleAccount">Login</button>
       </form>
 
       <a href="/signup">Create your new account</a>

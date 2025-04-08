@@ -24,7 +24,8 @@ class SignupUserRequest extends FormRequest
         return [
             "username" => ["required"],
             "email" => ["required", "email"],
-            "password" => ["required"]
+            "password" => ["sometimes", "required"],
+            "googleToken" => ["sometimes", "required"]
         ];
     }
 }

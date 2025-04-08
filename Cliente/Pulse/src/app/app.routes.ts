@@ -12,6 +12,7 @@ import { NotFoundComponent } from './view/not-found/not-found.component';
 import { IssuesComponent } from './view/issues/issues.component';
 import { CreateIssueComponent } from './view/issues/create-issue/create-issue.component';
 import { ProfileComponent } from './view/profile/profile.component';
+import { AddUserPasswordComponent } from './view/add-user-password/add-user-password.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -70,47 +71,6 @@ const dashboardRoutes = {
         }
       ]
     }
-    //     {
-    //       path: "taks/:id",
-    //       title: "Tasks",
-    //       // loadComponent: () =>,
-    //       children: [
-    //         {
-    //           path: "users",
-    //           title: "Task users",
-    //           // loadComponent: () => ,
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       path: "issues",
-    //       title: "Issues",
-    //       // loadComponent: () =>,
-    //     },
-    //     {
-    //       path: "issues/:id",
-    //       title: "Issues",
-    //       // loadComponent: () =>,
-    //       children: [
-    //         {
-    //           path: "users",
-    //           title: "Issue users",
-    //           // loadComponent: () => ,
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       path: "members",
-    //       title: "Members",
-    //       // loadComponent: () =>,
-    //     },
-    //     {
-    //       path: "members/:id",
-    //       title: "Members",
-    //       // loadComponent: () =>,
-    //     }
-    //   ]
-    // }
   ]
 }
 
@@ -130,6 +90,12 @@ export const routes: Routes = [
     path: "signup",
     data: {title: "signup"},
     loadComponent: () => SignupComponent
+  },
+
+  {
+    path: "addPassword",
+    data: {title: "add password"},
+    loadComponent: () => AddUserPasswordComponent
   },
   {
     path: "**",

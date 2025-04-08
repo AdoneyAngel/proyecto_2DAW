@@ -29,6 +29,7 @@ section#logo img {
 form {
   display: flex;
   flex-direction: column;
+  margin-bottom: 25px;
 }
 
 form input {
@@ -40,7 +41,6 @@ form input {
 form button {
   margin-left: auto;
   display: block;
-  width: min-content;
   padding: 10px 15px;
   background-color: var(--light-color);
 }
@@ -50,4 +50,13 @@ body {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   place-items: center;
+}
+
+#loginStep {
+  display: flex;
+  flex-direction: column;
+}
+
+#loginStep.googleLogin #googleButton {
+  margin: 0 auto;
 }

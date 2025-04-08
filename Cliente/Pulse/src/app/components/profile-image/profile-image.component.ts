@@ -91,8 +91,6 @@ export class ProfileImageComponent {
   }
 
   loadProfilePhoto() {
-    console.log("cargando foto")
-
     this.dashboard.findUserPhoto(this.userId)
     .then((res:any) => {
       this.image = res.photo

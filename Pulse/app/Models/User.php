@@ -19,6 +19,7 @@ class User extends Model
     protected $password;
     protected $photo;
     protected $registred;
+    private $googleId;
 
     public function __construct($id = null, $username = "", $email = "", $password = "", $photo = null, $registred = null) {
         $this->id = $id;
@@ -91,13 +92,19 @@ class User extends Model
 
         return true;
     }
+    public function getGoogleId() {
+        return $this->googleId;
+    }
+    public function setGoogleId(string $googleId) {
+        $this->googleId = $googleId;
+    }
 
     //Methods
     public function login() {
-        if (!$this->email || ! strlen($this->email)) {
+        if (!$this->email || !strlen($this->email)) {
             return false;
         }
-        if (!$this->password || ! strlen($this->password)) {
+        if (!$this->password || !strlen($this->password)) {
             return false;
         }
 
@@ -110,8 +117,8 @@ class User extends Model
         }
 
         //Compare the current password with the hashed password
-        if (password_verify($this->password, $userWithMail[0]->password)) {
-            $this->id = $userWithMail[0]->id;
+        if (password_verify($this->password, $userWithMail->password)) {
+            $this->id = $userWithMail->id;
             $token = $this->genToken();
             return $token;
         }
@@ -131,14 +138,23 @@ class User extends Model
             throw new \Exception("Missing email");
         }
         //password
-        if (!$this->password || !strlen($this->password)) {
+        if ((!$this->password || !strlen($this->password)) && (!$this->googleId || !strlen($this->googleId))) {
             throw new \Exception("Missing password");
         }
 
-        //----has password
-        $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
+        //Create user with email-password or email-google account
+        $newUserDb = null;
 
-        $newUserDb = DB::select("CALL users_insert(?,?,?,?)", [$this->username, $this->email, $hashedPassword, $this->photo]);
+        if ($this->password) {
+            //----has password
+            $hashedPassword = password_hash($this->password, PASSWORD_DEFAULT);
+
+            $newUserDb = DB::select("CALL users_insert(?,?,?,?)", [$this->username, $this->email, $hashedPassword, $this->photo]);
+
+        } else if ($this->googleId) {
+            $newUserDb = DB::select("CALL users_insert_with_google(?,?,?,?)", [$this->username, $this->email, $this->googleId, $this->photo]);
+
+        }
 
         if (count($newUserDb)) {
             $this->id = $newUserDb[0]->id;
@@ -227,13 +243,7 @@ class User extends Model
         $userDb = self::selectQuery(["email" => $email]);
 
         if (count($userDb)) {
-            return new User(
-                $userDb[0]->id,
-                $userDb[0]->username,
-                $userDb[0]->email,
-                null,
-                $userDb[0]->photo,
-                $userDb[0]->registred);
+            return $userDb[0];
 
         } else {
             return null;
@@ -248,7 +258,7 @@ class User extends Model
                 $userDb[0]->id,
                 $userDb[0]->username,
                 $userDb[0]->email,
-                null,
+                $userDb[0]->password,
                 $userDb[0]->photo,
                 $userDb[0]->registred);
 
@@ -397,7 +407,7 @@ class User extends Model
         return true;
     }
 
-    private function genToken() {
+    public function genToken() {
         $validToken = false;
         $newToken = "";
 
@@ -419,6 +429,28 @@ class User extends Model
         DB::select("CALL users_tokens_insert(?,?,?)", [$this->id, $newToken, $expireDate]);
 
         return $newToken;
+    }
+
+    public function addPassword(string $password) {
+        if (!$this->id) return null;
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $userUpdated = DB::select("CALL user_add_password(?,?)", [$this->id, $hashedPassword]);
+
+        if ($userUpdated) {
+            return new User(
+                $userUpdated[0]->id,
+                $userUpdated[0]->username,
+                $userUpdated[0]->email,
+                $userUpdated[0]->password,
+                $userUpdated[0]->photo,
+                $userUpdated[0]->registred,
+            );
+
+        } else {
+            return null;
+        }
     }
 
     private function tokenExist(string $token) {

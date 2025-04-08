@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\loginCheckEmailRequest;
 use App\Http\Requests\User\LoginUserRequest;
+use App\Http\Requests\User\SignupUserRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\SyncGoogleAccountRequest;
 use App\Http\Requests\User\UpdateUserRequest;
@@ -110,7 +112,7 @@ class UserController extends Controller
             //Check Google Account, if the user have, he must use it
             $userWithEmail->loadGoogleId();
 
-            if ($userWithEmail->googleId) {
+            if ($userWithEmail->getGoogleId()) {
                 return responseUtils::invalidParams("The user must login with Google Account");
             }
 
@@ -121,7 +123,7 @@ class UserController extends Controller
             $userToken = $userLogin->login();
 
             if ($userToken) {
-                $tokenCookie = cookie('access_token', $userToken, 60 * 24, '/', null, false, false, false, false);
+                $tokenCookie = $this->genSessionCookie($userToken);
 
                 return responseUtils::successful(new UserResource($userLogin))->withCookie($tokenCookie);
             } else {
@@ -135,8 +137,27 @@ class UserController extends Controller
     /**
      * Check if the user email is valid and exist for the login.
      */
-    public function loginCheckEmail(Request $request) {
+    public function loginCheckEmail(loginCheckEmailRequest $request) {
         try {
+            $userWithEmail = User::getByEmail($request->email);
+
+            //Check if the email exist
+            if (!$userWithEmail) {
+                return responseUtils::notFound("Email not registered");
+            }
+
+            //Check if the email have Google Account
+            $userWithEmail->loadGoogleId();
+
+            $googleId = $userWithEmail->getGoogleId();
+
+            if ($googleId) {
+                return responseUtils::successful(["googleAccount" => true]);
+
+            } else {
+                return responseUtils::successful(["googleAccount" => false]);
+            }
+
 
         } catch (Exception $err) {
             return responseUtils::serverError("Error checking if the email is valid and exist", $err);
@@ -144,11 +165,52 @@ class UserController extends Controller
     }
 
     /**
+     * Login with Google Account.
+     */
+    public function googleLogin(SyncGoogleAccountRequest $request) {
+        try {
+            $token = $request->token;
+
+            //Validate google token
+            $validToken = $this->validateGoogleToken($token);
+
+            if (!$validToken) {
+                return responseUtils::invalidParams("Invalid google account");
+            }
+
+            //Check if the user with this Google ID exist
+
+            $googleId = $validToken["sub"];
+            $userWithGoogleId = User::getByGoogleId($googleId);
+
+            if ($userWithGoogleId) {
+                $userToken = $userWithGoogleId->genToken();
+
+                $tokenCookie = $this->genSessionCookie($userToken);
+
+                return responseUtils::successful(new UserResource($userWithGoogleId))->withCookie($tokenCookie);
+
+            } else {
+                return responseUtils::notFound("This Google Account is not registered");
+            }
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error login with google account", $err);
+        }
+    }
+
+    /**
      * Register a new user.
      */
-    public function signup(StoreUserRequest $request)
+    public function signup(SignupUserRequest $request)
     {
         try {
+            if (!$request->password && !$request->googleToken) {
+                return responseUtils::invalidParams("Missing password or Google credentials");
+            }
+
+            $newUser = null;
+
             //Validate if email exist
             $userWithEmail = User::getByEmail($request->email);
 
@@ -156,17 +218,45 @@ class UserController extends Controller
                 return responseUtils::conflict("The email is already in use");
             }
 
-            $newUser = new User(null, $request->username, $request->email, $request->password, $request->photo ?? null);
+            if ($request->password) {
+                $newUser = new User(null, $request->username, $request->email, $request->password, $request->photo ?? null);
+
+            } else if ($request->googleToken) {
+                $newUser = new User(null, $request->username, $request->email, null, $request->photo ?? null);
+
+                $validGoogleToken = $this->validateGoogleToken($request->googleToken);
+
+                if ($validGoogleToken) {
+                    $newUser->setGoogleId($validGoogleToken["sub"]);
+
+                } else {
+                    return responseUtils::invalidParams("Invalid Google Account");
+                }
+
+            }
 
             $userToken = $newUser->create();
             $newUser->token = $userToken;
 
-            $tokenCookie = cookie("access_token", $userToken, 60 * 24, null, null, true, true);
+            $tokenCookie = $this->genSessionCookie($userToken);
 
             return responseUtils::successful(new UserResource($newUser))->withCookie($tokenCookie);
         } catch (Exception $err) {
             responseUtils::serverError("Error creating user", $err);
         }
+    }
+
+    private function validateGoogleToken(string $credential) {
+        //Validate google token
+        $googleClient = new Client();
+        $googleClient->setAuthConfig(Storage::disk("googleAuth")->path("client_secret.json"));
+        $googleClient->setAccessType("offline");
+
+        $googleClient->setClientId(env("GOOGLE_CLIENT_ID"));
+
+        $validToken = $googleClient->verifyIdToken($credential);
+
+        return $validToken;
     }
 
     /**
@@ -179,6 +269,17 @@ class UserController extends Controller
         ])->withoutCookie("access_token");
     }
 
+    private function genSessionCookie(string $userToken) {
+        try {
+            $tokenCookie = cookie("access_token", $userToken, 60 * 24, null, null, true, true);
+
+            return $tokenCookie;
+
+        } catch (Exception $err) {
+            throw $err;
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -188,18 +289,12 @@ class UserController extends Controller
             $user = $request["user"];
             $changes = false;
 
-            if (!$request->username && !$request->email && !$request->password && !$request->photo) {
+            if (!$request->username && !$request->email && !$request->photo) {
                 return responseUtils::successful(new UserResource($user));
             }
 
             if ($request->username && $user->getUserName() != $request->username) {
                 $user->setUserName($request->username);
-                $changes = true;
-            }
-
-
-            if ($request->password) {
-                $user->setPassword($request->password);
                 $changes = true;
             }
 
@@ -371,6 +466,11 @@ class UserController extends Controller
         try {
             $reqUser = $request["user"];
 
+            //The user must have a password
+            if (!$reqUser->getPassword() || !strlen($reqUser->getPassword())) {
+                return responseUtils::invalidParams("You can't unsync your google account if you don't set a password");
+            }
+
             $reqUser->removeGoogleAccount();
 
             return responseUtils::successful(true);
@@ -396,13 +496,8 @@ class UserController extends Controller
             }
 
             //Validate google token
-            $googleClient = new Client();
-            $googleClient->setAuthConfig(Storage::disk("googleAuth")->path("client_secret.json"));
-            $googleClient->setAccessType("offline");
 
-            $googleClient->setClientId(env("GOOGLE_CLIENT_ID"));
-
-            $validToken = $googleClient->verifyIdToken($token);
+            $validToken = $this->validateGoogleToken($token);
 
             if (!$validToken) {
                 return responseUtils::invalidParams("Invalid google account");
@@ -442,10 +537,10 @@ class UserController extends Controller
 
             $reqUser->loadGoogleId();
 
-            if ($reqUser->googleId) {
+            if ($reqUser->getGoogleId()) {
                 return responseUtils::successful(true);
 
-            } {
+            }else {
                 return responseUtils::successful(false);
             }
 
@@ -454,6 +549,49 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Check if the user have a password
+     */
+    public function checkUserPassword(Request $request) {
+        try {
+            $reqUser = $request["user"];
+
+            return responseUtils::successful($reqUser->getPassword() && strlen($reqUser->getPassword()));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error checking if the user have password", $err);
+        }
+    }
+
+    /**
+     * Add password to user, only if the user don't have
+     */
+    public function addUserPassword(Request $request) {
+        try {
+            $reqUser = $request["user"];
+
+            //Check if the user have password
+            if ($reqUser->getPassword() || strlen($reqUser->getPassword())) {
+                return responseUtils::invalidParams("You already have password");
+            }
+
+            if (!$request->password || !strlen($request->password)) {
+                return responseUtils::invalidParams("Missing password");
+            }
+
+            $updatedUser = $reqUser->addPassword($request->password);
+
+            if ($updatedUser) {
+                return responseUtils::successful(true);
+
+            } else {
+                return responseUtils::serverError("Can't add the password");
+            }
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error adding user password", $err);
+        }
+    }
 
     public function isLogged(Request $request) {
         try {

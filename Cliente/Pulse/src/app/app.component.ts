@@ -19,6 +19,8 @@ export class AppComponent {
   user:any = {}
   routeSuscripcions:any = []
   onLoadProfileFunc:any = []
+  lastRoute:string = ""
+  currentRoute:string = ""
 
   //Notifications
   notificationList = [
@@ -47,16 +49,24 @@ export class AppComponent {
     this.onLoadProfileFunc.push(fn)
   }
 
+  getLastRoute():string {
+    return this.lastRoute
+  }
+
   ngOnInit() {
     this.notificationList = []
 
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))  // Filtramos solo los eventos de finalización de navegación
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(async e => {
         //Check if the user is logged
         await isLogged()
         .then(logged => {
           const routeTitle = this.getTitle();
+
+          //Manage current/previous path
+          this.lastRoute = this.currentRoute
+          this.currentRoute = e.urlAfterRedirects
 
           this.title = "Pulse - " + routeTitle
 
@@ -74,14 +84,6 @@ export class AppComponent {
             this.onLoadProfileFunc.forEach((actualFunc:Function) => actualFunc())
           }
         })
-      });
-
-      this.router.events
-      .pipe(filter(event => event instanceof NavigationStart))  // Filtramos solo los eventos de finalización de navegación
-      .subscribe(async e => {
-
-        console.log(e.url)
-
       });
   }
 
@@ -222,7 +224,6 @@ export class AppComponent {
     })
 
     if (!suscripcionExist) {
-      console.log("new: " + id)
       const newSuscripcion = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))  // Filtramos solo los eventos de finalización de navegación
       .subscribe(async e => {
