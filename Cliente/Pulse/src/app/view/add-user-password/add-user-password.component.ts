@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class AddUserPasswordComponent {
   password:string = ""
 
-  constructor (private app:AppComponent, private router:Router) {}
+  constructor (protected app:AppComponent, private router:Router) {}
 
   async submit(event:Event) {
     event.preventDefault()

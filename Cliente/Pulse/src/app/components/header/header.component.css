@@ -47,5 +47,6 @@ section#routes {
 }
 
 #arrow {
-  opacity: .5;
+  opacity: .3;
+  width: 15px;
 }
