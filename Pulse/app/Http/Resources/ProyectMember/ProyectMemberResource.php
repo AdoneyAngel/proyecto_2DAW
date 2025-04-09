@@ -23,7 +23,8 @@ class ProyectMemberResource extends JsonResource
             "registred" => $this->getRegistred(),
             "status" => $this->getStatus(),
             "effectiveTime" => $this->getEffectiveTime(),
-            "proyectId" => $this->getProyectId()
+            "proyectId" => $this->getProyectId(),
+            "type" => $this->getType()
         ];
 
         if ($this->getProyect()) {

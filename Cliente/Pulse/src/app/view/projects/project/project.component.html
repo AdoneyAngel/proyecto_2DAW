@@ -1,6 +1,6 @@
 <div id="projectBody">
   <div id="titleContainer">
-    @if (project.ownerId == app.getUser().id && isOnMain) {
+    @if ((project.ownerId == app.getUser().id || memberType == memberTypeEnum.Admin) && isOnMain) {
       @if (project.title) {
         <input class="title" [(ngModel)]="newProjectTitle" type="text" id="inputTitle" placeholder="{{project.title}}" value="{{project.title}}">
 
@@ -27,7 +27,7 @@
     @if (isOnMain) {
       <div id="optionSection">
         <button (click)="openShowMemberSearch()" id="bMembersSearch">Members</button>
-        <button *ngIf="isOwner" routerLink="/dashboard/projects/{{projectId}}/createTask" id="bCreateTask">Create new task</button>
+        <button *ngIf="isOwner || memberType == memberTypeEnum.Admin" routerLink="/dashboard/projects/{{projectId}}/createTask" id="bCreateTask">Create new task</button>
       </div>
 
       <br>
@@ -137,5 +137,5 @@
 </div>
 
 @if (showMemberSearch) {
-  <app-member-search [project]="project" [close]="closeShowMemberSearch.bind(this)" />
+  <app-member-search [memberType]="memberType" [project]="project" [close]="closeShowMemberSearch.bind(this)" />
 }

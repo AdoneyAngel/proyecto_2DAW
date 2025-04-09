@@ -49,15 +49,20 @@
   width: 100%;
 }
 
+.userList #user {
+  cursor: pointer;
+}
+
 #userList {
   padding: 10px;
 }
 #userList #user {
-  background: var(--secondary-color);
+  background: linear-gradient(90deg, var(--secondary-color) 80%, black);
   padding: 10px 10px;
   border-radius: var(--lg-border-radius);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
   margin: 5px 0;
   font-size: 1.2rem;
   cursor: normal;
@@ -65,9 +70,18 @@
   text-transform: capitalize;
   position: relative;
   overflow: hidden;
+  border: 2px solid var(--tertiary-color);
+
 }
 #user p {
   margin-left: 10px;
+}
+#user .userBody {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  width: 100%;
 }
 #user #email {
   opacity: var(--md-opacity);
@@ -91,16 +105,12 @@
   justify-content: right;
 }
 
-#userList.memberList #user {
-  border: 2px solid var(--tertiary-color);
-}
-
 #userOptions {
   position: absolute;
   right: 0;
   top: 50%;
   transform: translate(0%, -50%);
-  background: linear-gradient(90deg, transparent, black 90%);
+  /* background: linear-gradient(90deg, transparent, black 90%); */
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -119,6 +129,47 @@
 #userOptions button.green {
   border-color: var(--green-color);
 }
+#userOptions button.transparent {
+  border: none;
+  background: none;
+}
+#userOptions button.transparent:hover {
+  filter: none;
+}
 #userOptions button.red {
   border-color: var(--red-color);
+}
+
+#userTypeOptions {
+  display: block;
+  margin-top: 10px;
+  animation: var(--animation-fade);
+}
+#userTypeOptions h3 {
+  margin: auto;
+  text-align: center;
+  text-transform: none;
+}
+#userTypeOptions #userType {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-width: 2px;
+  border-radius: var(--lg-border-radius);
+  border-style: solid;
+  margin: 5px;
+  padding: var(--lg-padding);
+  background: var(--tertiary-color);
+  text-align: center;
+  cursor: pointer;
+}
+#userType.admin {
+  border-color: var(--admin-color);
+}
+#userType.member {
+  border-color: var(--member-color);
+}
+#userType.viewer {
+  border-color: var(--viewer-color);
 }

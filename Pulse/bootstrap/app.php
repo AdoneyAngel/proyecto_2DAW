@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
@@ -21,4 +22,5 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function(ValidationException $err, Request $request) {
             return responseUtils::invalidParams($err->getMessage());
         });
+
     })->create();

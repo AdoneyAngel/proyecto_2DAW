@@ -126,6 +126,9 @@ h1 {
 #bDeployMembers.closed {
   transform: rotate(0deg);
 }
+#bDeployMembers img {
+  width: 15px;
+}
 
 #fullMemberList {
   position: absolute;

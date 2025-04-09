@@ -20,8 +20,9 @@
         <div id="info">
 
           <input [(ngModel)]="newUsername" type="text" id="username" value="{{editing ? newUsername:profile.username}}" [disabled]="!editing" />
-          <span *ngIf="!editing" id="emailIcon">{{'@'}}</span><input [(ngModel)]="newEmail" type="email" id="email" value="{{editing ? newEmail:profile.email}}" [disabled]="!editing" />
-
+          <div class="emailContainer" [title]="profile.email??'email'">
+            <span *ngIf="!editing" id="emailIcon">{{'@'}}</span><input [(ngModel)]="newEmail" type="email" id="email" value="{{editing ? newEmail:profile.email}}" [disabled]="!editing" />
+          </div>
         </div>
       </section>
 

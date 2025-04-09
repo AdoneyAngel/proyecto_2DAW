@@ -28,6 +28,7 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
 
     //----Proyects
     Route::apiResource("/proyects", ProyectController::class);
+    Route::get("/proyects/{id}/members/{memberId}/type", [ProyectController::class, "getProyectMemberType"]);
     Route::get("/proyects/{id}/members", [ProyectController::class, "getMembers"]);
     Route::post("/proyects/{id}/members", [ProyectController::class, "addMember"]);
     Route::get("/proyects/{id}/members/{memberId}", [ProyectController::class, "showMember"]);

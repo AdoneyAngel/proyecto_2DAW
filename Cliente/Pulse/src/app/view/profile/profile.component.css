@@ -29,12 +29,19 @@
   color: white;
   border: none;
   cursor: text;
+  width: 100%;
 }
 
 #username:enabled, #email:enabled {
   border: 2px solid var(--tertiary-color);
 }
 
+.emailContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
 #emailIcon {
   margin-left: 10px;
   opacity: .7;

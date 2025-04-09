@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { changeUserStatus, deleteIssue, deleteTask, getIssue, getProjectMembers, getTask, updateIssue, updateTask } from '../../../API/api';
+import { changeUserStatus, deleteIssue, deleteTask, getIssue, getProjectMembers, getProyectMemberType, getTask, updateIssue, updateTask } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { ProfileImageComponent } from '../../components/profile-image/profile-im
 import { ContentBoxDelimiterComponent } from '../../components/content-box-delimiter/content-box-delimiter.component';
 import { ProjectComponent } from '../projects/project/project.component';
 import UserTaskStatusEnum from '../../enums/UserTaskStatusEnum';
+import MemberTypeEnum from '../../enums/MemberTypeEnum';
 
 @Component({
   selector: 'app-task',
@@ -19,6 +20,8 @@ import UserTaskStatusEnum from '../../enums/UserTaskStatusEnum';
   styleUrl: './task.component.css'
 })
 export class TaskComponent {
+  memberType:number = 2
+  memberTypeEnum:any = MemberTypeEnum
   taskId:number|string = 0
   task:any = {}
   isOwner:boolean = false
@@ -43,6 +46,20 @@ export class TaskComponent {
     this.userTaskStatus.Todo = UserTaskStatusEnum.Todo
     this.userTaskStatus.Progress = UserTaskStatusEnum.Progress
     this.userTaskStatus.Done = UserTaskStatusEnum.Done
+  }
+
+  async loadMemberType() {
+    if (!this.projectComponent.getProjectId() || !this.taskId) return null
+
+    const user = this.app.getUser()
+
+    const res = await getProyectMemberType(this.projectComponent.getProjectId(), user.id)
+
+    if (res.success) {
+      this.memberType = res.data
+    }
+
+    return true
   }
 
   setTitle(event:any) {
@@ -94,7 +111,7 @@ export class TaskComponent {
   }
 
   onDragStart(event:any, userId:number|string) {
-    if (this.isOwner && this.editing) {
+    if ((this.isOwner || this.memberType == this.memberTypeEnum.Admin) && this.editing) {
       event.dataTransfer.setData("text/plain", userId)
 
     } else {
@@ -120,7 +137,7 @@ export class TaskComponent {
   }
 
   onDragOver(event:any) {
-    if (this.isOwner) {
+    if (this.isOwner || this.memberType == this.memberTypeEnum.Admin) {
       event.preventDefault()
     }
   }
@@ -238,6 +255,8 @@ export class TaskComponent {
 
         this.loadUserPhotos()
 
+        this.loadMemberType()
+
       } else {
         this.app.notificationError(res.error)
       }
@@ -313,7 +332,7 @@ export class TaskComponent {
     this.newDescription = this.newDescription?.trim()
     this.newTag = this.newTag.trim()
 
-    if (!this.isOwner) {
+    if (!this.isOwner && this.memberType != this.memberTypeEnum.Admin) {
       this.app.notificationError("You can't update this task")
       return false
     }

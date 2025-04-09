@@ -13,6 +13,7 @@ use App\Http\Resources\ProyectMember\ProyectMemberCollection;
 use App\Http\Resources\ProyectMember\ProyectMemberResource;
 use App\Http\Resources\Task\TaskCollection;
 use App\Http\Resources\TaskHistory\TaskHistoryCollection;
+use App\MemberTypeEnum;
 use App\Models\Proyect;
 use App\Models\ProyectMember;
 use App\Models\responseUtils;
@@ -143,9 +144,14 @@ class ProyectController extends Controller
                 return responseUtils::notFound("Proyect not found");
             }
 
-            //Current user is owner of the proyect
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            //Current user is owner|admin of the proyect
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You are not the owner of this proyect");
+            }
+
+            //Check if the member type is correct
+            if (!MemberTypeEnum::from($request->type)) {
+                return responseUtils::invalidParams("Invalid member type");
             }
 
             //User is already joined
@@ -159,9 +165,11 @@ class ProyectController extends Controller
             if ($proyectMember) {
                 if ($proyectMember->getStatus() == 0) {
                     return responseUtils::successful(new ProyectMemberResource($proyectMember));
+
                 } else if ($proyectMember->getStatus() == -1) {
                     //If the user rejected the request, update it to status 0 (pending)
                     $proyectMember->setStatus(0);
+                    $proyectMember->setType(MemberTypeEnum::from($request->type));
                     $proyectMember->saveMemberChanges();
 
                     return responseUtils::successful(new ProyectMemberResource($proyectMember));
@@ -171,6 +179,7 @@ class ProyectController extends Controller
             //Add member
             $newMember = new ProyectMember();
             $newMember->buildFromUser($user, 0, $request->effectiveTime ?? 1, $proyect->getId());
+            $newMember->setType(MemberTypeEnum::from($request->type));
 
             $addedMember = $proyect->addMember($newMember);
 
@@ -197,7 +206,7 @@ class ProyectController extends Controller
             }
 
             //Request user is owner of the proyect
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You can't remove this user");
             }
 
@@ -348,7 +357,7 @@ class ProyectController extends Controller
             $user = $request["user"];
             $proyect = Proyect::getById($id);
 
-            if ($proyect->getOwnerId() != $user->getId()) {
+            if ($proyect->getOwnerId() != $user->getId() && $proyect->getMemberType($user->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
@@ -476,7 +485,7 @@ class ProyectController extends Controller
             }
 
             //Request user is owner of the proyect
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You are unauthorized to modify members on this proyect");
             }
 
@@ -500,6 +509,48 @@ class ProyectController extends Controller
             return responseUtils::successful(new ProyectMemberResource($member));
         } catch (Exception $err) {
             return responseUtils::serverError("Error updating member, ProyectController", $err);
+        }
+    }
+
+    /**
+     * Get all comments of task.
+     */
+    public function getProyectMemberType(Request $request, $proyectId, $memberId) {
+        try {
+            $reqUser = $request["user"];
+            $proyect = Proyect::getById($proyectId);
+            $user = null;
+            $reqUserMemberType = null;
+            $userMemberType = null;
+
+            //Check if the proyect exist
+            if (!$proyect) {
+                return responseUtils::notFound("Project not found");
+            }
+
+            //Check if the user/member exist
+            $user = $memberId ? $proyect->getMemberById($memberId) : $proyect->getMemberById($reqUser->getId());
+
+            if (!$user) {
+                return responseUtils::notFound("Member not found");
+            }
+
+            //Check if the request user is the owner/member
+            $userMemberType = $proyect->getMemberType($user->getId());
+
+            if ($proyect->getOwnerId() != $reqUser->getId() && !$proyect->isMember($reqUser->getId())) {
+                return responseUtils::unAuthorized("You are not the owner of this proyect");
+            }
+
+            //Check if the user is member of the proyect
+            if ($memberId && !$proyect->isMember($user->getId())) {
+                return responseUtils::invalidParams("The user is not member of the proyect");
+            }
+
+            return responseUtils::successful($userMemberType);
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting member type of proyect", $err);
         }
     }
 

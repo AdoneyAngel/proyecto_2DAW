@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\MemberTypeEnum;
 use App\TaskTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -228,6 +229,8 @@ class Proyect extends Model
                 $member->status,
                 $member->effective_time,
                 $member->proyect_id,
+                null,
+                MemberTypeEnum::from($member->type_id)
             );
         }
 
@@ -243,7 +246,7 @@ class Proyect extends Model
     public function addMember(ProyectMember $member) {
         if (!$this->id) return null;
 
-        $newMemberDb = DB::select("CALL proyects_members_insert(?,?,?)", [$this->id, $member->getId(), $member->getEffectiveTime()]);
+        $newMemberDb = DB::select("CALL proyects_members_insert(?,?,?,?)", [$this->id, $member->getId(), $member->getEffectiveTime(), $member->getType()->value]);
 
         if (count($newMemberDb)) {
             return $member;
@@ -276,7 +279,9 @@ class Proyect extends Model
                 $userDb[0]->registred,
                 $userDb[0]->status,
                 $userDb[0]->effective_time,
-                $this->id
+                $this->id,
+                null,
+                MemberTypeEnum::from($userDb[0]->type_id)
             );
         }
 
@@ -298,7 +303,9 @@ class Proyect extends Model
                 $userDb[0]->registred,
                 $userDb[0]->status,
                 $userDb[0]->effective_time,
-                $this->id
+                $this->id,
+                null,
+                MemberTypeEnum::from($userDb[0]->type_id)
             );
         }
 
@@ -358,6 +365,19 @@ class Proyect extends Model
         }
 
         return $tasks;
+    }
+
+    public function getMemberType(int $userId) {
+        if (!$this->id) return null;
+
+        $user = $this->getMemberById($userId);
+
+        if ($user) {
+            return $user->getType();
+
+        } else {
+            return null;
+        }
     }
 
     public static function selectQuery(array $whereValues = null) {

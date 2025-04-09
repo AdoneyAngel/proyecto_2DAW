@@ -1,6 +1,7 @@
 import axios from "axios"
 import { apiUrl, prefix } from "./config"
 import UserTaskStatusEnum from "../app/enums/UserTaskStatusEnum"
+import MemberTypeEnum from "../app/enums/MemberTypeEnum"
 
 async function get(url:string, params:{name:any, value:any}[] = [], config:any = {withCredentials: true}, data:any = {}) {
   let requestPath = `${apiUrl}/${prefix}/${url}`
@@ -395,8 +396,8 @@ export async function getUser(userId:string|number) {
   return await get(`users/${userId}`)
 }
 
-export async function addUserToProyect(projectId:string|number, userId:string|number) {
-  return await post(`proyects/${projectId}/members`, {userId})
+export async function addUserToProyect(projectId:string|number, userId:string|number, type:MemberTypeEnum) {
+  return await post(`proyects/${projectId}/members`, {userId, type})
 }
 
 export async function changeUserStatus(taskId:number|string, userId:number|string, newStatus:UserTaskStatusEnum) {
@@ -524,4 +525,8 @@ export async function checkUserPassword() {
 
 export async function addUserPassword(password:string) {
   return await post("addPassword", {password})
+}
+
+export async function getProyectMemberType(projectId:number|string, userId:number|string = 0) {
+  return await get(`proyects/${projectId}/members/${userId}/type`)
 }

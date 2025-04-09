@@ -13,6 +13,7 @@ use App\Http\Resources\Task\TaskResource;
 use App\Http\Resources\TaskComment\TaskCommentCollection;
 use App\Http\Resources\TaskComment\TaskCommentResource;
 use App\Http\Resources\User\UserCollection;
+use App\MemberTypeEnum;
 use App\Models\Issue;
 use App\Models\Proyect;
 use App\Models\responseUtils;
@@ -70,7 +71,7 @@ class TaskController extends Controller
             $proyect = Proyect::getById($request->proyectId);
             $users = [];
 
-            if ($proyect->getOwnerId() != $user->getId()) {
+            if ($proyect->getOwnerId() != $user->getId() && $proyect->getMemberType($user->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You are not the owner of the project");
             }
 
@@ -144,7 +145,7 @@ class TaskController extends Controller
             $users = [];
 
             //Request user is owner/member of the proyect
-            if ($proyect->getOwnerId() != $user->getId() && !$proyect->isMember($user->getId())) {
+            if ($proyect->getOwnerId() != $user->getId() && !$proyect->isMember($user->getId()) && $proyect->getMemberType($user->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You are not the owner of the proyect");
             }
 
@@ -252,7 +253,7 @@ class TaskController extends Controller
             //The request user is owner of the proyect
             $proyect = Proyect::getById($task->getProyectId());
 
-            if ($proyect->getOwnerId() != $user->getId()) {
+            if ($proyect->getOwnerId() != $user->getId() && $proyect->getMemberType($user->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You don't own the proyect of this task");
             }
 
@@ -469,7 +470,7 @@ class TaskController extends Controller
             $proyect = Proyect::getById($task->getProyectId());
 
             //Is owner of the proyect
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
@@ -513,7 +514,7 @@ class TaskController extends Controller
             $proyect = Proyect::getById($task->getProyectId());
 
             //Request user is owner of the proyect
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You can't update this project");
             }
 
@@ -564,7 +565,7 @@ class TaskController extends Controller
             $proyect = Proyect::getById($task->getProyectId());
 
             //User is owner of the proyect
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You can't update this proyect");
             }
 
@@ -607,7 +608,7 @@ class TaskController extends Controller
             $proyect = Proyect::getById($task->getProyectId());
 
             //Request user is owner of the proyect
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You can't update this project");
             }
 
@@ -698,7 +699,7 @@ class TaskController extends Controller
             $proyect = Proyect::getById($task->getProyectId());
 
             //User is owner
-            if ($proyect->getOwnerId() != $user->getId()) {
+            if ($proyect->getOwnerId() != $user->getId() && !$task->isJoined($user)) {
                 return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
@@ -861,7 +862,7 @@ class TaskController extends Controller
             //Request user is the owner of the proyect
             $proyect = Proyect::getById($task->getProyectId());
 
-            if ($proyect->getOwnerId() != $reqUser->getId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You are not the owner of the proyect");
             }
 
@@ -891,7 +892,7 @@ class TaskController extends Controller
             //Request user is the owner of the proyect/issue
             $proyect = Proyect::getById($issue->getProyectId());
 
-            if ($proyect->getOwnerId() != $reqUser->getId() || $reqUser->getId() != $proyect->getOwnerId()) {
+            if ($proyect->getOwnerId() != $reqUser->getId() && $issue->getNotifierId() != $reqUser->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::Admin) {
                 return responseUtils::unAuthorized("You can't delete this issue");
             }
 

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProfileImageComponent } from '../../profile-image/profile-image.component';
 import { NgIf } from '@angular/common';
 import { AppComponent } from '../../../app.component';
+import MemberTypeEnum from '../../../enums/MemberTypeEnum';
 
 @Component({
   selector: 'app-create-task-form',
@@ -26,6 +27,8 @@ export class CreateTaskFormComponent {
   @Input() members:any = []
   @Input() memberPhotos:any = []
   @Input() isOwner:boolean = false
+  @Input() memberType:number = 2
+  memberTypeEnum:any = MemberTypeEnum
 
   constructor (protected app:AppComponent) {}
 

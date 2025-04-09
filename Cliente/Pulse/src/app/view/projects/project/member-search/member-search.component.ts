@@ -7,6 +7,7 @@ import { AppComponent } from '../../../../app.component';
 import { ProfileImageComponent } from "../../../../components/profile-image/profile-image.component";
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import MemberTypeEnum from '../../../../enums/MemberTypeEnum';
 
 @Component({
   selector: 'app-member-search',
@@ -18,6 +19,7 @@ import { RouterLink } from '@angular/router';
 export class MemberSearchComponent {
   @Input() close:VoidFunction = ()=>{}
   @Input() project:any = {}
+  @Input() memberType:number = 2
   searchMember:boolean = false
   searchUser:boolean = false
   userData:string = ""
@@ -28,8 +30,17 @@ export class MemberSearchComponent {
   searchTimeout:any = null
   usersString:string = ""
   memberToRemove:string|number|null = null
+  memberTypeEnum:any = MemberTypeEnum
+  selectingMemberType:string|number|null = null
 
   constructor (protected app:AppComponent){}
+
+  setSelectingMemberType(idComponent:number|string) {
+    this.selectingMemberType = idComponent
+  }
+  unSelectingMemberType() {
+    this.selectingMemberType = null
+  }
 
   setSearchTimeout() {
     clearTimeout(this.searchTimeout)
@@ -86,10 +97,12 @@ export class MemberSearchComponent {
     }
   }
 
-  async sendInvitation(userId:string|number):Promise<any> {
+  async sendInvitation(userId:string|number, memberType:MemberTypeEnum):Promise<any> {
     if (!(userId+"").length) return null
 
-    addUserToProyect(this.project.id, userId)
+    this.selectingMemberType = null
+
+    addUserToProyect(this.project.id, userId, memberType)
     .then(res => {
       if (res.success) {
         this.app.notificationSuccess("Invitación enviada")

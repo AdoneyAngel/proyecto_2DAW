@@ -4,11 +4,43 @@
   opacity: .6;
   font-style: oblique;
   text-align: right;
-  max-width: 90%;
+  max-width: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 #user .email {
   opacity: .6;
+}
+
+#item > h1 {
+  margin-bottom: 10px;
+}
+
+#memberType {
+  margin-right: auto;
+  font-size: 1em;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: absolute;
+  left: var(--md-padding);
+  background: black;
+  border-radius: var(--lg-border-radius);
+  padding: var(--xlg-padding) var(--lg-padding);
+  box-shadow: 0px 0px 5px -1px;
+}
+#memberType.admin {
+  color: var(--admin-color);
+}
+#memberType.member {
+  color: var(--member-color);
+}
+#memberType.viewer {
+  color: var(--viewer-color);
+}
+
+#memberType img {
+  width: 15px;
 }

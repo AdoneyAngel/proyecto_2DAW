@@ -46,7 +46,7 @@
 
     </div>
 
-    <div *ngIf="isOwner" class="inputSection" class="usersSection">
+    <div *ngIf="isOwner || memberType == memberTypeEnum.Admin" class="inputSection" class="usersSection">
       <label>Users <input (keyup)="filterUsers()" type="text" placeholder="Search user" id="inputSearchUser" [(ngModel)]="searchUser"></label>
       <div id="userList">
         @for (user of (searchUser.length?filteredUsers:members); track $index) {

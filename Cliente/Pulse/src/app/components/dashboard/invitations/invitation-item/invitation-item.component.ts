@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { DashboardComponent } from '../../../../view/dashboard/dashboard.component';
 import { AppComponent } from '../../../../app.component';
+import MemberTypeEnum from '../../../../enums/MemberTypeEnum';
 
 @Component({
   selector: 'app-invitation-item',
@@ -12,6 +13,7 @@ import { AppComponent } from '../../../../app.component';
 export class InvitationItemComponent {
   @Input() invitation: any = {}
   loading: boolean = false
+  memberTypeEnum:any = MemberTypeEnum
 
   constructor(private dashboard: DashboardComponent, private app: AppComponent){}
 

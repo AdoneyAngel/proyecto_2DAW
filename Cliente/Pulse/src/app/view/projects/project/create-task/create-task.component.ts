@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CreateTaskFormComponent } from '../../../../components/createTask/create-task-form/create-task-form.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { createTask, getProject, getTags } from '../../../../../API/api';
+import { createTask, getProject, getProyectMemberType, getTags } from '../../../../../API/api';
 import { AppComponent } from '../../../../app.component';
 import { DashboardComponent } from '../../../dashboard/dashboard.component';
 import { ProjectComponent } from '../project.component';
@@ -19,6 +19,7 @@ export class CreateTaskComponent {
   tags:any = []
   memberPhotos:any = []
   isProjectOwner:boolean = false
+  memberType:number = 2
 
   constructor (private activedRouter:ActivatedRoute, protected app:AppComponent, protected dashboard:DashboardComponent, private router:Router, private projectComponent:ProjectComponent){}
 
@@ -32,6 +33,18 @@ export class CreateTaskComponent {
 
   ngOnDestroy() {
     this.projectComponent.setOnMain(true)
+  }
+
+  async loadMemberType() {
+    const user = this.app.getUser()
+
+    getProyectMemberType(this.projectId, user.id)
+    .then(res => {
+      if (res.success) {
+        this.memberType = res.data
+      }
+    })
+
   }
 
   async submit(title:string, description:string, tag:string, time:number, priority:number, users:any = []) {
@@ -109,6 +122,7 @@ export class CreateTaskComponent {
 
         this.loadTags()
         this.loadMemberPhotos()
+        this.loadMemberType()
 
         this.isProjectOwner = this.project.ownerId == this.app.getUser().id
 

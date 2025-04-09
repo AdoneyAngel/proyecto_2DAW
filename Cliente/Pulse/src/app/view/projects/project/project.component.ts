@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { getProject, getTaskOfProject, updateProjectTitle } from '../../../../API/api';
+import { getProject, getProyectMemberType, getTaskOfProject, updateProjectTitle } from '../../../../API/api';
 import { AppComponent } from '../../../app.component';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { Title } from '@angular/platform-browser';
@@ -12,6 +12,7 @@ import { TaskComponent } from './task/task.component';
 import { ContentBoxDelimiterComponent } from '../../../components/content-box-delimiter/content-box-delimiter.component';
 import { NgIf } from '@angular/common';
 import { MemberSearchComponent } from './member-search/member-search.component';
+import MemberTypeEnum from '../../../enums/MemberTypeEnum';
 
 @Component({
   selector: 'app-project',
@@ -30,6 +31,8 @@ export class ProjectComponent {
   isOnMain:boolean = false
   title:string = "Project"
   isOwner:boolean = false
+  memberTypeEnum:any = MemberTypeEnum
+  memberType:number = 2
   tasks: any = {
     onRack: [],
     todo: [],
@@ -100,7 +103,6 @@ export class ProjectComponent {
     )
   }
 
-
   ngAfterViewInit() {
     this.setMemberListPosition()
   }
@@ -127,6 +129,11 @@ export class ProjectComponent {
 
       this.isOwner = user.id == this.project.owner.id
 
+      //If the user is not the owner, check the type of member
+      if (!this.isOwner) {
+        this.loadMemberType()
+      }
+
       //Load owner profile image
       this.dashboard.findUserPhoto(this.project.owner.id)
       .then(data => {
@@ -139,6 +146,17 @@ export class ProjectComponent {
     } else {
       this.app.notificationError(res.error)
     }
+  }
+
+  async loadMemberType () {
+    const user = this.app.getUser()
+
+    getProyectMemberType(this.project.id, user.id)
+    .then(res => {
+      if (res.success) {
+        this.memberType = res.data
+      }
+    })
   }
 
   getProject() {

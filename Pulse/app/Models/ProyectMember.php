@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\MemberTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -11,8 +12,9 @@ class ProyectMember extends User
     protected $effectiveTime;
     protected $proyectId;
     protected $proyect;
+    protected MemberTypeEnum $type;
 
-    public function __construct($id = null, $username = "", $email = "", $password = "", $photo = null, $registred = null, $status = 0, $effectiveTime = 1, $proyectId = -1, Proyect|null $proyect = null)
+    public function __construct($id = null, $username = "", $email = "", $password = "", $photo = null, $registred = null, $status = 0, $effectiveTime = 1, $proyectId = -1, Proyect|null $proyect = null, MemberTypeEnum $type = MemberTypeEnum::Member)
     {
         parent::__construct($id, $username, $email, $password, $photo, $registred);
 
@@ -20,6 +22,7 @@ class ProyectMember extends User
         $this->effectiveTime = $effectiveTime;
         $this->proyectId = $proyectId;
         $this->proyect = $proyect;
+        $this->type = $type;
     }
 
     //Getters & setters
@@ -55,6 +58,12 @@ class ProyectMember extends User
 
         $this->proyectId = $id;
         return true;
+    }
+    public function getType() {
+        return $this->type;
+    }
+    public function setType(MemberTypeEnum $type) {
+        $this->type = $type;
     }
 
     //Methods
@@ -97,7 +106,9 @@ class ProyectMember extends User
                     $actualRequest->user_registred,
                     $actualRequest->status,
                     $actualRequest->effective_time,
-                    $actualRequest->proyect_id
+                    $actualRequest->proyect_id,
+                    null,
+                    MemberTypeEnum::from($actualRequest->type_id)
                 );
             }
         }
@@ -124,7 +135,9 @@ class ProyectMember extends User
                     $actualRequest->user_registred,
                     $actualRequest->status,
                     $actualRequest->effective_time,
-                    $actualRequest->proyect_id
+                    $actualRequest->proyect_id,
+                    null,
+                    MemberTypeEnum::from($actualRequest->type_id)
                 );
             }
         }
@@ -165,7 +178,6 @@ class ProyectMember extends User
     {
         return $this->proyect;
     }
-
 
     public function saveMemberChanges() {
         if (!$this->id) return null;

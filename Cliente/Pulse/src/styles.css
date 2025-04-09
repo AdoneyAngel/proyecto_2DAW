@@ -25,6 +25,11 @@
   --profile-green: rgb(122, 184, 138);
   --profile-blue: rgb(101, 153, 184);
   --profile-purple: rgb(146, 122, 184);
+  --animation-fade: .2s ease-in-out fade;
+
+  --admin-color: var(--profile-red);
+  --member-color: var(--profile-blue);
+  --viewer-color: var(--profile-purple);
 
   /* Dashboard */
   --ds-background-color: var(--secondary-color);
@@ -100,4 +105,13 @@ button:hover, .button:hover {
 
 a, .a {
   color: var(--link-color);
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
