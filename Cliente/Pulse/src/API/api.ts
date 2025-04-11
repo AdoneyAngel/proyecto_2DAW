@@ -499,7 +499,7 @@ export async function addGoogleAccount(token:string) {
   })
 }
 
-export async function checkGoogleAccount() {
+export async function getGoogleAccount() {
   return await get("googleAccount")
 }
 
@@ -529,4 +529,18 @@ export async function addUserPassword(password:string) {
 
 export async function getProyectMemberType(projectId:number|string, userId:number|string = 0) {
   return await get(`proyects/${projectId}/members/${userId}/type`)
+}
+
+export async function checkGoogleAccount(token:string) {
+  return await post("checkGoogleAccount", {token})
+}
+
+export async function updateTaskStatus(taskId:number|string, statusId:number) {
+  return await put(`tasks/${taskId}`, {
+    statusId
+  })
+}
+
+export async function logout() {
+  return await get("logout")
 }

@@ -8,7 +8,6 @@ import { Component, Input } from '@angular/core';
   styleUrl: './text-link.component.css'
 })
 export class TextLinkComponent {
-  @Input() text:string = ""
   @Input() link:string = ""
-  @Input() styles:string = ""
+  @Input() styles:string|object = ""
 }

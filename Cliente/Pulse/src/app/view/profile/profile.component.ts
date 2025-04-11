@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { addGoogleAccount, checkGoogleAccount, checkUserPassword, getUser, removeGoogleAccount, updateUser, uploadProfilePhoto } from '../../../API/api';
+import { addGoogleAccount, checkUserPassword, getGoogleAccount, getUser, logout, removeGoogleAccount, updateUser, uploadProfilePhoto } from '../../../API/api';
 import { AppComponent } from '../../app.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { ProfileImageComponent } from '../../components/profile-image/profile-image.component';
@@ -54,6 +54,23 @@ export class ProfileComponent {
     });
   }
 
+  askLogout() {
+    this.app.showAccept("Do you want to log out?", this.logout.bind(this))
+  }
+
+  async logout() {
+      this.app.hideAccept()
+
+      const res = await logout()
+
+      if (res.success) {
+        this.router.navigate(["/login"])
+
+      } else {
+        this.app.notificationError(res.error ?? "Something gone wronte")
+      }
+  }
+
   askFormProfileImage() {
     console.log(this.imageFileDom.nativeElement.click())
   }
@@ -90,7 +107,7 @@ export class ProfileComponent {
     this.googleAccountChecked = false
 
     try {
-      const res = await checkGoogleAccount()
+      const res = await getGoogleAccount()
 
       if (res.success) {
         this.haveGoogleAccount = res.data

@@ -140,6 +140,19 @@ export class ProjectComponent {
         this.project.owner.photoUrl = data.photo
       })
 
+      //Ordenate the users (first the owner and then the current user)
+      this.project.members = this.project.members.sort((prev:any, next:any) => {
+        if (next.id == this.project.owner.id) {
+          return 1
+
+        } else if (next.id == user.id && prev.id != this.project.owner.id) {
+          return 1
+
+        } else {
+          return -1
+        }
+      })
+
       this.loadMemberPhotos()
       this.loadTasks()
 

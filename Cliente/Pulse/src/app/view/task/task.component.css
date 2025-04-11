@@ -253,3 +253,33 @@ input:disabled, textarea:disabled {
   opacity: .8;
   margin-bottom: 10px;
 }
+
+#taskStatusContainer {
+  padding-left: 20px;
+  color: var(--light-color);
+  user-select: none;
+}
+
+#taskStatusContainer span.review {
+  color: var(--blue-color);
+}
+#taskStatusContainer span.done {
+  color: var(--green-color);
+}
+#changeToDoneButton {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#doneStatusMessage {
+  color: var(--green-color);
+  font-weight: bold;
+  border: 2px solid var(--green-color);
+  padding: var(--md-padding);
+  border-radius: var(--md-border-radius);
+  cursor: default;
+  user-select: none;
+}
+#doneStatusMessage p {
+  font-size: 1rem;
+}

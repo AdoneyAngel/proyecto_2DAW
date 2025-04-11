@@ -109,6 +109,18 @@
     @for (member of project.members?.slice(0, 4); track $index) {
       <div *ngIf="member.id != project.ownerId" id="member" class="{{app.getUser().id==member.id?'sameUser':''}}" title="{{member.username}} - {{member.email}}">
 
+        <div id="memberType" class="{{memberTypeEnum[member.type].toLowerCase()}}">
+          @if (member.type == memberTypeEnum.Admin) {
+            <img src="assets/images/admin_white.png">
+
+          } @else if (member.type == memberTypeEnum.Viewer) {
+            <img src="assets/images/viewer_white.png">
+
+          } @else {
+            <img src="assets/images/user_white.png">
+          }
+        </div>
+
         <app-profile-image [show]="true" [userId]="member.id" [username]="member.username" image="{{member.photoUrl}}" />
 
       </div>

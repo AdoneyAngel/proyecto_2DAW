@@ -250,6 +250,11 @@ class TaskController extends Controller
                 return responseUtils::notFound("Task not found");
             }
 
+            //Task is not done
+            if ($task->getStatusId() == TaskStatusEnum::Done->value) {
+                return responseUtils::invalidParams("The task is already done");
+            }
+
             //The request user is owner of the proyect
             $proyect = Proyect::getById($task->getProyectId());
 
@@ -327,6 +332,11 @@ class TaskController extends Controller
                     }
 
                     if (!$isIncluded) {
+                        //Check if the user is a viewer he can't be assigned
+                        if ($proyect->getMemberType($userFromRequest) == MemberTypeEnum::Viewer) {
+                            return responseUtils::invalidParams("Viewers can't be assigned into a task");
+                        }
+
                         $newUser = User::getById($userFromRequest);
 
                         //User exist
@@ -474,6 +484,11 @@ class TaskController extends Controller
                 return responseUtils::unAuthorized("You are not the owner of this proyect");
             }
 
+            //Check if the user is not a viewer
+            if ($proyect->getMemberType($user->getId()) == MemberTypeEnum::Viewer) {
+                return responseUtils::invalidParams("Viewer can't be asigned on a task");
+            }
+
             //The user already has assigned this user
             if ($task->isJoined($user)) {
                 return responseUtils::conflict("The user already has assigned this task");
@@ -489,6 +504,14 @@ class TaskController extends Controller
         } catch (Exception $err) {
             return responseUtils::serverError("Error adding user into a task", $err);
         }
+    }
+
+    /**
+     * Add user into a issue.
+     */
+    public function issueAddUser(AddTaskUserRequest $request, $id) {
+        $this->taskTypeClass = Issue::class;
+        return $this->addUser($request, $id);
     }
 
     /**
@@ -525,6 +548,11 @@ class TaskController extends Controller
 
                 if (!$user) {
                     return responseUtils::notFound("One of users not found");
+                }
+
+                //Viewers can't be asigned on a task
+                if ($proyect->getMemberType($user->getId()) == MemberTypeEnum::Viewer) {
+                    return responseUtils::invalidParams("Viewers can't be asigned to a task");
                 }
 
                 $users[] = $user;
@@ -633,14 +661,6 @@ class TaskController extends Controller
         } catch (Exception $err) {
             return responseUtils::serverError("Error removing list of user into a task, TaskController", $err);
         }
-    }
-
-    /**
-     * Add user into a issue.
-     */
-    public function issueAddUser(AddTaskUserRequest $request, $id) {
-        $this->taskTypeClass = Issue::class;
-        return $this->addUser($request, $id);
     }
 
     /**

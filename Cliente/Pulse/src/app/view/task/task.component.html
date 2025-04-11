@@ -3,7 +3,17 @@
     <input [(ngModel)]="newTitle" class="{{editing?'titleEditing':''}}" id="title" value="{{task.title}}" type="text" placeholder="{{task.title}}" disabled="{{!editing}}">
   </div>
 
-  <div id="statusSection" *ngIf="memberIsJoined(app.getUser().id)">
+  <div id="taskStatusContainer" *ngIf="(memberType == memberTypeEnum.Admin || isOwner) && task.statusId == taskStatusEnum.Review">
+    <p>The task is on <span class="review">Review</span> phase, <span (click)="changeTaskStatusToDone()" id="changeToDoneButton">change to <span class="done">Done</span> status</span></p>
+  </div>
+
+  <div id="doneStatusMessage" *ngIf="task.statusId == taskStatusEnum.Done">
+    <p>Done</p>
+  </div>
+
+  <br>
+
+  <div id="statusSection" *ngIf="memberIsJoined(app.getUser().id) && task.statusId != taskStatusEnum.Done">
     <h1 id="titleStatus">Your Status</h1>
 
     <div id="statusList">
@@ -28,7 +38,7 @@
     <button (click)="app.showAccept('Are you sure to change your status', changeStatus.bind(this))" class="{{newStatus?'visible':''}}" id="bSetStatus">Set status</button>
   </div>
 
-  <button class="{{!editing?'bEditin':'bCancel'}}" (click)="setEditing()" *ngIf="isOwner || memberType == memberTypeEnum.Admin" id="bEdit">{{editing?'Cancel':'Edit'}}</button>
+  <button class="{{!editing?'bEditin':'bCancel'}}" (click)="setEditing()" *ngIf="task.statusId != taskStatusEnum.Done && (isOwner || memberType == memberTypeEnum.Admin)" id="bEdit">{{editing?'Cancel':'Edit'}}</button>
 
   <app-main-content-box display="list">
 
@@ -80,7 +90,7 @@
 
       <div (dragover)="onDragOver($event)" (drop)="onDropUnassignedUsers($event)" class="container" id="users">
         @for (user of newUsers; track $index) {
-          @if (!user.added) {
+          @if (!user.added && user.type != memberTypeEnum.Viewer) {
             <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner||memberType==memberTypeEnum.Admin}}" title="{{user.username}}-{{user.email}}" class="unassigned {{editing?'draggable':''}} {{user.original?'removed':''}}" id="user">
 
               <app-profile-image [image]="user.photoUrl" [username]="user.username" />

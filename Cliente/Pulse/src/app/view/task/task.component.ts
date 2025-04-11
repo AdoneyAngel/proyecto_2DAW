@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { changeUserStatus, deleteIssue, deleteTask, getIssue, getProjectMembers, getProyectMemberType, getTask, updateIssue, updateTask } from '../../../API/api';
+import { changeUserStatus, deleteIssue, deleteTask, getIssue, getProjectMembers, getProyectMemberType, getTask, updateIssue, updateTask, updateTaskStatus } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { ContentBoxDelimiterComponent } from '../../components/content-box-delim
 import { ProjectComponent } from '../projects/project/project.component';
 import UserTaskStatusEnum from '../../enums/UserTaskStatusEnum';
 import MemberTypeEnum from '../../enums/MemberTypeEnum';
+import TaskStatusEnum from '../../enums/TaskStatusEnmu';
 
 @Component({
   selector: 'app-task',
@@ -36,6 +37,7 @@ export class TaskComponent {
   isChanged:boolean = false
   newStatus:UserTaskStatusEnum|null = null
   totalEt:number = 0
+  taskStatusEnum:any =TaskStatusEnum
   userTaskStatus:any = {
     Todo: null,
     Progress: null,
@@ -46,6 +48,17 @@ export class TaskComponent {
     this.userTaskStatus.Todo = UserTaskStatusEnum.Todo
     this.userTaskStatus.Progress = UserTaskStatusEnum.Progress
     this.userTaskStatus.Done = UserTaskStatusEnum.Done
+  }
+
+  async changeTaskStatusToDone() {
+    const res = await updateTaskStatus(this.taskId, TaskStatusEnum.Done)
+
+    if (res.success) {
+      this.app.notificationSuccess("Task status updated")
+
+    } else {
+      this.app.notificationError(res.error??"Can't update the task status, try again or reload")
+    }
   }
 
   async loadMemberType() {

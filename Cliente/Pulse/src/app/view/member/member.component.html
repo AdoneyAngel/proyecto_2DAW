@@ -24,7 +24,21 @@
     <app-content-box-simple-delimiter />
 
     <div id="tasksSection" class="section">
-      <h1>Tasks of <app-text-link styles="font-size: 1.5rem" [text]="project?.title??'project'" [link]="project?'/dashboard/projects/'+projectId:''" /></h1>
+      <h1>Tasks from
+        <span id="projectLink">
+          <app-text-link [styles]="{
+            padding: 'var(--lg-padding) var(--lg-padding)',
+            border: '2px solid var(--primary-color)',
+            borderRadius: 'var(--md-border-radius)',
+            marginLeft: '10px'
+          }" [link]="project?'/dashboard/projects/'+projectId:''" >
+
+            <img src="assets/images/project_white.png">
+            <p>{{project?.title??'project'}}</p>
+
+          </app-text-link>
+        </span>
+      </h1>
 
       <div id="taskList">
         @for (task of tasks; track $index) {

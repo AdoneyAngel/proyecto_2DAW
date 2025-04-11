@@ -78,9 +78,25 @@
   filter: brightness(.9);
 }
 
-#removeGoogleButton {
-  border: 2px solid var(--red-color);
+#account {
+  display: flex;
+  flex-direction: column;
+}
+
+#account button {
+  margin: 2.5px 0;
   padding: var(--lg-padding) var(--md-padding);
   border-radius: var(--md-border-radius);
   cursor: pointer;
+  text-align: left;
+  max-width: max-content;
+  margin-left: auto;
+}
+
+#removeGoogleButton {
+  border: 2px solid var(--red-color);
+}
+
+#logoutButton {
+  display: flex;
 }

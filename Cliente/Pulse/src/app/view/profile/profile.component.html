@@ -27,7 +27,10 @@
       </section>
 
       <section id="account">
-        <div style="display: {{!haveGoogleAccount && googleAccountChecked?'block':'none'}}" id="googleButton"></div>
+        <button (click)="askLogout()">Logout</button>
+
+        <button id="logoutButton" style="display: {{!haveGoogleAccount && googleAccountChecked?'block':'none'}}" id="googleButton"></button>
+
         <button (click)="askRemoveGoogleAccount()" style="display: {{haveGoogleAccount && googleAccountChecked?'block':'none'}}" id="removeGoogleButton">Remove Google Account</button>
       </section>
     </div>

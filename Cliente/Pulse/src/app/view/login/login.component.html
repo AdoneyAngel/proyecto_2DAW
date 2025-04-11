@@ -21,8 +21,8 @@
           <input [(ngModel)]="person.password" name="password" type="password" placeholder="********" [disabled]="isLoading">
         </div>
 
-        <div id="loginStep" class="googleLogin" *ngIf="emailChecked && googleAccount">
-          <label>This email is synchronized with a Google Account</label>
+        <div id="loginStep" class="googleLogin">
+          <label *ngIf="emailChecked && googleAccount">This email is synchronized with a Google Account</label>
           <br>
           <div id="googleButton"></div>
         </div>

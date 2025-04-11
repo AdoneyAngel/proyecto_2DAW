@@ -26,6 +26,10 @@ export class LoginComponent {
 
   constructor (private appComponent: AppComponent, private router:Router) {}
 
+  ngOnInit() {
+    this.renderGoogleLoginButton()
+  }
+
   async submit(e: Event): Promise<void|boolean> {
     e.preventDefault();
 
@@ -37,8 +41,6 @@ export class LoginComponent {
 
         if (res.success) {
           if (res.data.googleAccount) {
-            this.renderGoogleLoginButton()
-
             this.googleAccount = true
 
           } else {

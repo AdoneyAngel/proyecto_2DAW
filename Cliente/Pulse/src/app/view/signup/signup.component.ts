@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from "@angular/forms"
-import { googleSignUp, signup } from '../../../API/api';
+import { checkGoogleAccount, googleSignUp, signup } from '../../../API/api';
 import { AppComponent } from '../../app.component';
 import { environment } from '../../../environments/environment';
 import { NgIf } from '@angular/common';
@@ -30,8 +30,22 @@ export class SignupComponent {
     this.renderGoogleLoginButton()
   }
 
-  googleSignUp(googleResponse:any) {
-    this.googleCredential = googleResponse.credential
+  async googleSignUp(googleResponse:any) {
+    const accountExistRes = await checkGoogleAccount(googleResponse.credential)
+
+    if (accountExistRes.success) {
+      if (!accountExistRes.data) {
+        this.googleCredential = googleResponse.credential
+
+      } else {
+        this.appComponent.notificationError("This Google Account is already synchronized with another user")
+      }
+
+
+    } else {
+      this.appComponent.notificationError(accountExistRes.error??"No se ha podido iniciar sesión con Google")
+    }
+
   }
 
   async renderGoogleLoginButton() {

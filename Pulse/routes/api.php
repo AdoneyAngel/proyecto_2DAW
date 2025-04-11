@@ -21,7 +21,8 @@ Route::group(["prefix" => "v1", "middleware" => userTokenAuthMiddleware::class],
     Route::post("/users/{id}/photo", [UserController::class, "uploadPhoto"]);
     Route::get("/users/{id}/pendingRequests", [UserController::class, "getUserPendingJoin"]);
     Route::post("/googleAccount", [UserController::class, "syncGoogleAccount"]);
-    Route::get("/googleAccount", [UserController::class, "checkGoogleAccount"]);
+    Route::get("/googleAccount", [UserController::class, "getGoogleAccount"]);
+    Route::post("/checkGoogleAccount", [UserController::class, "checkGoogleAccount"]);
     Route::delete("/googleAccount", [UserController::class, "removeGoogleAccount"]);
     Route::get("/checkPassword", [UserController::class, "checkUserPassword"]);
     Route::post("/addPassword", [UserController::class, "addUserPassword"]);

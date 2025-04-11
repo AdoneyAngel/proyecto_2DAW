@@ -16,6 +16,13 @@
 }
 .section h1 {
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+#tasksSection h1 img {
+  margin-right: 10px;
+  width: 20px;
 }
 
 #taskItem {

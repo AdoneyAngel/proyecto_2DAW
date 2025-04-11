@@ -531,7 +531,7 @@ class UserController extends Controller
     /**
      * Check if the user have a google account
      */
-    public function checkGoogleAccount(Request $request) {
+    public function getGoogleAccount(Request $request) {
         try {
             $reqUser = $request["user"];
 
@@ -545,7 +545,39 @@ class UserController extends Controller
             }
 
         } catch (Exception $err) {
-            return responseUtils::serverError("Error checking if the user have google account", $err);
+            return responseUtils::serverError("Error getting the user google account", $err);
+        }
+    }
+
+    /**
+     * Check if the user have a google account
+     */
+    public function checkGoogleAccount(Request $request) {
+        try {
+            //Token body param is required
+            if (!$request->token) {
+                return responseUtils::invalidParams("Missing Google token");
+            }
+
+            $googleToken = $this->validateGoogleToken($request->token);
+
+            if (!$googleToken) {
+                return responseUtils::invalidParams("Invalid Google Account");
+            }
+
+            $googleId = $googleToken["sub"];
+
+            $userWithGoogleId = User::getByGoogleId($googleId);
+
+            if ($userWithGoogleId) {
+                return responseUtils::successful(true);
+
+            } else {
+                return responseUtils::successful(false);
+            }
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error checking the google account", $err);
         }
     }
 

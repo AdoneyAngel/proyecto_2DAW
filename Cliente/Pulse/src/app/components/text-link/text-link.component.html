@@ -1,6 +1,1 @@
-@if (link.length) {
-  <a [style]="styles" href="{{link}}">{{text}}</a>
-
-} @else {
-  <a [style]="styles">{{text}}</a>
-}
+<a [style]="styles" href="{{link}}"><ng-content></ng-content></a>

@@ -10,6 +10,9 @@
 #item.review {
   border-color: var(--blue-color);
 }
+#item.done {
+  border-color: var(--green-color);
+}
 
 #info {
   display: flex;
@@ -19,6 +22,7 @@
 #info h1 {
   text-transform: capitalize;
   font-size: 1.3em;
+  font-weight: bold;
 }
 #date {
   margin-left: auto;

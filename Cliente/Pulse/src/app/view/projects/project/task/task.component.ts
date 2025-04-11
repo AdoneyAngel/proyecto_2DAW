@@ -3,6 +3,7 @@ import { ProfileImageComponent } from '../../../../components/profile-image/prof
 import TaskStatusEnum from '../../../../enums/TaskStatusEnmu';
 import UserTaskStatusEnum from '../../../../enums/UserTaskStatusEnum';
 import { RouterLink } from '@angular/router';
+import MemberTypeEnum from '../../../../enums/MemberTypeEnum';
 
 @Component({
   selector: 'app-task',
@@ -17,6 +18,7 @@ export class TaskComponent {
   progressEnum:number = 1
   reviewEnum:number = 1
   doneEnum:number = 1
+  memberTypeEnum:any = MemberTypeEnum
 
   userTodoEnum:number = 1
   userProgressEnum:number = 1
