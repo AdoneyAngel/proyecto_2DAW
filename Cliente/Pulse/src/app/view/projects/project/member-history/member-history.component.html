@@ -1,0 +1,17 @@
+<app-main-content-box display="list">
+  @for (item of history; track $index) {
+    <div id="historyItem" class="{{item.action}}">
+        <div id="icon">
+          <img src="assets/images/user_{{item.action == 'add'?'add':'remove'}}_white.png">
+        </div>
+
+        <div id="itemBody">
+          User <span id="userInfo">{{item.user.username}} - {{item.user.email}}</span> {{item.action == 'add'?'is included': 'is removed'}}
+        </div>
+
+        <div id="date">
+          {{item.date}}
+        </div>
+    </div>
+  }
+</app-main-content-box>

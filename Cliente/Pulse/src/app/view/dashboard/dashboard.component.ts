@@ -139,6 +139,7 @@ export class DashboardComponent {
 
   async loadProjects() {
     const projects = await getIncludedProjects(true, true);
+    const user = this.appComponent.getUser()
 
     if (projects.success) {
       //Validate if there are changes with the last load
@@ -146,6 +147,9 @@ export class DashboardComponent {
 
       for (let projectIndex = 0; projectIndex<projects.data.length; projectIndex++) {
         const actualProject = projects.data[projectIndex]
+
+        //Don't show the owner as member
+        actualProject.members = actualProject.members?.filter((actualMember:any) => actualMember.id != actualProject.ownerId) ?? []
 
         let isLoaded = false;
 

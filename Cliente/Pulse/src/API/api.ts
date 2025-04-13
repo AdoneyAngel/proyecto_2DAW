@@ -544,3 +544,11 @@ export async function updateTaskStatus(taskId:number|string, statusId:number) {
 export async function logout() {
   return await get("logout")
 }
+
+export async function getMemberHistory(projectId:number|string) {
+  return await get(`proyects/${projectId}/membersHistory`)
+}
+
+export async function getTaskHistory (taskId:number|string) {
+  return await get(`tasks/${taskId}/history`)
+}

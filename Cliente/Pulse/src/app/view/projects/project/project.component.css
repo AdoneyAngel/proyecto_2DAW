@@ -114,7 +114,7 @@ h1 {
   justify-content: flex-end;
 }
 
-#bCreateTask, #bMembersSearch {
+#optionSection button {
   font-size: 1em;
   background: var(--primary-color);
   padding: 10px 15px;

@@ -17,8 +17,18 @@
       <br>
       <br>
 
+      <h1>Roll</h1>
+      <select [disabled]="!editing" [(ngModel)]="newMemberType" name="type" id="typeSelect" class="{{memberTypeEnum[newMemberType].toLowerCase()}}">
+        @for (type of memberTypeList; track $index) {
+          <option class="{{type[1].toLowerCase()}}" value="{{type[0]}}">{{type[1]}}</option>
+        }
+      </select>
+
+      <br>
+      <br>
+
       <button *ngIf="!editing" (click)="setEditing()" id="bEdit">Edit</button>
-      <button *ngIf="editing" (click)="saveEffectiveTime()" id="bEffectiveTimeSave">Save</button>
+      <button *ngIf="editing" (click)="saveChanges()" id="bEffectiveTimeSave">Save</button>
     </div>
 
     <app-content-box-simple-delimiter />

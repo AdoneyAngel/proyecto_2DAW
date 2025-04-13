@@ -120,6 +120,43 @@ class TaskHistory extends Model
 
     }
 
+    public static function getByTaskId ($taskId) {
+        $dbRes = DB::select("CALL proyects_tasks_history_id(?)", [$taskId]);
+
+        if (count($dbRes)) {
+            $history = [];
+
+            foreach ($dbRes as $reg) {
+                $actualRegTask = new Task(
+                    $taskId,
+                    $reg->proyects_tasks_title,
+                    $reg->proyects_tasks_description,
+                    $reg->proyects_tasks_tag,
+                    $reg->proyects_tasks_time,
+                    $reg->proyects_tasks_priority,
+                    $reg->proyects_tasks_proyect_id,
+                    $reg->proyects_tasks_status,
+                    $reg->proyects_tasks_date,
+                    TaskTypeEnum::from($reg->proyects_tasks_type));
+
+                $actualTaskHistoryReg = new TaskHistory(
+                    $reg->id,
+                    $taskId,
+                    $reg->new_status,
+                    $reg->date,
+                    $actualRegTask
+                );
+
+                $history[] = $actualTaskHistoryReg;
+            }
+
+            return $history;
+
+        } else {
+            return [];
+        }
+    }
+
     public static function selectQuery(array $whereValues = null) {
         $queryString = "SELECT * FROM proyects_tasks_history ";
         $queryValues = [];

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { AppComponent } from '../../app.component';
 import { changeUserStatus, deleteIssue, deleteTask, getIssue, getProjectMembers, getProyectMemberType, getTask, updateIssue, updateTask, updateTaskStatus } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
@@ -12,11 +12,12 @@ import { ProjectComponent } from '../projects/project/project.component';
 import UserTaskStatusEnum from '../../enums/UserTaskStatusEnum';
 import MemberTypeEnum from '../../enums/MemberTypeEnum';
 import TaskStatusEnum from '../../enums/TaskStatusEnmu';
+import { TextLinkComponent } from '../../components/text-link/text-link.component';
 
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [MainContentBoxComponent, FormsModule, NgIf, ProfileImageComponent, ContentBoxDelimiterComponent],
+  imports: [MainContentBoxComponent, FormsModule, NgIf, ProfileImageComponent, ContentBoxDelimiterComponent, RouterLink, TextLinkComponent],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css'
 })

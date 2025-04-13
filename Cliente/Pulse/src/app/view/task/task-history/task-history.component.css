@@ -1,0 +1,56 @@
+img {
+  width: 25px;
+  margin-right: 10px;
+}
+
+#historyItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--secondary-color);
+  border: 2px solid var(--tertiary-color);
+  border-radius: var(--md-border-radius);
+  padding: var(--lg-padding);
+  margin: 5px 0;
+}
+#historyItem.done {
+  border-color: var(--green-color);
+}
+#historyItem.progress {
+  border-color: var(--primary-color);
+}
+#historyItem.review {
+  border-color: var(--blue-color);
+}
+#historyItem.todo {
+  border-color: var(--light-color);
+}
+
+#historyItem #status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 2px solid var(--primary-color);
+  border-radius: var(--lg-border-radius);
+  padding: var(--lg-padding);
+  margin-left: 10px;
+  user-select: none;
+}
+
+#historyItem #status.done {
+  border-color: var(--green-color);
+}
+#historyItem #status.progress {
+  border-color: var(--primary-color);
+}
+#historyItem #status.review {
+  border-color: var(--blue-color);
+}
+#historyItem #status.todo {
+  border-color: var(--light-color);
+}
+
+#date {
+  margin-left: auto;
+  opacity: var(--md-opacity);
+}

@@ -12,6 +12,7 @@ use App\Http\Resources\Task\TaskCollection;
 use App\Http\Resources\Task\TaskResource;
 use App\Http\Resources\TaskComment\TaskCommentCollection;
 use App\Http\Resources\TaskComment\TaskCommentResource;
+use App\Http\Resources\TaskHistory\TaskHistoryCollection;
 use App\Http\Resources\User\UserCollection;
 use App\MemberTypeEnum;
 use App\Models\Issue;
@@ -19,6 +20,7 @@ use App\Models\Proyect;
 use App\Models\responseUtils;
 use App\Models\Task;
 use App\Models\TaskComment;
+use App\Models\TaskHistory;
 use App\Models\TaskStatus;
 use App\Models\User;
 use App\Models\Utils;
@@ -922,6 +924,33 @@ class TaskController extends Controller
 
         } catch (Exception $err) {
             return responseUtils::serverError("Error deleting task, TaskController", $err);
+        }
+    }
+
+    public function getTaskHistory(Request $request, $id) {
+        try {
+            $reqUser = $request["user"];
+            $task = $this->taskTypeClass::getById($id);
+            $proyect = null;
+
+            //Check if the task exist
+            if (!$task) {
+                return responseUtils::notFound("Task not found");
+            }
+
+            //Check if the user is owner/member of proyecto of the task
+            $proyect = Proyect::getById($task->getProyectId());
+
+            if ($proyect->getOwnerId() != $reqUser->getId() && !$proyect->isMember($reqUser->getId())) {
+                return responseUtils::unAuthorized("You have not access to this project");
+            }
+
+            $taskHistory = TaskHistory::getByTaskId($id);
+
+            return responseUtils::successful(new TaskHistoryCollection($taskHistory));
+
+        } catch (Exception $err) {
+            return responseUtils::serverError("Error getting task history", $err);
         }
     }
 

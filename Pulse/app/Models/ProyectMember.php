@@ -67,7 +67,7 @@ class ProyectMember extends User
     }
 
     //Methods
-    public function buildFromUser(User $user, $status = null, $effectiveTime = null, $proyectId = null)
+    public function buildFromUser(User $user, $status = null, $effectiveTime = null, $type = MemberTypeEnum::Member, $proyectId = null)
     {
         if ($status) {
             $this->status = $status;
@@ -77,6 +77,9 @@ class ProyectMember extends User
         }
         if ($proyectId) {
             $this->proyectId = $proyectId;
+        }
+        if ($type) {
+            $this->type = $type;
         }
 
         $this->id = $user->getId();
@@ -167,7 +170,9 @@ class ProyectMember extends User
                 $membersDb[0]->user_registred,
                 $membersDb[0]->status,
                 $membersDb[0]->effective_time,
-                $membersDb[0]->proyect_id
+                $membersDb[0]->proyect_id,
+                null,
+                MemberTypeEnum::from($membersDb[0]->type_id)
             );
         }
 
@@ -185,8 +190,9 @@ class ProyectMember extends User
         if (!$this->username) return null;
         if (!$this->email) return null;
         if (!$this->effectiveTime) return null;
+        if (!$this->type) return null;
 
-        $updatedMemberDb = DB::select("CALL proyects_members_update(?,?,?,?)", [$this->id, $this->proyectId, $this->status, $this->effectiveTime]);
+        $updatedMemberDb = DB::select("CALL proyects_members_update(?,?,?,?,?)", [$this->id, $this->proyectId, $this->status, $this->effectiveTime, $this->type->value]);
 
         if (count($updatedMemberDb)) {
             return new ProyectMember(
@@ -198,7 +204,9 @@ class ProyectMember extends User
                 $updatedMemberDb[0]->user_registred,
                 $updatedMemberDb[0]->status,
                 $updatedMemberDb[0]->effective_time,
-                $updatedMemberDb[0]->proyect_id
+                $updatedMemberDb[0]->proyect_id,
+                null,
+                MemberTypeEnum::from($updatedMemberDb[0]->type_id)
             );
         }
 

@@ -24,7 +24,7 @@ class AddProyectMemberRequest extends FormRequest
         return [
             "userId" => ["required"],
             "effectiveTime" => ["sometimes", "required"],
-            "type" => ["required"]
+            "type" => ["required", "numeric"]
         ];
     }
 }

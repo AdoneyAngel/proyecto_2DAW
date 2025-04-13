@@ -92,6 +92,8 @@ export class LoginComponent {
   async googleLogin(googleResponse:any) {
     const token = googleResponse.credential
 
+    this.isLoading = true
+
     try {
       googleLogin(token)
       .then(res => {
@@ -105,6 +107,9 @@ export class LoginComponent {
 
     } catch (err) {
       this.appComponent.notificationError("Something gone wrong")
+
+    } finally {
+      this.isLoading = false
     }
 
   }

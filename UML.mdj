@@ -6682,6 +6682,24 @@
 											"height": 13,
 											"text": "+selectQuery(array whereValues): array",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAGWMHao/bbTY9M=",
+											"_parent": {
+												"$ref": "AAAAAAGVQ/y44L6iIgs="
+											},
+											"model": {
+												"$ref": "AAAAAAGWMHao77bQl4o="
+											},
+											"font": "Arial;13;0",
+											"parentStyle": true,
+											"left": 1069,
+											"top": 666,
+											"width": 230.8740234375,
+											"height": 13,
+											"text": "+getByTaskId(int taskId): array",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
@@ -6689,7 +6707,7 @@
 									"left": 1064,
 									"top": 436,
 									"width": 240.8740234375,
-									"height": 233
+									"height": 248
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -6732,7 +6750,7 @@
 							"left": 1064,
 							"top": 328,
 							"width": 239.8740234375,
-							"height": 341,
+							"height": 356,
 							"nameCompartment": {
 								"$ref": "AAAAAAGVQ/y44L6cqj4="
 							},
@@ -6771,8 +6789,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1039,
-									"top": 546,
+									"left": 1038,
+									"top": 550,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -6793,8 +6811,8 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1043,
-									"top": 560,
+									"left": 1042,
+									"top": 565,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -6815,8 +6833,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1030,
-									"top": 517,
+									"left": 1031,
+									"top": 521,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -6835,7 +6853,7 @@
 								"$ref": "AAAAAAGVQ/y44L6bmpg="
 							},
 							"lineStyle": 1,
-							"points": "1063:531;1007:546",
+							"points": "1063:536;1007:549",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAGVRAAIjL9DNSE="
@@ -8064,7 +8082,8 @@
 								"$ref": "AAAAAAGVQ3mAfvLJXhs="
 							},
 							"name": "type",
-							"visibility": "protected"
+							"visibility": "protected",
+							"type": ""
 						}
 					],
 					"operations": [
@@ -9863,7 +9882,8 @@
 									"_parent": {
 										"$ref": "AAAAAAGWG/VOpBTDOvI="
 									},
-									"name": "int userId"
+									"name": "int userId",
+									"type": ""
 								},
 								{
 									"_type": "UMLParameter",
@@ -11996,7 +12016,8 @@
 								"$ref": "AAAAAAGVQ/DUKrzYFD0="
 							},
 							"name": "type",
-							"visibility": "protected"
+							"visibility": "protected",
+							"type": ""
 						}
 					],
 					"operations": [
@@ -12325,7 +12346,8 @@
 									"_parent": {
 										"$ref": "AAAAAAGWG155kxSvWwI="
 									},
-									"name": "MemberTypeEnum type"
+									"name": "MemberTypeEnum type",
+									"type": ""
 								}
 							]
 						},
@@ -13095,6 +13117,34 @@
 									"_id": "AAAAAAGVUgDJT27cQEU=",
 									"_parent": {
 										"$ref": "AAAAAAGVUgCOG27UYQk="
+									},
+									"type": "array",
+									"direction": "return"
+								}
+							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAGWMHao77bQl4o=",
+							"_parent": {
+								"$ref": "AAAAAAGVQ/y4376Ze9E="
+							},
+							"name": "getByTaskId",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGWMHbTCLbXOds=",
+									"_parent": {
+										"$ref": "AAAAAAGWMHao77bQl4o="
+									},
+									"name": "int taskId",
+									"type": ""
+								},
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAGWMHbTCLbYpAk=",
+									"_parent": {
+										"$ref": "AAAAAAGWMHao77bQl4o="
 									},
 									"type": "array",
 									"direction": "return"

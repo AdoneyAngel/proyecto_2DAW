@@ -38,6 +38,10 @@
     <button (click)="app.showAccept('Are you sure to change your status', changeStatus.bind(this))" class="{{newStatus?'visible':''}}" id="bSetStatus">Set status</button>
   </div>
 
+  <app-text-link link="/dashboard/projects/{{task.proyect.id}}/tasks/{{task.id}}/history" >Status history</app-text-link>
+
+  <br>
+
   <button class="{{!editing?'bEditin':'bCancel'}}" (click)="setEditing()" *ngIf="task.statusId != taskStatusEnum.Done && (isOwner || memberType == memberTypeEnum.Admin)" id="bEdit">{{editing?'Cancel':'Edit'}}</button>
 
   <app-main-content-box display="list">

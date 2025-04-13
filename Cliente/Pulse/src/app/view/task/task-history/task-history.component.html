@@ -1,0 +1,16 @@
+<app-main-content-box display="list">
+  @for (item of history; track $index) {
+    <div id="historyItem" class="{{taskStatusEnum[item.newStatus].toLowerCase()}}">
+      <p>Status changed to </p>
+
+      <div id="status" class="{{taskStatusEnum[item.newStatus].toLowerCase()}}">
+        <img src="/assets/images/{{taskStatusEnum[item.newStatus].toLowerCase()}}_white.png">
+        <p>{{taskStatusEnum[item.newStatus]}}</p>
+      </div>
+
+      <p id="date">
+        {{item.date}}
+      </p>
+    </div>
+  }
+</app-main-content-box>

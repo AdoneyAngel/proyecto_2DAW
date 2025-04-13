@@ -11,6 +11,7 @@ import UserTaskStatusEnum from '../../enums/UserTaskStatusEnum';
 import { TextLinkComponent } from '../../components/text-link/text-link.component';
 import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import MemberTypeEnum from '../../enums/MemberTypeEnum';
 
 @Component({
   selector: 'app-member',
@@ -27,6 +28,9 @@ export class MemberComponent {
   tasks:any = []
   editing:boolean = false
   newEffectiveTime:number = 1
+  newMemberType:number = 2
+  memberTypeEnum:any = MemberTypeEnum
+  memberTypeList:any = Object.entries(this.memberTypeEnum).filter(([clave, valor]) => !isNaN(Number(clave)))
   userTaskStatus:any = {
     Todo: null,
     Progress: null,
@@ -72,6 +76,7 @@ export class MemberComponent {
       if (res.success) {
         this.member = res.data
         this.newEffectiveTime = res.data.effectiveTime
+        this.newMemberType = res.data.type
 
         this.dashboard.setRouteCustomTitle("member", res.data.username)
         this.dashboard.setTitle(res.data.username)
@@ -138,9 +143,10 @@ export class MemberComponent {
     this.editing = false
   }
 
-  async saveEffectiveTime():Promise<any> {
+  async saveChanges():Promise<any> {
     if (!this.memberId) return null
     if (!this.projectId) return null
+    if (!this.newMemberType) return null
 
     if (this.newEffectiveTime < 1) {
       this.app.notificationError("Invalid effective time")
@@ -148,11 +154,12 @@ export class MemberComponent {
     }
 
     updateMember(this.projectId, this.memberId, {
-      effectiveTime: this.newEffectiveTime
+      effectiveTime: this.newEffectiveTime,
+      type: this.newMemberType
     })
     .then(res => {
       if (res.success) {
-        this.app.notificationSuccess("Effective time updated")
+        this.app.notificationSuccess("Member updated")
         this.unSetEditing()
 
       } else {

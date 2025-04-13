@@ -47,6 +47,8 @@ export class ProjectComponent {
     this.clearPage()
 
     this.onRouteChanges()
+
+    this.setOnMain(true)
   }
 
   openShowMemberSearch() {
@@ -75,12 +77,12 @@ export class ProjectComponent {
   onRouteChanges() {
     this.title = this.app.getTitle()
 
-    if (this.title != "project") {
-      this.isOnMain = false
+    // if (this.title != "project") {
+    //   this.isOnMain = false
 
-    } else {
-      this.isOnMain = true
-    }
+    // } else {
+    //   this.isOnMain = true
+    // }
 
     this.activedRouter.params.subscribe(
       (param: Params) => {

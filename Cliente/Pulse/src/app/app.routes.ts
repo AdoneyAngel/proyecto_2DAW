@@ -13,6 +13,8 @@ import { IssuesComponent } from './view/issues/issues.component';
 import { CreateIssueComponent } from './view/issues/create-issue/create-issue.component';
 import { ProfileComponent } from './view/profile/profile.component';
 import { AddUserPasswordComponent } from './view/add-user-password/add-user-password.component';
+import { MemberHistoryComponent } from './view/projects/project/member-history/member-history.component';
+import { TaskHistoryComponent } from './view/task/task-history/task-history.component';
 
 const dashboardRoutes = {
   path: "dashboard",
@@ -55,6 +57,11 @@ const dashboardRoutes = {
           loadComponent: () => TaskComponent
         },
         {
+          path: "tasks/:id/history",
+          data: {title: "taskHistory"},
+          loadComponent: () => TaskHistoryComponent
+        },
+        {
           path: "issues/:id",
           data: {title: "issue"},
           loadComponent: () => TaskComponent
@@ -68,6 +75,11 @@ const dashboardRoutes = {
           path: "members/:memberId",
           data: {title: "member"},
           loadComponent: () => MemberComponent
+        },
+        {
+          path: "memberHistory",
+          data: {title: "memberHistory"},
+          loadComponent: () => MemberHistoryComponent
         }
       ]
     }

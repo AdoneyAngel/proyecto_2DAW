@@ -59,3 +59,42 @@
 #bEffectiveTimeSave {
   background: var(--primary-color);
 }
+
+#typeSelect {
+  background: black;
+  border: 2px solid var(--primary-color);
+  border-radius: var(--lg-border-radius);
+  cursor: pointer;
+  padding: var(--lg-padding);
+}
+#typeSelect:disabled {
+  border: none;
+  opacity: 1;
+  background: black;
+}
+#typeSelect:active {
+  background: black;
+}
+
+#typeSelect.admin {
+  color: var(--admin-color);
+  border: 2px solid var(--admin-color);
+}
+#typeSelect.member {
+  color: var(--member-color);
+  border: 2px solid var(--member-color);
+}
+#typeSelect.viewer {
+  color: var(--viewer-color);
+  border: 2px solid var(--viewer-color);
+}
+
+#typeSelect option.admin {
+  color: var(--admin-color);
+}
+#typeSelect option.member {
+  color: var(--member-color);
+}
+#typeSelect option.viewer {
+  color: var(--viewer-color);
+}

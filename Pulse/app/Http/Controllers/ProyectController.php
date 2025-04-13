@@ -178,8 +178,7 @@ class ProyectController extends Controller
 
             //Add member
             $newMember = new ProyectMember();
-            $newMember->buildFromUser($user, 0, $request->effectiveTime ?? 1, $proyect->getId());
-            $newMember->setType(MemberTypeEnum::from($request->type));
+            $newMember->buildFromUser($user, 0, $request->effectiveTime ?? 1, MemberTypeEnum::from($request->type), $proyect->getId());
 
             $addedMember = $proyect->addMember($newMember);
 
@@ -502,6 +501,9 @@ class ProyectController extends Controller
             }
             if ($request->effectiveTime) {
                 $member->setEffectiveTime($request->effectiveTime);
+            }
+            if ($request->type) {
+                $member->setType(MemberTypeEnum::from($request->type));
             }
 
             $member->saveMemberChanges();

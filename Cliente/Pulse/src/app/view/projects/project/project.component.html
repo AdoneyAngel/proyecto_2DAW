@@ -27,6 +27,7 @@
     @if (isOnMain) {
       <div id="optionSection">
         <button (click)="openShowMemberSearch()" id="bMembersSearch">Members</button>
+        <button routerLink="/dashboard/projects/{{projectId}}/memberHistory">History</button>
         <button *ngIf="isOwner || memberType == memberTypeEnum.Admin" routerLink="/dashboard/projects/{{projectId}}/createTask" id="bCreateTask">Create new task</button>
       </div>
 
