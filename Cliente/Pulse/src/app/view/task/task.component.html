@@ -38,7 +38,9 @@
     <button (click)="app.showAccept('Are you sure to change your status', changeStatus.bind(this))" class="{{newStatus?'visible':''}}" id="bSetStatus">Set status</button>
   </div>
 
-  <app-text-link link="/dashboard/projects/{{task.proyect.id}}/tasks/{{task.id}}/history" >Status history</app-text-link>
+  <div *ngIf="task?.proyect?.id">
+    <app-text-link link="/dashboard/projects/{{task.proyect.id}}/{{app.getTitle()=='issue'?'issues':'tasks'}}/{{task.id}}/history" >Status history</app-text-link>
+  </div>
 
   <br>
 
@@ -67,6 +69,42 @@
         <input [(ngModel)]="newPriority" type="number" value="{{task.priority}}" placeholder="{{task.priority}}" [disabled]="(!isOwner && memberType != memberTypeEnum.Admin) || !editing">
       </div>
     </div>
+
+
+    <app-main-content-box display="list" title="Comments">
+      <div id="commentList">
+        @for (comment of comments; track $index) {
+          <div id="commentItem">
+            <div id="commentUser">
+              <app-profile-image [username]="comment.user.username" [image]="comment.user.photoUrl ?? ''"/>
+
+              <p id="commentUserInfo">
+                {{comment.user.username}} <span id="commentUserEmail"> {{'@'}} {{comment.user.email}}</span>
+              </p>
+            </div>
+
+            <div id="commentBody">
+              {{comment.comment}}
+            </div>
+
+            <div id="commentDate">
+              @if (timeUtil.calcPastTime(comment.date).data.days > 1) {
+                {{comment.date}}
+
+              }
+              @else {
+                {{timeUtil.calcPastTime(comment.date).string}} ago
+              }
+            </div>
+          </div>
+        }
+
+        <div id="newComment">
+          <input [(ngModel)]="newComment" placeholder="Write new comment" type="text" id="commentInput">
+          <button (click)="sendComment()">Send</button>
+        </div>
+      </div>
+    </app-main-content-box>
 
     <button *ngIf="isOwner || memberType == memberTypeEnum.Admin" (click)="askDeleteTask()" id="bDeleteTask">{{app.getTitle() == "issue"?"Delete Issue":"Delete Task"}}</button>
 

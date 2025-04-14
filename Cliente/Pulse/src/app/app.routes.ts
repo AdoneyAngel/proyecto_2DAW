@@ -62,6 +62,11 @@ const dashboardRoutes = {
           loadComponent: () => TaskHistoryComponent
         },
         {
+          path: "issues/:id/history",
+          data: {title: "issueHistory"},
+          loadComponent: () => TaskHistoryComponent
+        },
+        {
           path: "issues/:id",
           data: {title: "issue"},
           loadComponent: () => TaskComponent

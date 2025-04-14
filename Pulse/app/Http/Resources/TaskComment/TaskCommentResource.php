@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\TaskComment;
 
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,12 +15,18 @@ class TaskCommentResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $resource = [
             "id" => $this->getId(),
             "comment" => $this->getComment(),
             "userId" => $this->getUserId(),
             "taskId" => $this->getTaskId(),
             "date" => $this->getDate()
         ];
+
+        if ($this->user) {
+            $resource["user"] = new UserResource($this->user);
+        }
+
+        return $resource;
     }
 }

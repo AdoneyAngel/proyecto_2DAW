@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { changeUserStatus, deleteIssue, deleteTask, getIssue, getProjectMembers, getProyectMemberType, getTask, updateIssue, updateTask, updateTaskStatus } from '../../../API/api';
+import { addIssueComment, addTaskComment, changeUserStatus, deleteIssue, deleteTask, getIssue, getIssueCommets, getProjectMembers, getProyectMemberType, getTask, getTaskCommets, updateIssue, updateTask, updateTaskStatus } from '../../../API/api';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { MainContentBoxComponent } from '../../components/main-content-box/main-content-box.component';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import UserTaskStatusEnum from '../../enums/UserTaskStatusEnum';
 import MemberTypeEnum from '../../enums/MemberTypeEnum';
 import TaskStatusEnum from '../../enums/TaskStatusEnmu';
 import { TextLinkComponent } from '../../components/text-link/text-link.component';
+import TimeUtil from '../../../utils/TimeUtil';
 
 @Component({
   selector: 'app-task',
@@ -38,7 +39,10 @@ export class TaskComponent {
   isChanged:boolean = false
   newStatus:UserTaskStatusEnum|null = null
   totalEt:number = 0
+  comments:any = []
   taskStatusEnum:any =TaskStatusEnum
+  newComment:string = ""
+  timeUtil:any = TimeUtil
   userTaskStatus:any = {
     Todo: null,
     Progress: null,
@@ -114,6 +118,69 @@ export class TaskComponent {
     this.setIsChanged()
 
     this.projectComponent.setOnMain(false)
+  }
+
+  async loadComments () {
+    const fn = (id:number|string) => {
+      if (this.app.getTitle() == "issue") {
+        return getIssueCommets(id)
+
+      } else {
+        return getTaskCommets(id)
+      }
+    }
+
+    try {
+      const res = await fn(this.taskId)
+
+      if (res.success) {
+        this.comments = res.data
+
+        //Load user photo profile
+        this.comments.forEach(async (comment:any) => {
+          const photo = await this.dashboard.findUserPhoto(comment.userId)
+
+          comment.user.photoUrl = photo.photo
+        })
+
+      } else {
+        this.app.notificationError(res.error ?? "Something gone wrong")
+      }
+
+    } catch (err) {
+      this.app.notificationError("Something gone wrong")
+    }
+  }
+
+  async sendComment():Promise<any> {
+    const fn = (id:number|string, comment:string) => {
+      if (this.app.getTitle() == "issue") {
+        return addIssueComment(id, comment)
+
+      } else {
+        return addTaskComment(id, comment)
+      }
+    }
+
+    try {
+      if (!this.newComment.length) return null
+
+      const res = await fn(this.taskId, this.newComment)
+
+      if (res.success) {
+        this.app.notificationSuccess("Comment uploaded")
+
+        this.newComment = ""
+
+        this.loadComments()
+
+      } else {
+        this.app.notificationError(res.error ?? "Something gone wrong")
+      }
+
+    } catch (err) {
+      this.app.notificationError("Something gone wrong")
+    }
   }
 
   setEditing() {
@@ -249,6 +316,7 @@ export class TaskComponent {
         this.newTime = res.data.time
 
         this.loadMembers()
+        this.loadComments()
 
       } else {
         this.app.notificationError(res.error)

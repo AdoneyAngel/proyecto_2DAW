@@ -552,3 +552,17 @@ export async function getMemberHistory(projectId:number|string) {
 export async function getTaskHistory (taskId:number|string) {
   return await get(`tasks/${taskId}/history`)
 }
+
+export async function getTaskCommets(taskId:number|string) {
+  return await get(`tasks/${taskId}/comments`)
+}
+export async function getIssueCommets(taskId:number|string) {
+  return await get(`issues/${taskId}/comments`)
+}
+
+export async function addTaskComment(taskId:number|string, comment:string) {
+  return await post(`tasks/${taskId}/comments`, {comment})
+}
+export async function addIssueComment(taskId:number|string, comment:string) {
+  return await post(`issues/${taskId}/comments`, {comment})
+}

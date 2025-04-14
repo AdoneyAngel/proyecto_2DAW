@@ -59,7 +59,7 @@ export class TaskHistoryComponent {
 
   loadTask() {
     const fn = (id: number | string, project: boolean, users: boolean) => {
-      if (this.app.getTitle() == "issue") {
+      if (this.app.getTitle() == "issueHistory") {
         return getIssue(id, project, users)
 
       } else {

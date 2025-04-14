@@ -800,7 +800,7 @@ class TaskController extends Controller
             $task = $this->taskTypeClass::getById($id);
             $proyect = null;
 
-            //Task exist
+            //Task|issue exist
             if (!$task) {
                 return responseUtils::notFound("Task not found");
             }
@@ -854,6 +854,14 @@ class TaskController extends Controller
             }
 
             $comments = TaskComment::getByTaskId($id);
+
+            //Load user info of comments
+
+            foreach ($comments as $index => $comment) {
+                $user = User::getById($comment->getUserId());
+
+                $comments[$index]->user = $user;
+            }
 
             return responseUtils::successful(new TaskCommentCollection($comments));
         } catch (Exception $err) {
@@ -935,7 +943,14 @@ class TaskController extends Controller
 
             //Check if the task exist
             if (!$task) {
-                return responseUtils::notFound("Task not found");
+                //Check if its an issue
+                $task = Issue::getById($id);
+
+                if (!$task) {
+                    return responseUtils::notFound("Task not found");
+
+                }
+
             }
 
             //Check if the user is owner/member of proyecto of the task
