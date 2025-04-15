@@ -32,3 +32,9 @@
   z-index: 3;
   padding: 30px;
 }
+
+@media (max-width: 950px) {
+  #box {
+    padding: 10px;
+  }
+}

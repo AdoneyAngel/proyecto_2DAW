@@ -1,11 +1,11 @@
 <body>
 
   <div class="section" id="header">
-    <app-header [photo]="profile.photo" [username]="profile.username" [routes]="routes" />
+    <app-header [showLateralBar]="showLateralBar.bind(this)" [photo]="profile.photo" [username]="profile.username" [routes]="routes" />
   </div>
 
-  <div class="section" id="lateralBar">
-    <app-lateral-bar />
+  <div *ngIf="!appComponent.phoneScreen || visibleLateralBar" class="section" id="lateralBarSection">
+    <app-lateral-bar [hidde]="hiddeLateralBar.bind(this)" />
   </div>
 
   <main class="section">

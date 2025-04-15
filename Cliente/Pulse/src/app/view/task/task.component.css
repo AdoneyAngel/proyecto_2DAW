@@ -99,9 +99,6 @@ input:disabled, textarea:disabled {
 #user.added {
   border-color: var(--green-color);
 }
-#user p {
-  margin-left: 10px;
-}
 #user #email {
   opacity: var(--md-opacity);
   font-size: .9rem;
@@ -336,4 +333,35 @@ input:disabled, textarea:disabled {
   width: calc(100% - 24px);
   padding: 10px 10px;
   margin-bottom: 10px;
+}
+
+@media (max-width: 950px) {
+  #user {
+    display: block;
+    padding: 5px;
+    margin: 0;
+  }
+  #userInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+    padding: 3px 0;
+  }
+  #userInfo p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  #email {
+    margin-left: 3px;
+  }
+  #user.draggable::before {
+    display: none;
+  }
+  #bUserAction {
+    display: flex;
+    width: 100%;
+    margin: 0;
+  }
 }

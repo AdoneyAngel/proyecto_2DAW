@@ -42,3 +42,11 @@
   opacity: var(--md-opacity);
   font-size: .9em;
 }
+
+@media (max-width: 480px) {
+  #content {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+}

@@ -1,13 +1,17 @@
-<header>
+<header #header>
 
   <div>
 
-    <section id="logo">
+    <section *ngIf="!app.phoneScreen" id="logo">
       <img src="assets/images/Logo.svg" alt="">
     </section>
 
-    <section id="routes">
-      @for (route of routes; track $index) {
+    <section *ngIf="app.phoneScreen" id="menu" (click)="showLateralBar()">
+      <img src="assets/images/menu_white.png" alt="">
+    </section>
+
+    <section #routerList id="routes">
+      @for (route of visibleRoutes; track $index) {
         @if (!$first) {
           <img id="arrow" src="assets/images/arrow_white.png">
         }

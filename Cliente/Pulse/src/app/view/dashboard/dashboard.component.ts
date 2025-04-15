@@ -6,11 +6,12 @@ import { AppComponent } from '../../app.component';
 import { acceptInvitation, getInvitations, getIncludedProjects, rejectInvitation, getUserPhoto } from '../../../API/api';
 import { InvitationsComponent } from '../../components/dashboard/invitations/invitations.component';
 import { ProjectsComponent } from '../../components/dashboard/proyects/projects.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, LateralBarComponent, InvitationsComponent, ProjectsComponent],
+  imports: [RouterOutlet, HeaderComponent, LateralBarComponent, InvitationsComponent, ProjectsComponent, NgIf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -26,14 +27,22 @@ export class DashboardComponent {
   title:string = ""
   usersPhotos: {id:number|string, photo:string|null}[] = []
   cache:{name:string, data:any}[] = []
+  visibleLateralBar:boolean = false
 
-  constructor(private appComponent: AppComponent, private activatedRoute: ActivatedRoute){}
+  constructor(protected appComponent: AppComponent, private activatedRoute: ActivatedRoute){}
 
   async ngOnInit() {
     this.onRouteChanges()
 
     this.appComponent.onLoadUser(this.loadProfile.bind(this))
     this.appComponent.onRouteChanges("dashboard", this.onRouteChanges.bind(this))
+  }
+
+  showLateralBar () {
+    this.visibleLateralBar = true
+  }
+  hiddeLateralBar () {
+    this.visibleLateralBar = false
   }
 
   loadProfile() {

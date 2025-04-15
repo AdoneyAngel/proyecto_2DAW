@@ -100,3 +100,9 @@
 #logoutButton {
   display: flex;
 }
+
+@media (max-width: 900px) {
+  #main {
+    display: block;
+  }
+}

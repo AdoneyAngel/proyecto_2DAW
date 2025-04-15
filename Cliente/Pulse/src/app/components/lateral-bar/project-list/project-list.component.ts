@@ -10,4 +10,5 @@ import { RouterLink } from '@angular/router';
 })
 export class ProjectListComponent {
   @Input() projects:any = []
+  @Input() hidde:VoidFunction = () => {}
 }

@@ -1,15 +1,19 @@
 <section id="lateralBar">
-  <a routerLink="/dashboard/rack" id="bRoute" class="button">
-    <img src="assets/images/rack_white.png" alt="">
+  <div (click)="hidde()" *ngIf="app.phoneScreen" id="bClose">
+    <img src="assets/images/cruz_white.png">
+  </div>
+
+  <a (click)="hidde()" routerLink="/dashboard/rack" id="bRoute" class="button">
+    <img src="assets/images/rack_white.png">
     Rack
   </a>
-  <a routerLink="/dashboard/issues" id="bRoute" class="button">
-    <img src="assets/images/issue_white.png" alt="">
+  <a (click)="hidde()" routerLink="/dashboard/issues" id="bRoute" class="button">
+    <img src="assets/images/issue_white.png">
     Issues
   </a>
-  <a routerLink="/dashboard/projects" id="bRoute" class="button">
-    <img src="assets/images/project_white.png" alt="">
+  <a (click)="hidde()" routerLink="/dashboard/projects" id="bRoute" class="button">
+    <img src="assets/images/project_white.png">
     Projects
   </a>
-  <app-project-list [projects]="projects" />
+  <app-project-list [hidde]="hidde" [projects]="projects" />
 </section>

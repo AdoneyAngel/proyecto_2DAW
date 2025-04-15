@@ -21,6 +21,8 @@ export class AppComponent {
   onLoadProfileFunc:any = []
   lastRoute:string = ""
   currentRoute:string = ""
+  screenWidth:number = 0
+  phoneScreen:boolean = false
 
   //Notifications
   notificationList = [
@@ -45,6 +47,16 @@ export class AppComponent {
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private route: ActivatedRoute) {}
 
+  checkScreenFormat () {
+    const width = window.innerWidth
+
+    if (width <= 950) {
+      this.phoneScreen = true
+    }
+
+    this.screenWidth = width
+  }
+
   async onLoadUser(fn:Function) {
     this.onLoadProfileFunc.push(fn)
   }
@@ -54,6 +66,8 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.checkScreenFormat()
+
     this.notificationList = []
 
     this.router.events

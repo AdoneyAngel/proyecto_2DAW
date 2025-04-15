@@ -1,5 +1,5 @@
 <div id="projectsList">
   @for (project of projects; track $index) {
-    <a routerLink="/dashboard/projects/{{project.id}}" id="projectItem">{{project.title}}</a>
+    <a (click)="hidde()" routerLink="/dashboard/projects/{{project.id}}" id="projectItem">{{project.title}}</a>
   }
 </div>

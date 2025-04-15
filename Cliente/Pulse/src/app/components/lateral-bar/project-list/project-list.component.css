@@ -19,4 +19,14 @@
   color: var(--light-color);
   cursor: pointer;
   text-decoration: none;
+  height: max-content;
+}
+
+@media (max-width: 950px) {
+  #projectItem {
+    margin: 4px 0;
+    margin-left: 0;
+  }
+  #projectsList {
+  }
 }

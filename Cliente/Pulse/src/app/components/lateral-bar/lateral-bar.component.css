@@ -20,9 +20,25 @@
   border-radius: var(--md-border-radius);
   border: none;
   box-sizing: border-box;
+  height: max-content;
   text-decoration: none;
 }
 #bRoute img {
+  width: 24px;
   height: 24px;
   margin-right: 10px;
+}
+
+#bClose {
+  margin-bottom: 20px;
+}
+#bClose img {
+  width: 20px;
+}
+
+@media (max-width: 950px) {
+  #lateralBar {
+    height: max-content;
+    align-items: normal;
+  }
 }

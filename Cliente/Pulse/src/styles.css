@@ -37,6 +37,7 @@
   --ds-border-radius: var(--md-border-radius);
   --ds-border: 2px solid var(--light-color);
   --ds-overflow: hidden;
+  --phone-sreen-width: 950px;
 }
 
 * {
@@ -113,5 +114,14 @@ a, .a {
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media (max-width: 950px) {
+  * {
+    font-size: 15px;
+  }
+  html {
+    padding: 0;
   }
 }

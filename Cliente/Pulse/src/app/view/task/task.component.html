@@ -117,8 +117,10 @@
         @if (user.added) {
           <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner||memberType==memberTypeEnum.Admin}}" title="{{user.username}}-{{user.email}}" class="assigned {{editing?'draggable':''}} {{!user.original?'added':''}}" id="user">
 
-            <app-profile-image [image]="user.photoUrl" [username]="user.username" />
-            <p><span id="youSpan" *ngIf="app.getUser().id==user.id">You</span>{{user.username}} <span id="email">- {{user.email}}</span></p>
+            <p id="userInfo">
+              <app-profile-image style="display: inline-block; margin-right: 10px;" [image]="user.photoUrl" [username]="user.username" />
+              <span id="youSpan" *ngIf="app.getUser().id==user.id">You</span> {{user.username}} <span id="email"> {{user.email}}</span>
+            </p>
             <p title="Effective Time" id="et"><span id="nEt">{{user.effectiveTime}}</span> EFT</p>
             <button *ngIf="editing" (click)="removeUser(user.id)" id="bUserAction" class="remove">Remove</button>
 
@@ -135,8 +137,10 @@
           @if (!user.added && user.type != memberTypeEnum.Viewer) {
             <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner||memberType==memberTypeEnum.Admin}}" title="{{user.username}}-{{user.email}}" class="unassigned {{editing?'draggable':''}} {{user.original?'removed':''}}" id="user">
 
-              <app-profile-image [image]="user.photoUrl" [username]="user.username" />
-              <p><span id="youSpan" *ngIf="app.getUser().id==user.id">You</span> {{user.username}} <span id="email">- {{user.email}}</span></p>
+              <p id="userInfo">
+                <app-profile-image style="display: inline-block; margin-right: 10px;" [image]="user.photoUrl" [username]="user.username" />
+                <span id="youSpan" *ngIf="app.getUser().id==user.id">You</span> {{user.username}} <span id="email"> {{user.email}}</span>
+              </p>
               <p title="Effective Time" id="et"><span id="nEt">{{user.effectiveTime}}</span> ET</p>
               <button *ngIf="editing" (click)="addUser(user.id)" id="bUserAction" class="add">Add</button>
 
