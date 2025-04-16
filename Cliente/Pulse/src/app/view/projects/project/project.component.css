@@ -204,3 +204,9 @@ h1 {
     transform: translate(0, -110%);
   }
 }
+
+@media (max-width: 950px) {
+  #projectBody {
+    padding-bottom: 150px;
+  }
+}

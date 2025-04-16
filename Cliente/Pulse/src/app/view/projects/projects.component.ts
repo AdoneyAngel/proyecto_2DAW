@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { ProjectsComponent as projectsList } from '../../components/dashboard/proyects/projects.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { AppComponent } from '../../app.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'view-projects',
   standalone: true,
-  imports: [projectsList],
+  imports: [projectsList, RouterLink],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })

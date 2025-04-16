@@ -563,6 +563,11 @@ export async function getIssueCommets(taskId:number|string) {
 export async function addTaskComment(taskId:number|string, comment:string) {
   return await post(`tasks/${taskId}/comments`, {comment})
 }
+
 export async function addIssueComment(taskId:number|string, comment:string) {
   return await post(`issues/${taskId}/comments`, {comment})
+}
+
+export async function createProject (title:string) {
+  return await post("proyects", {title})
 }

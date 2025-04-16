@@ -15,12 +15,18 @@ import { ProfileComponent } from './view/profile/profile.component';
 import { AddUserPasswordComponent } from './view/add-user-password/add-user-password.component';
 import { MemberHistoryComponent } from './view/projects/project/member-history/member-history.component';
 import { TaskHistoryComponent } from './view/task/task-history/task-history.component';
+import { CreateProjectComponent } from './view/create-project/create-project.component';
 
 const dashboardRoutes = {
   path: "dashboard",
   data: {title: "dashboard"},
   loadComponent: () => DashboardComponent,
   children: [
+    {
+      path: "createProject",
+      data: {title: "createProject"},
+      loadComponent: () => CreateProjectComponent
+    },
     {
       path: "issues",
       data: {title: "issues"},
