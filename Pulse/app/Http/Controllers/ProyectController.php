@@ -503,6 +503,10 @@ class ProyectController extends Controller
                 $member->setEffectiveTime($request->effectiveTime);
             }
             if ($request->type) {
+                if ($reqUser->getId() == $member->getId() && $proyect->getMemberType($reqUser->getId()) != MemberTypeEnum::from($request->type)) {
+                    return responseUtils::unAuthorized("You cannot change your own member type");
+                }
+
                 $member->setType(MemberTypeEnum::from($request->type));
             }
 
