@@ -1,0 +1,30 @@
+.projectInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#date {
+  opacity: .5;
+  margin-left: auto;
+  text-align: right;
+}
+
+#owner {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  opacity: .4;
+  text-align: right;
+}
+
+#membersList {
+  padding: 10px 15px;
+  padding-bottom: 15px;
+  font-size: .8rem;
+}
+
+#owner.sameUser {
+  opacity: 1;
+  color: var(--primary-color);
+}

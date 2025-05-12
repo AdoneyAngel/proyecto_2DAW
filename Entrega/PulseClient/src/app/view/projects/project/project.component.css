@@ -1,0 +1,212 @@
+#projectBody {
+  padding-bottom: 30px;
+}
+
+h1 {
+  text-transform: capitalize;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  margin-left: 20px;
+  font-size: 2rem;
+}
+
+#titleContainer {
+  width: 100%;
+  transform: translateY(calc(-100% - 10px));
+  background: var(--secondary-color);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.title {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  text-transform: capitalize;
+  font-size: 2rem;
+  border-bottom: 2px solid transparent;
+}
+#inputTitle {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--tertiary-color);
+  border-radius: 0;
+  padding: 0;
+  font-weight: bold;
+  background: var(--secondary-color);
+  margin-right: 20px;
+  width: 100%;
+}
+
+#bSave {
+  border: none;
+  text-decoration: underline;
+  color: var(--light-color);
+}
+
+#memberList {
+  position: fixed;
+  bottom: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  overflow-x: visible;
+  overflow-y: visible;
+  padding: 5px 30px;
+  z-index: 10;
+}
+#memberList #member {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 10px;
+  cursor: pointer;
+  position: relative;
+}
+#member.owner, #member.sameUser {
+  padding: 5px;
+  /* border: 2px solid var(--primary-color); */
+  border-radius: var(--lg-border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.753);
+}
+#member.owner::before, #member.sameUser::before {
+  margin-right: 10px;
+  text-align: center;
+  width: 100%;
+  margin: auto;
+  display: block;
+  margin-bottom: 5px;
+}
+#member.owner::before {
+  content: "Onwer";
+}
+#member.sameUser::before {
+  content: "You";
+}
+
+#deployable .closed {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: .3s;
+}
+
+#deployable .opened {
+  height: auto;
+  opacity: 1;
+  overflow: hidden;
+  transition: .2s;
+}
+
+#optionSection {
+  position: sticky;
+  top: 0;
+  padding: 0 10px;
+  z-index: 4;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#optionSection button {
+  font-size: 1em;
+  background: var(--primary-color);
+  padding: 10px 15px;
+}
+
+#bDeployMembers {
+  transform: rotate(0deg);
+}
+#bDeployMembers.opened {
+  transform: rotate(-90deg);
+}
+#bDeployMembers.closed {
+  transform: rotate(0deg);
+}
+#bDeployMembers img {
+  width: 15px;
+}
+
+#fullMemberList {
+  position: absolute;
+  top: 0;
+  transform: translate(0, -110%);
+  background: black;
+  padding: var(--md-padding);
+  border-radius: var(--md-border-radius);
+  max-height: 500px;
+  max-width: 300px;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: showFullMemberListAni .2s ease-out;
+}
+#fullMemberList #member {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 0;
+}
+#fullMemberList #member p {
+  margin-left: 10px;
+}
+
+#bMembersSearch {
+  margin-right: auto;
+
+}
+
+#memberType {
+  margin-bottom: 5px;
+  text-align: center;
+  font-weight: bold;
+  opacity: .6;
+  cursor: default;
+  user-select: none;
+}
+#memberType img {
+  width: 20px;
+}
+#memberType.admin {
+  filter: drop-shadow(0px 0px 7px var(--admin-color));
+  color: var(--admin-color);
+}
+#memberType.member {
+  filter: drop-shadow(0px 0px 7px var(--member-color));
+  color: var(--member-color);
+}
+#memberType.viewer {
+  filter: drop-shadow(0px 0px 7px var(--viewer-color));
+  color: var(--viewer-color);
+}#memberType.admin img {
+  filter: drop-shadow(0px 0px 7px var(--admin-color));
+}
+#memberType.member img {
+  filter: drop-shadow(0px 0px 5px var(--member-color));
+}
+#memberType.viewer img {
+  filter: drop-shadow(0px 0px 5px var(--viewer-color));
+}
+
+@keyframes showFullMemberListAni {
+  0% {
+    opacity: 0;
+    transform: translate(0, -105%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, -110%);
+  }
+}
+
+@media (max-width: 950px) {
+  #projectBody {
+    padding-bottom: 150px;
+  }
+}

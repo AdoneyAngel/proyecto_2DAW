@@ -1,0 +1,40 @@
+#item {
+  margin: 5px 0;
+}
+#item.progress {
+  border-color: var(--primary-color);
+}
+#item.rack {
+  opacity: var(--md-opacity);
+}
+#item.review {
+  border-color: var(--blue-color);
+}
+#item.done {
+  border-color: var(--green-color);
+}
+
+#info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#info h1 {
+  text-transform: capitalize;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+#date {
+  margin-left: auto;
+  text-align: right;
+  opacity: var(--md-opacity);
+}
+
+#userList {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+#user {
+  margin: 0 5px;
+}

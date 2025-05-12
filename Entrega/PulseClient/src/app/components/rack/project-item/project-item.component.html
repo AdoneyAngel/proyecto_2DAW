@@ -1,0 +1,38 @@
+<app-main-content-box display="list" title="{{project.title}}" [hidden]="!project.tasks.length">
+
+  @for (task of project.tasks; track $index) {
+    @if (task.users && task.users.length) {
+      <div id="item" routerLink="/dashboard/projects/{{task.proyectId}}/tasks/{{task.id}}" class="assigned">
+
+        <p id="content"> <img src="assets/images/settings_white.png" alt="">
+
+          {{task.title}}
+          <span id="description">
+            {{task.description}}
+          </span>
+
+        </p>
+
+        <p id="date">{{task.date}}</p>
+      </div>
+
+    } @else {
+      <div id="item" routerLink="/dashboard/projects/{{task.proyectId}}/tasks/{{task.id}}" class="unssigned">
+
+        <p id="content"> <img src="assets/images/web_white.png" alt="">
+
+          {{task.title}}
+          <span id="description">
+            {{task.description}}
+          </span>
+
+        </p>
+
+        <p id="date">{{task.date}}</p>
+
+      </div>
+    }
+
+  }
+
+</app-main-content-box>

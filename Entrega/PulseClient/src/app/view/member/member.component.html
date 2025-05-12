@@ -1,0 +1,83 @@
+<app-main-content-box display="list" >
+  <div id="memberBox">
+    <div id="header">
+      <app-profile-image styles="
+        width: 60px;
+        height: 60px;
+      " [image]="member?.photoUrl??null" [username]="member ? member.username : ''" />
+      <h1>{{member?.email}}</h1>
+    </div>
+
+    <app-content-box-simple-delimiter />
+
+    <div class="section" id="effectiveTimeSection">
+      <h1>Effective Time (days)</h1>
+      <input [disabled]="!editing" [(ngModel)]="newEffectiveTime" type="number" min="1" placeholder="{{member?.effectiveTime}}" value="{{member?.effectiveTime}}">
+
+      <br>
+      <br>
+
+      <h1>Roll</h1>
+      <select [disabled]="!editing" [(ngModel)]="newMemberType" name="type" id="typeSelect" class="{{memberTypeEnum[newMemberType].toLowerCase()}}">
+        @for (type of memberTypeList; track $index) {
+          <option class="{{type[1].toLowerCase()}}" value="{{type[0]}}">{{type[1]}}</option>
+        }
+      </select>
+
+      <br>
+      <br>
+
+      <button *ngIf="!editing" (click)="setEditing()" id="bEdit">Edit</button>
+      <button *ngIf="editing" (click)="saveChanges()" id="bEffectiveTimeSave">Save</button>
+    </div>
+
+    <app-content-box-simple-delimiter />
+
+    <div id="tasksSection" class="section">
+      <h1>Tasks from
+        <span id="projectLink">
+          <app-text-link [styles]="{
+            padding: 'var(--lg-padding) var(--lg-padding)',
+            border: '2px solid var(--primary-color)',
+            borderRadius: 'var(--md-border-radius)',
+            marginLeft: '10px'
+          }" [link]="project?'/dashboard/projects/'+projectId:''" >
+
+            <img src="assets/images/project_white.png">
+            <p>{{project?.title??'project'}}</p>
+
+          </app-text-link>
+        </span>
+      </h1>
+
+      <div id="taskList">
+        @for (task of tasks; track $index) {
+
+          @if (task.userStatus == userTaskStatus.Todo) {
+            <div routerLink="/dashboard/projects/{{projectId}}/tasks/{{task.id}}" class="todo" id="taskItem">
+              <img src="assets/images/web_white.png" alt="">
+
+              <p>{{task.title}}</p>
+            </div>
+
+          } @else if (task.userStatus == userTaskStatus.Progress) {
+            <div routerLink="/dashboard/projects/{{projectId}}/tasks/{{task.id}}" class="progress" id="taskItem">
+              <img src="assets/images/settings_white.png" alt="">
+
+              <p>{{task.title}}</p>
+            </div>
+
+          } @else if (task.userStatus == userTaskStatus.Done) {
+            <div routerLink="/dashboard/projects/{{projectId}}/tasks/{{task.id}}" class="done" id="taskItem">
+              <img src="assets/images/done_white.png" alt="">
+
+              <p>{{task.title}}</p>
+            </div>
+          }
+
+        }
+      </div>
+    </div>
+
+  </div>
+</app-main-content-box>

@@ -1,0 +1,5 @@
+<div (click)="showOptions()" title="{{invitation.proyect.title}}" id="item">
+  <h1>{{invitation.proyect.title}}</h1>
+  <p title="Your roll on the proyect" id="memberType" class="{{memberTypeEnum[invitation.type]?.toLowerCase()}}"> <img src="assets/images/rol_white.png"> {{memberTypeEnum[invitation.type]}}</p>
+  <p title="{{invitation.proyect.owner.username}}" id="user">{{invitation.proyect.owner.username}} <span title="{{invitation.proyect.owner.email}}" class="email">- {{invitation.proyect.owner.email}}</span></p>
+</div>

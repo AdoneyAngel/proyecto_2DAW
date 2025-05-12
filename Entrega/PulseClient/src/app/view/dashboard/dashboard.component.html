@@ -1,0 +1,29 @@
+<body>
+
+  <div class="section" id="header">
+    <app-header [showLateralBar]="showLateralBar.bind(this)" [photo]="profile.photo" [username]="profile.username" [routes]="routes" />
+  </div>
+
+  <div *ngIf="!appComponent.phoneScreen || visibleLateralBar" class="section" id="lateralBarSection">
+    <app-lateral-bar [hidde]="hiddeLateralBar.bind(this)" />
+  </div>
+
+  <main class="section">
+    <h1>{{title}}</h1>
+
+    @if (isOnDashboard) {
+
+      @if (invitations.length) {
+        <app-invitations [invitations]="invitations"/>
+      }
+
+      @if (projects.length) {
+        <app-projects [usersPhotos]="usersPhotos" [projects]="projects"/>
+      }
+
+    } @else {
+      <router-outlet></router-outlet>
+    }
+  </main>
+
+</body>

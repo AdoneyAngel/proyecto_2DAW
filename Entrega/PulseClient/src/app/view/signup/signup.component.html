@@ -1,0 +1,41 @@
+<html>
+  <head></head>
+  <body>
+
+    <section id="logo">
+      <img src="assets/images/Logo.svg" alt="">
+    </section>
+
+    <section [className]="isLoading ? 'loading' : ''" id="form">
+      <h1>Signup</h1>
+
+      <form (submit)="submit($event)">
+
+        <div id="loginStep">
+          <label>Your username</label>
+          <input [(ngModel)]="person.username" name="username" type="email" placeholder="Alfonsito">
+        </div>
+
+        <div id="loginStep">
+          <label>Email</label>
+          <input [(ngModel)]="person.email" name="email" type="email" placeholder="your@email.com">
+        </div>
+
+        <div *ngIf="!googleCredential" id="loginStep">
+          <label>Password</label>
+          <input [(ngModel)]="person.password" name="password" type="password" placeholder="********" [disabled]="isLoading">
+        </div>
+
+        <div *ngIf="!googleCredential" id="loginStep" class="googleLogin">
+          <label>Or you can sign up with a Google Account</label>
+          <br>
+          <div id="googleButton"></div>
+        </div>
+
+        <button type="submit" [disabled]="isLoading">Sign Up</button>
+      </form>
+
+      <a href="/login">Do you have an account?</a>
+    </section>
+  </body>
+</html>

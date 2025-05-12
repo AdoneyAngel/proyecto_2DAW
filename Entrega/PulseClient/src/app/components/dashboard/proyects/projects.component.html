@@ -1,0 +1,5 @@
+<app-main-content-box title="{{title?'Projects':''}}">
+  @for (project of projects; track $index) {
+    <app-project-item [usersPhotos]="usersPhotos" [project]="project" />
+  }
+</app-main-content-box>

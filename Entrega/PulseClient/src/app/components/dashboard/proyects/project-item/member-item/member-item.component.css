@@ -1,0 +1,25 @@
+#memberItem {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#memberItem p {
+  font-size: 1em;
+  margin-left: 20px;
+}
+.owner {
+  background: var(--tertiary-color);
+  padding: 10px 0;
+  border-radius: var(--lg-border-radius);
+}
+#memberItem #email {
+  opacity: .5;
+  font-style: oblique;
+  font-size: .95em;
+}
+#memberItem #sameUser {
+  color: var(--primary-color);
+  opacity: .7;
+  font-size: 1.2em;
+}

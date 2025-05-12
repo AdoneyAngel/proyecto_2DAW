@@ -1,0 +1,159 @@
+<main>
+  <div class="container" id="titleContainer">
+    <input [(ngModel)]="newTitle" class="{{editing?'titleEditing':''}}" id="title" value="{{task.title}}" type="text" placeholder="{{task.title}}" disabled="{{!editing}}">
+  </div>
+
+  <div id="taskStatusContainer" *ngIf="(memberType == memberTypeEnum.Admin || isOwner) && task.statusId == taskStatusEnum.Review">
+    <p>The task is on <span class="review">Review</span> phase, <span (click)="changeTaskStatusToDone()" id="changeToDoneButton">change to <span class="done">Done</span> status</span></p>
+  </div>
+
+  <div id="doneStatusMessage" *ngIf="task.statusId == taskStatusEnum.Done">
+    <p>Done</p>
+  </div>
+
+  <br>
+
+  <div id="statusSection" *ngIf="memberIsJoined(app.getUser().id) && task.statusId != taskStatusEnum.Done">
+    <h1 id="titleStatus">Your Status</h1>
+
+    <div id="statusList">
+
+      <div tabindex="-1" (focus)="getActualMember().taskStatus!=userTaskStatus.Todo?setNewStatus(userTaskStatus.Todo):unSetNewStatus()" class="todoStatus {{getActualMember()?.taskStatus == userTaskStatus.Todo ? 'select':''}}" id="statusItem">
+        <img src="assets/images/web_white.png">
+        <p>To Do</p>
+      </div>
+
+      <div tabindex="-1" (focus)="getActualMember().taskStatus!=userTaskStatus.Progress?setNewStatus(userTaskStatus.Progress):unSetNewStatus()" class="progressStatus {{getActualMember()?.taskStatus == userTaskStatus.Progress ? 'select':''}}" id="statusItem">
+        <img src="assets/images/settings_white.png">
+        <p>In Progress</p>
+      </div>
+
+      <div tabindex="-1" (focus)="getActualMember().taskStatus!=userTaskStatus.Done?setNewStatus(userTaskStatus.Done):unSetNewStatus()" class="doneStatus {{getActualMember()?.taskStatus == userTaskStatus.Done ? 'select':''}}" id="statusItem">
+        <img src="assets/images/done_white.png">
+        <p>Done</p>
+      </div>
+
+    </div>
+
+    <button (click)="app.showAccept('Are you sure to change your status', changeStatus.bind(this))" class="{{newStatus?'visible':''}}" id="bSetStatus">Set status</button>
+  </div>
+
+  <div *ngIf="task?.proyect?.id">
+    <app-text-link link="/dashboard/projects/{{task.proyect.id}}/{{app.getTitle()=='issue'?'issues':'tasks'}}/{{task.id}}/history" >Status history</app-text-link>
+  </div>
+
+  <br>
+
+  <button class="{{!editing?'bEditin':'bCancel'}}" (click)="setEditing()" *ngIf="task.statusId != taskStatusEnum.Done && (isOwner || memberType == memberTypeEnum.Admin)" id="bEdit">{{editing?'Cancel':'Edit'}}</button>
+
+  <app-main-content-box display="list">
+
+    <div class="container" id="descriptionContainer">
+      <h1> <img src="assets/images/description_white.png" alt=""> Description</h1>
+      <textarea [(ngModel)]="newDescription" class="input" id="description" [disabled]="(!isOwner && memberType != memberTypeEnum.Admin) || !editing">{{task.description}}</textarea>
+    </div>
+
+    <div class="container" id="tagContainer">
+      <h1> <img src="assets/images/tag_white.png" alt="">Tag</h1>
+      <input [(ngModel)]="newTag" type="text" id="tag" placeholder="{{task.tag}}" value="{{task.tag}}" [disabled]="(!isOwner && memberType != memberTypeEnum.Admin) || !editing">
+    </div>
+
+    <div class="container" id="numericsContainer">
+      <div class="subContainer">
+        <h1> <img src="assets/images/time_white.png" alt="">Time</h1>
+        <input [(ngModel)]="newTime" type="number" value="{{task.time}}" placeholder="{{task.time}}" [disabled]="(!isOwner && memberType != memberTypeEnum.Admin) || !editing">
+      </div>
+
+      <div class="subContainer">
+        <h1> <img src="assets/images/priority_white.png" alt="">Priority</h1>
+        <input [(ngModel)]="newPriority" type="number" value="{{task.priority}}" placeholder="{{task.priority}}" [disabled]="(!isOwner && memberType != memberTypeEnum.Admin) || !editing">
+      </div>
+    </div>
+
+
+    <app-main-content-box display="list" title="Comments">
+      <div id="commentList">
+        @for (comment of comments; track $index) {
+          <div id="commentItem">
+            <div id="commentUser">
+              <app-profile-image [username]="comment.user.username" [image]="comment.user.photoUrl ?? ''"/>
+
+              <p id="commentUserInfo">
+                {{comment.user.username}} <span id="commentUserEmail"> {{'@'}} {{comment.user.email}}</span>
+              </p>
+            </div>
+
+            <div id="commentBody">
+              {{comment.comment}}
+            </div>
+
+            <div id="commentDate">
+              @if (timeUtil.calcPastTime(comment.date).data.days > 1) {
+                {{comment.date}}
+
+              }
+              @else {
+                {{timeUtil.calcPastTime(comment.date).string}} ago
+              }
+            </div>
+          </div>
+        }
+
+        <div id="newComment">
+          <input [(ngModel)]="newComment" placeholder="Write new comment" type="text" id="commentInput">
+          <button (click)="sendComment()">Send</button>
+        </div>
+      </div>
+    </app-main-content-box>
+
+    <button *ngIf="isOwner || memberType == memberTypeEnum.Admin" (click)="askDeleteTask()" id="bDeleteTask">{{app.getTitle() == "issue"?"Delete Issue":"Delete Task"}}</button>
+
+    <app-content-box-delimiter title="Assigned users" />
+
+    <div (dragover)="onDragOver($event)" (drop)="onDropAssignedUsers($event)" class="container" id="users">
+      <p id="et" title="Total Effecitve Time">Total EFT: <span id="nEt">{{totalEt}}</span></p>
+
+      @for (user of newUsers; track $index) {
+        @if (user.added) {
+          <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner||memberType==memberTypeEnum.Admin}}" title="{{user.username}}-{{user.email}}" class="assigned {{editing?'draggable':''}} {{!user.original?'added':''}}" id="user">
+
+            <p id="userInfo">
+              <app-profile-image style="display: inline-block; margin-right: 10px;" [image]="user.photoUrl" [username]="user.username" />
+              <span id="youSpan" *ngIf="app.getUser().id==user.id">You</span> {{user.username}} <span id="email"> {{user.email}}</span>
+            </p>
+            <p title="Effective Time" id="et"><span id="nEt">{{user.effectiveTime}}</span> EFT</p>
+            <button *ngIf="editing" (click)="removeUser(user.id)" id="bUserAction" class="remove">Remove</button>
+
+          </div>
+        }
+      }
+    </div>
+
+    @if (isOwner || memberType == memberTypeEnum.Admin) {
+      <app-content-box-delimiter title="Unassigned users" />
+
+      <div (dragover)="onDragOver($event)" (drop)="onDropUnassignedUsers($event)" class="container" id="users">
+        @for (user of newUsers; track $index) {
+          @if (!user.added && user.type != memberTypeEnum.Viewer) {
+            <div (dragend)="onDragEnd($event)" (drag)="onDrag($event)" (dragstart)="onDragStart($event, user.id)" draggable="{{isOwner||memberType==memberTypeEnum.Admin}}" title="{{user.username}}-{{user.email}}" class="unassigned {{editing?'draggable':''}} {{user.original?'removed':''}}" id="user">
+
+              <p id="userInfo">
+                <app-profile-image style="display: inline-block; margin-right: 10px;" [image]="user.photoUrl" [username]="user.username" />
+                <span id="youSpan" *ngIf="app.getUser().id==user.id">You</span> {{user.username}} <span id="email"> {{user.email}}</span>
+              </p>
+              <p title="Effective Time" id="et"><span id="nEt">{{user.effectiveTime}}</span> ET</p>
+              <button *ngIf="editing" (click)="addUser(user.id)" id="bUserAction" class="add">Add</button>
+
+            </div>
+          }
+        }
+      </div>
+    }
+  </app-main-content-box>
+
+  @if (isChanged) {
+    <button (click)="submit()" id="bSave">Save</button>
+  }
+
+
+</main>

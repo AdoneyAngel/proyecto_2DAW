@@ -1,0 +1,12 @@
+#box input {
+  padding: var(--lg-padding) var(--md-padding);
+  display: flex;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+#box button {
+  background: var(--primary-color);
+  padding: var(--lg-padding);
+}

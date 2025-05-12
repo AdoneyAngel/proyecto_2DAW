@@ -1,0 +1,32 @@
+#projectsList {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+#projectItem {
+  display: block;
+  background: transparent;
+  border: 2px solid rgb(73, 73, 73);
+  border-radius: var(--md-border-radius);
+  padding: 10px 13px;
+  margin: 3px 0;
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--light-color);
+  cursor: pointer;
+  text-decoration: none;
+  height: max-content;
+}
+
+@media (max-width: 950px) {
+  #projectItem {
+    margin: 4px 0;
+    margin-left: 0;
+  }
+  #projectsList {
+  }
+}

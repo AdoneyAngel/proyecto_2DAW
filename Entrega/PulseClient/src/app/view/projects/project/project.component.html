@@ -1,0 +1,154 @@
+<div id="projectBody">
+  <div id="titleContainer">
+    @if ((project.ownerId == app.getUser().id || memberType == memberTypeEnum.Admin) && isOnMain) {
+      @if (project.title) {
+        <input class="title" [(ngModel)]="newProjectTitle" type="text" id="inputTitle" placeholder="{{project.title}}" value="{{project.title}}">
+
+        @if (newProjectTitle.length && newProjectTitle != project.title) {
+          <button id="bSave" (click)="updateTitle()">save change</button>
+        }
+
+      } @else {
+        <h1 class="title">Project</h1>
+      }
+
+
+    } @else {
+      @if (isOnMain) {
+        <h1 class="title">{{project.title ?? "Project"}}</h1>
+      }
+    }
+
+  </div>
+
+  <main style="margin-top: {{isOnMain?'-60px':''}};">
+    <router-outlet></router-outlet>
+
+    @if (isOnMain) {
+      <div id="optionSection">
+        <button (click)="openShowMemberSearch()" id="bMembersSearch">Members</button>
+        <button routerLink="/dashboard/projects/{{projectId}}/memberHistory">History</button>
+        <button *ngIf="isOwner || memberType == memberTypeEnum.Admin" routerLink="/dashboard/projects/{{projectId}}/createTask" id="bCreateTask">Create new task</button>
+      </div>
+
+      <br>
+
+      <app-main-content-box display="list" title="Tasks">
+        @if (tasks.onRack.length) {
+          <div id="deployable">
+            <app-content-box-delimiter (click)="deploySection('deployContent-rack')" title="On Rack" />
+
+            <div class="closed" id="deployContent-rack">
+              @for (task of tasks.onRack; track $index) {
+                <app-task [task]="task" />
+              }
+            </div>
+          </div>
+        }
+
+        @if (tasks.todo.length) {
+          <div id="deployable">
+            <app-content-box-delimiter (click)="deploySection('deployContent-todo')" title="To Do" />
+
+            <div class="opened" id="deployContent-todo">
+              @for (task of tasks.todo; track $index) {
+                <app-task [task]="task" />
+              }
+            </div>
+          </div>
+        }
+
+        @if (tasks.progress.length) {
+          <div id="deployable">
+            <app-content-box-delimiter (click)="deploySection('deployContent-progress')" title="In Progress" />
+
+            <div class="opened" id="deployContent-progress">
+              @for (task of tasks.progress; track $index) {
+                <app-task [task]="task" />
+              }
+            </div>
+          </div>
+        }
+
+        @if (tasks.review.length) {
+          <div id="deployable">
+            <app-content-box-delimiter (click)="deploySection('deployContent-review')" title="Review" />
+
+            <div class="opened" id="deployContent-review">
+              @for (task of tasks.review; track $index) {
+                <app-task [task]="task" />
+              }
+            </div>
+          </div>
+        }
+
+        @if (tasks.done.length) {
+          <div id="deployable">
+            <app-content-box-delimiter (click)="deploySection('deployContent-done')" title="Done" />
+
+            <div class="opened" id="deployContent-done">
+              @for (task of tasks.done; track $index) {
+                <app-task [task]="task" />
+              }
+            </div>
+          </div>
+        }
+      </app-main-content-box>
+    }
+
+  </main>
+
+  <div id="memberList" [style]="'display: '+(isOnMain?'flex':'none')">
+
+
+    @if (project.owner) {
+      <div id="member" class="owner" title="{{project.owner.username}} - {{project.owner.email}}">
+        <app-profile-image [userId]="project.ownerId" [show]="true" [username]="project.owner.username" image="{{project.owner.photoUrl}}" />
+      </div>
+    }
+
+    @for (member of project.members?.slice(0, 4); track $index) {
+      <div *ngIf="member.id != project.ownerId" id="member" class="{{app.getUser().id==member.id?'sameUser':''}}" title="{{member.username}} - {{member.email}}">
+
+        <div id="memberType" class="{{memberTypeEnum[member.type].toLowerCase()}}">
+          @if (member.type == memberTypeEnum.Admin) {
+            <img src="assets/images/admin_white.png">
+
+          } @else if (member.type == memberTypeEnum.Viewer) {
+            <img src="assets/images/viewer_white.png">
+
+          } @else {
+            <img src="assets/images/user_white.png">
+          }
+        </div>
+
+        <app-profile-image [show]="true" [userId]="member.id" [username]="member.username" image="{{member.photoUrl}}" />
+
+      </div>
+    }
+
+    @if (project.members?.length > 4) {
+      <button class="{{showMemberList?'opened':'closed'}}" (click)="showMemberList=!showMemberList" id="bDeployMembers">
+        <img src="assets/images/arrow_white.png">
+      </button>
+    }
+
+    @if (showMemberList) {
+      <div id="fullMemberList">
+        @for (member of project.members; track $index) {
+          <div id="member" class="{{app.getUser().id==member.id?'sameUser':''}}" title="{{member.username}} - {{member.email}}">
+
+            <app-profile-image [username]="member.username" image="{{member.photoUrl}}" />
+            <p>{{member.username}} <span>- {{member.email}}</span></p>
+
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+</div>
+
+@if (showMemberSearch) {
+  <app-member-search [memberType]="memberType" [project]="project" [close]="closeShowMemberSearch.bind(this)" />
+}

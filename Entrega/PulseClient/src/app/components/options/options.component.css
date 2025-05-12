@@ -1,0 +1,43 @@
+#acceptBox {
+  background: black;
+  width: 93%;
+  max-width: 500px;
+  margin: auto;
+  padding: var(--md-padding);
+  border-radius: var(--md-border-radius);
+  border: 2px solid var(--secondary-color);
+  animation: .3s showAni ease-in-out;
+  z-index: 1000;
+}
+
+#options {
+  margin-top: 20px;
+}
+#options button {
+  margin: 0 10px;
+}
+#options button:first-child {
+  margin: 0;
+}
+
+button.cancel {
+  background: var(--red-color);
+  border-color: var(--red-color);
+  border-width: 2px;
+}
+button.accept {
+  background: transparent;
+  border-color: var(--grey-color);
+  border-width: 2px;
+}
+
+@keyframes showAni {
+  0% {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}

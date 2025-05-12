@@ -1,0 +1,28 @@
+#item {
+  background-color: var(--secondary-color);
+  padding: var(--md-padding);
+  border-radius: var(--md-border-radius);
+  border: 2px solid rgb(73, 73, 73);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+#item h1 {
+  font-size: 1.2em;
+  font-weight: normal;
+}
+
+/* #user {
+  margin-left: auto;
+  font-size: 1em;
+  opacity: .6;
+  font-style: oblique;
+  text-align: right;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#user .email {
+  opacity: .6;
+} */

@@ -1,0 +1,24 @@
+<div #profileImageContainer id="profileImageContainer" tabindex="-1" (click)="show?onProfileClick($event) : onclick?onclick():''" (blur)="onProfileBlur()" (focus)="onProfileFocus()">
+  <div class="{{show?'deployable': ''}}" [style]="styles" id="profileImage">
+    @if (image) {
+      <img [src]="image" alt="">
+
+    } @else {
+      <p id="letter" [style]="setLetterStyles()">{{username[0]}}</p>
+    }
+  </div>
+
+  @if (focused && show) {
+    <div id="profileInfo" style="
+      left: {{containerPos?.x}}px;
+      top: {{containerPos?.y}}px;
+    ">
+      <div id="head">
+        <app-profile-image [username]="username" [image]="image" />
+        <h1>{{profile?.username}}</h1>
+      </div>
+
+      <p id="email">{{'@'}} {{profile?.email}}</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,10 @@
+@if (!hidden) {
+  <div id="box">
+    @if (title) {
+      <h1 id="titleBox">{{title}}</h1>
+    }
+    <div id="content" class="{{display}}">
+      <ng-content></ng-content>
+    </div>
+  </div>
+}

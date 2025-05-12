@@ -1,0 +1,66 @@
+<app-main-content-box display="list">
+
+  <div id="titleSection">
+    <div class="inputSection">
+      <label>Title</label>
+      <input [(ngModel)]="title" type="text" id="inputTitle" placeholder="Primary name of task">
+    </div>
+
+    <div class="inputSection">
+      <div class="inputSection" id="tagSection">
+        <div class="inputTagSection">
+          <label> <img src="assets/images/tag_white.png" alt=""> Tag</label>
+          <input [(ngModel)]="tag" type="text" id="inputTag" placeholder="Tag of group">
+        </div>
+
+        <div id="tagList">
+          @for (actualTag of tags; track $index) {
+            <div class="button" (click)="tag=actualTag" id="tag">{{actualTag}}</div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="delimiter"></div>
+
+  <div class="inputSection" id="descriptionSection">
+    <textarea [(ngModel)]="description" id="inputDescription" placeholder="Detailed description"></textarea>
+  </div>
+
+  <div id="delimiter"></div>
+
+  <div id="dataSection">
+    <div class="numericsSection">
+      <div class="inputSection">
+        <label> <img src="assets/images/time_white.png" alt="">Estimated Time (days)</label>
+        <input type="number" step="1" value="1" min="1" placeholder="ET" [(ngModel)]="time">
+      </div>
+
+      <br>
+
+      <div class="inputSection">
+        <label> <img src="assets/images/priority_white.png" alt="">Priority</label>
+        <input type="number" step="1" value="1" min="1" placeholder="Priority" [(ngModel)]="priority">
+      </div>
+
+    </div>
+
+    <div *ngIf="isOwner || memberType == memberTypeEnum.Admin" class="inputSection" class="usersSection">
+      <label>Users <input (keyup)="filterUsers()" type="text" placeholder="Search user" id="inputSearchUser" [(ngModel)]="searchUser"></label>
+      <div id="userList">
+        @for (user of (searchUser.length?filteredUsers:members); track $index) {
+          <div title="{{user.username}} - {{user.email}}" (click)="selectUser(user.id)" class="{{user.selected?'selected':'unselected'}}" id="user">
+            <div id="image">
+              <app-profile-image [username]="user.username" [image]="user.photoUrl" />
+            </div>
+            <p>{{user.username}}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <button (click)="submit(title, description, tag, time, priority, users)" id="bSubmit">Create</button>
+
+</app-main-content-box>

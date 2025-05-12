@@ -1,0 +1,42 @@
+<app-main-content-box>
+
+  <div id="profileMain">
+
+    <div id="main" #main>
+      <section id="profile">
+
+        <div id="profilePhoto">
+
+          <app-profile-image [onclick]="askFormProfileImage.bind(this)" [username]="profile.username??''" [image]="profile.photoUrl??''" styles="
+            border-radius: 10000px;
+            height: 80px;
+            width: 80px;
+          "/>
+
+          <input (change)="uploadImage($event)" accept="image/png, image/jpg, image/jpeg" style="display: none;" #imageFile type="file" name="" id="">
+
+        </div>
+
+        <div id="info">
+
+          <input [(ngModel)]="newUsername" type="text" id="username" value="{{editing ? newUsername:profile.username}}" [disabled]="!editing" />
+          <div class="emailContainer" [title]="profile.email??'email'">
+            <span *ngIf="!editing" id="emailIcon">{{'@'}}</span><input [(ngModel)]="newEmail" type="email" id="email" value="{{editing ? newEmail:profile.email}}" [disabled]="!editing" />
+          </div>
+        </div>
+      </section>
+
+      <section id="account">
+        <button (click)="askLogout()">Logout</button>
+
+        <button id="logoutButton" style="display: {{!haveGoogleAccount && googleAccountChecked?'block':'none'}}" id="googleButton"></button>
+
+        <button (click)="askRemoveGoogleAccount()" style="display: {{haveGoogleAccount && googleAccountChecked?'block':'none'}}" id="removeGoogleButton">Remove Google Account</button>
+      </section>
+    </div>
+
+    <button class="{{editing ? 'editing' : ''}}" (click)="editing = !editing" id="bEdit">{{editing ? 'Cancel' : "Edit"}}</button>
+    <button (click)="updateProfile()" *ngIf="editing" id="bSave">Save</button>
+
+  </div>
+</app-main-content-box>

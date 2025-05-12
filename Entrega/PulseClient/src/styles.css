@@ -1,0 +1,127 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  color-scheme: dark;
+  --primary-color: #BC6F31;
+  --primary-dark-color:rgb(82, 49, 22);
+  --secondary-color: #1E1E1E;
+  --tr-secondary-color: #1f1f1f83;
+  --tertiary-color: #2C2723;
+  --dark-color: #121212;
+  --light-color: #a0a0a0;
+  --grey-color: #262626;
+  --green-color: #85a727;
+  --blue-color: #2783a7;
+  --hg-padding: 35px;
+  --md-padding: 20px;
+  --lg-padding: 10px;
+  --xlg-padding: 5px;
+  --md-border-radius: 10px;
+  --lg-border-radius: 5px;
+  --link-color: #af835e;
+  --red-color: #a12e00;
+  --md-blur: 3px;
+  --md-opacity: .6;
+  --profile-red: rgb(185, 127, 101);
+  --profile-green: rgb(122, 184, 138);
+  --profile-blue: rgb(101, 153, 184);
+  --profile-purple: rgb(146, 122, 184);
+  --animation-fade: .2s ease-in-out fade;
+
+  --admin-color: var(--profile-red);
+  --member-color: var(--profile-blue);
+  --viewer-color: var(--profile-purple);
+
+  /* Dashboard */
+  --ds-background-color: var(--secondary-color);
+  --ds-padding: var(--lg-padding) var(--md-padding);
+  --ds-border-radius: var(--md-border-radius);
+  --ds-border: 2px solid var(--light-color);
+  --ds-overflow: hidden;
+  --phone-sreen-width: 950px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  outline: none;
+}
+*::-webkit-scrollbar {
+  background: transparent;
+  width: 5px;
+  border-radius: 100px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--primary-dark-color);
+  overflow: hidden;
+  border-radius: 100px;
+}
+*::-webkit-scrollbar-button {
+  background-color: transparent;
+  height: 5px;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+img, .img {
+  user-select: none;
+}
+
+label {
+  color: rgba(255, 255, 255, 0.589);
+  padding: 0 10px;
+}
+
+html, body {
+  background: black;
+}
+
+html {
+  padding: 5px;
+}
+
+input, .input {
+  border-radius: var(--lg-border-radius);
+  border: 2px solid var(--tertiary-color);
+  padding: 5px 10px;
+  background-color: var(--dark-color);
+}
+
+button, .button{
+  padding: 5px;
+  display: inline;
+  border: 1px solid var(--tertiary-color);
+  border-radius: var(--lg-border-radius);
+  background-color: var(--secondary-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+button:hover, .button:hover {
+  filter: brightness(.9);
+}
+
+a, .a {
+  color: var(--link-color);
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 950px) {
+  * {
+    font-size: 15px;
+  }
+  html {
+    padding: 0;
+  }
+}

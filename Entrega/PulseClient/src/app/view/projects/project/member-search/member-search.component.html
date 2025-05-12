@@ -1,0 +1,71 @@
+<app-popup-background [closeCallback]="close">
+  <div id="memberSearch">
+
+    <div id="header">
+      <button (click)="close()" id="bBack">
+        <img src="assets/images/back_white.png">
+      </button>
+
+      @if (isLoading) {
+        <div id="loadingIcon">
+          <app-loading />
+        </div>
+      }
+    </div>
+
+    @if (!searchMember && (project.ownerId == app.getUser().id || memberType == memberTypeEnum.Admin)) {
+      <section id="searchUser">
+        <h1>Search user</h1>
+        <input [(ngModel)]="usersString" type="text" placeholder="Username/email" (keyup)="onKeyUpUser($event)">
+
+        <div id="userList" class="userList">
+          @for (user of filteredUsers; track $index) {
+            <div (focus)="setSelectingMemberType($index)" (blur)="unSelectingMemberType()" tabindex="-1" *ngIf="!isJoined(user.id)" title="{{user.username}} - {{user.email}}" id="user">
+              <div class="userBody">
+                <app-profile-image [username]="user.username"/>
+                <p>{{user.username}} <span id="email"> - {{user.email}}</span></p>
+
+                <div id="userOptions">
+                  <button class="transparent">Invite</button>
+                </div>
+              </div>
+
+              <div id="userTypeOptions" *ngIf="selectingMemberType==$index">
+                <h3>Invite as</h3>
+                <div id="userType" (click)="sendInvitation(user.id, memberTypeEnum.Admin)" class="admin button">Admin</div>
+                <div id="userType" (click)="sendInvitation(user.id, memberTypeEnum.Member)" class="member button">Member</div>
+                <div id="userType" (click)="sendInvitation(user.id, memberTypeEnum.Viewer)" class="viewer button">Viewer</div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <div id="separator"></div>
+
+    @if (!searchUser) {
+      <section id="searchMember">
+        <h1>Members</h1>
+        <input type="text" placeholder="Search member" (keyup)="onKeyUpMember($event)">
+
+         <div id="userList" class="memberList">
+          @for (user of (!searchMember?project?.members : filteredMembers); track $index) {
+            <div title="{{user.username}} - {{user.email}}" id="user">
+              <div class="userBody">
+                <app-profile-image [image]="user.photoUrl" [username]="user.username"/>
+                <p>{{user.username}} <span id="email"> - {{user.email}}</span></p>
+
+                <div id="userOptions">
+                  <button (click)="close()" routerLink="/dashboard/projects/{{project.id}}/members/{{user.id}}">Profile</button>
+                  <button *ngIf="project.ownerId == app.getUser().id || memberType == memberTypeEnum.Admin" (click)="askToRemoveUser(user.id)" class="red">Kick</button>
+                </div>
+              </div>
+            </div>
+          }
+         </div>
+      </section>
+    }
+
+  </div>
+</app-popup-background>

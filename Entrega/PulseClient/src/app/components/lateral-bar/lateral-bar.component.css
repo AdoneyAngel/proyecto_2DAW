@@ -1,0 +1,44 @@
+#lateralBar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--md-padding);
+}
+
+#bRoute {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 15px;
+  color: rgba(255, 255, 255, 0.74);
+  font-weight: 500;
+  width: 100%;
+  margin: 5px 0;
+  background: var(--grey-color);
+  text-align: left;
+  border-radius: var(--md-border-radius);
+  border: none;
+  box-sizing: border-box;
+  height: max-content;
+  text-decoration: none;
+}
+#bRoute img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+#bClose {
+  margin-bottom: 20px;
+}
+#bClose img {
+  width: 20px;
+}
+
+@media (max-width: 950px) {
+  #lateralBar {
+    height: max-content;
+    align-items: normal;
+  }
+}

@@ -1,0 +1,108 @@
+#main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#profile {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 50px;
+}
+#profile #info {
+  margin-left: 20px;
+}
+#username {
+  text-transform: capitalize;
+  font-size: 2rem;
+  background: transparent;
+  color: white;
+  border: none;
+  display: block;
+  margin-bottom: 5px;
+  cursor: text;
+}
+#email {
+  font-size: .9rem;
+  opacity: .7;
+  font-weight: bold;
+  background: transparent;
+  color: white;
+  border: none;
+  cursor: text;
+  width: 100%;
+}
+
+#username:enabled, #email:enabled {
+  border: 2px solid var(--tertiary-color);
+}
+
+.emailContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+#emailIcon {
+  margin-left: 10px;
+  opacity: .7;
+}
+
+#bEdit {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  padding: var(--xlg-padding) 10px;
+  border-radius: var(--md-border-radius);
+}
+#bEdit.editing {
+  border-color: var(--red-color);
+}
+#bSave {
+  margin-left: 5px;
+  background: transparent;
+  border: 2px solid var(--green-color);
+  padding: var(--xlg-padding) 10px;
+  border-radius: var(--md-border-radius);
+}
+
+#profilePhoto {
+  cursor: pointer;
+  transform: .2s;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+#profilePhoto:hover {
+  filter: brightness(.9);
+}
+
+#account {
+  display: flex;
+  flex-direction: column;
+}
+
+#account button {
+  margin: 2.5px 0;
+  padding: var(--lg-padding) var(--md-padding);
+  border-radius: var(--md-border-radius);
+  cursor: pointer;
+  text-align: left;
+  max-width: max-content;
+  margin-left: auto;
+}
+
+#removeGoogleButton {
+  border: 2px solid var(--red-color);
+}
+
+#logoutButton {
+  display: flex;
+}
+
+@media (max-width: 900px) {
+  #main {
+    display: block;
+  }
+}

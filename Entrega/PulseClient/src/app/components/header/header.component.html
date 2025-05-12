@@ -1,0 +1,37 @@
+<header #header>
+
+  <div>
+
+    <section *ngIf="!app.phoneScreen" id="logo">
+      <img src="assets/images/Logo.svg" alt="">
+    </section>
+
+    <section *ngIf="app.phoneScreen" id="menu" (click)="showLateralBar()">
+      <img src="assets/images/menu_white.png" alt="">
+    </section>
+
+    <section #routerList id="routes">
+      @for (route of visibleRoutes; track $index) {
+        @if (!$first) {
+          <img id="arrow" src="assets/images/arrow_white.png">
+        }
+
+        @if ($last) {
+          <a class="link">{{route.customTitle ?? route.title}}</a>
+
+        } @else {
+          <a class="link" routerLink="{{route.url}}">{{route.customTitle ?? route.title}}</a>
+        }
+
+      }
+    </section>
+
+    <section id="profile">
+        <app-profile-image [onclick]="goToProfile.bind(this)" [image]="photo??''" [username]="username" styles="
+          border-radius: 1000px;
+        "/>
+    </section>
+
+  </div>
+
+</header>

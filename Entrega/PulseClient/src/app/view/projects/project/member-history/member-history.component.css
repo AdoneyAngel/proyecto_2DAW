@@ -1,0 +1,30 @@
+img {
+  width: 30px;
+  margin-right: 10px;
+}
+
+#historyItem {
+  background: var(--secondary-color);
+  padding: var(--lg-padding) var(--md-padding);
+  border: 2px solid var(--tertiary-color);
+  border-radius: var(--md-border-radius);
+  margin: 5px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#historyItem.add {
+  border-color: var(--green-color);
+}
+#historyItem.remove {
+  border-color: var(--red-color);
+}
+
+#userInfo {
+  font-weight: bold;
+}
+
+#date {
+  margin-left: auto;
+  opacity: var(--md-opacity);
+}

@@ -1,0 +1,7 @@
+a {
+  text-decoration: underline;
+  color: var(--link-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
